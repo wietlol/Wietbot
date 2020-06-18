@@ -1,11 +1,13 @@
 package me.wietlol.wietbot.data.auth.core.repository
 
+import me.wietlol.konfig.api.KonfigName
+
 data class DatabaseSettings(
-	val host: String,
-	val name: String,
-	val driver: String,
-	val user: String,
-	val password: String
+	@KonfigName("host") val host: String,
+	@KonfigName("name") val name: String,
+	@KonfigName("driver") val driver: String,
+	@KonfigName("user") val user: String,
+	@KonfigName("password") val password: String
 )
 {
 	val url: String
