@@ -1,0 +1,63 @@
+service: 'wietbot-data-auth'
+
+provider:
+    name: 'aws'
+    runtime: 'java8'
+    region: 'eu-west-1'
+    memorySize: '512'
+    timeout: '20'
+
+    environment:
+        heater_warmupAware: 'true'
+        database_host: '${ssm:/me/wietlol/wietbot/common/database/host}'
+        database_name: '${ssm:/me/wietlol/wietbot/common/database/name}'
+        database_driver: '${ssm:/me/wietlol/wietbot/common/database/driver}'
+        database_user: '${ssm:/me/wietlol/wietbot/common/database/user}'
+        database_password: '${ssm:/me/wietlol/wietbot/common/database/password}'
+
+    iamRoleStatements:
+        -   Effect: 'Allow'
+            Action:
+                - 'rds-db:connect'
+            Resource:
+                - '*'
+    
+    vpc:
+        securityGroupIds:
+            - 'sg-4fdd0307'
+        subnetIds:
+            - 'subnet-41e1c709'
+            - 'subnet-2ca23276'
+            - 'subnet-99faadff'
+
+custom:
+    version: '1.0.0-SNAPSHOT'
+
+package:
+    artifact: 'target/data-auth-core-${self:custom.version}-jar-with-dependencies.jar'
+
+functions:
+    getOrCreateUser:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::getOrCreateUserBit'
+    createPermission:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::createPermissionBit'
+    createRole:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::createRoleBit'
+    createPolicy:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::createPolicyBit'
+    createGrantedAuthority:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::createGrantedAuthorityBit'
+    createRevokedAuthority:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::createRevokedAuthorityBit'
+    attachRolePolicy:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::attachRolePolicyBit'
+    detachRolePolicy:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::detachRolePolicyBit'
+    getUserRole:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::getUserRoleBit'
+    setUserRole:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::setUserRoleBit'
+    listRoles:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::listRolesBit'
+    isUserAuthorized:
+        handler: 'me.wietlol.wietbot.data.auth.core.api.AuthHandler::isUserAuthorizedBit'

@@ -1,0 +1,57 @@
+service: 'wietbot-services-chat-client'
+
+provider:
+    name: 'aws'
+    runtime: 'java11'
+    region: 'eu-west-1'
+    memorySize: '1024'
+    timeout: '20'
+
+    environment:
+        heater_warmupAware: 'true'
+        seCredentials_emailAddress: '${ssm:/me/wietlol/wietbot/services/stackexchange/wietbot/emailAddress}'
+        seCredentials_password: '${ssm:/me/wietlol/wietbot/services/stackexchange/wietbot/password}'
+        retryBaseSnsTopic: 'arn:aws:sns:eu-west-1:059598504952:wietbot-chatclient'
+
+    iamRoleStatements:
+        -   Effect: 'Allow'
+            Action:
+                - 'sns:Publish'
+            Resource:
+                - 'arn:aws:sns:eu-west-1:059598504952:wietbot-chatclient-retrySendMessage'
+                - 'arn:aws:sns:eu-west-1:059598504952:wietbot-chatclient-retryEditMessage'
+
+custom:
+    version: '1.0.0-SNAPSHOT'
+
+package:
+    artifact: 'target/services-chat-client-core-${self:custom.version}-jar-with-dependencies.jar'
+
+functions:
+    sendMessage:
+        handler: 'me.wietlol.wietbot.services.chatclient.core.api.ChatClientHandler::sendMessageBit'
+    retrySendMessage:
+        handler: 'me.wietlol.wietbot.services.chatclient.core.api.ChatClientRetryHandler::sendMessageSns'
+        events:
+            -   sns:
+                    arn: !Ref RetrySendMessage
+                    topicName: 'wietbot-chatclient-retrySendMessage'
+    editMessage:
+        handler: 'me.wietlol.wietbot.services.chatclient.core.api.ChatClientHandler::editMessageBit'
+    retryEditMessage:
+        handler: 'me.wietlol.wietbot.services.chatclient.core.api.ChatClientRetryHandler::editMessageSns'
+        events:
+            -   sns:
+                    arn: !Ref RetryEditMessage
+                    topicName: 'wietbot-chatclient-retryEditMessage'
+
+resources:
+    Resources:
+        RetrySendMessage:
+            Type: 'AWS::SNS::Topic'
+            Properties:
+                TopicName: 'wietbot-chatclient-retrySendMessage'
+        RetryEditMessage:
+            Type: 'AWS::SNS::Topic'
+            Properties:
+                TopicName: 'wietbot-chatclient-retryEditMessage'

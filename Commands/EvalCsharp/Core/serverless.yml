@@ -1,0 +1,40 @@
+service: 'wietbot-commands-eval-csharp'
+
+provider:
+    name: 'aws'
+    runtime: 'java8'
+    region: 'eu-west-1'
+    memorySize: '512'
+    timeout: '30'
+
+    environment:
+        heater_warmupAware: 'true'
+
+    iamRoleStatements:
+        -   Effect: 'Allow'
+            Action:
+                - 'lambda:InvokeFunction'
+            Resource:
+                - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-commands-eval-csharp-2-dev-evalCSharpPrivate'
+                - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-services-chat-client-dev-sendMessage'
+
+custom:
+    version: '1.0.0-SNAPSHOT'
+
+package:
+    artifact: 'target/commands-eval-csharp-core-${self:custom.version}-jar-with-dependencies.jar'
+
+functions:
+    evalCSharp:
+        handler: 'me.wietlol.wietbot.commands.evalcsharp.core.api.EvalCSharpHandler::evalCSharpSns'
+        events:
+            -   sns:
+                    arn: !Ref CommandsEvalCSharp
+                    topicName: 'wietbot-commands-evalCSharp'
+
+resources:
+    Resources:
+        CommandsEvalCSharp:
+            Type: 'AWS::SNS::Topic'
+            Properties:
+                TopicName: 'wietbot-commands-evalCSharp'

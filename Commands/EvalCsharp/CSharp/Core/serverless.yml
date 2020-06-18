@@ -1,0 +1,26 @@
+service: 'wietbot-commands-eval-csharp-2'
+
+provider:
+    name: 'aws'
+    runtime: 'dotnetcore2.1'
+    region: 'eu-west-1'
+    memorySize: '512'
+    timeout: '20'
+    
+    environment:
+        heater_warmupAware: 'true'
+    
+    vpc:
+        securityGroupIds:
+            - 'sg-4fdd0307'
+        subnetIds:
+            - 'subnet-41e1c709'
+            - 'subnet-2ca23276'
+            - 'subnet-99faadff'
+
+package:
+    artifact: 'bin/release/netcoreapp2.1/deploy-package.zip'
+
+functions:
+    evalCSharpPrivate:
+        handler: 'Core::Core.Api.EvalCSharpHandler::EvalCSharpPrivate'

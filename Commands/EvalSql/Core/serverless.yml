@@ -1,0 +1,62 @@
+service: 'wietbot-commands-eval-sql'
+
+provider:
+    name: 'aws'
+    runtime: 'java8'
+    region: 'eu-west-1'
+    memorySize: '512'
+    timeout: '30'
+    
+    environment:
+        heater_warmupAware: 'true'
+    
+    iamRoleStatements:
+
+custom:
+    version: '1.0.0-SNAPSHOT'
+
+plugins:
+    localPath: 'C:/Users/Harry/AppData/Roaming/npm/node_modules'
+    modules:
+        - 'serverless-iam-roles-per-function'
+
+package:
+    artifact: 'target/commands-eval-sql-core-${self:custom.version}-jar-with-dependencies.jar'
+
+functions:
+    evalSql:
+        handler: 'me.wietlol.wietbot.commands.evalsql.core.api.EvalSqlHandler::evalSqlSns'
+        events:
+            -   sns:
+                    arn: !Ref CommandsEvalSql
+                    topicName: 'wietbot-commands-evalSql'
+        iamRoleStatements:
+            -   Effect: 'Allow'
+                Action:
+                    - 'lambda:InvokeFunction'
+                Resource:
+                    - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-commands-eval-sql-dev-evalSqlPrivate'
+                    - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-services-chat-client-dev-sendMessage'
+    evalSqlPrivate:
+        handler: 'me.wietlol.wietbot.commands.evalsql.core.api.EvalSqlPrivateHandler::evalSqlPrivate'
+        timeout: '20'
+        memorySize: '1024'
+        environment:
+            database_driver: 'org.h2.Driver'
+            database_url: 'jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1'
+            database_user: 'sa'
+            database_password: 'sa'
+        vpc:
+            securityGroupIds:
+                - 'sg-4fdd0307'
+            subnetIds:
+                - 'subnet-41e1c709'
+                - 'subnet-2ca23276'
+                - 'subnet-99faadff'
+
+resources:
+    Resources:
+        CommandsEvalSql:
+            Type: 'AWS::SNS::Topic'
+            Properties:
+                TopicName: 'wietbot-commands-evalSql'

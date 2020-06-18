@@ -1,0 +1,9 @@
+1:String|Base|BitBlock|1.0
+2:Integer|Base|BitBlock|1.0
+
+33:SendMessageRequest|WietbotServicesChatClient|Wietbot|1.0
+34:SendMessageResponse|WietbotServicesChatClient|Wietbot|1.0
+35:EditMessageRequest|WietbotServicesChatClient|Wietbot|1.0
+36:EditMessageResponse|WietbotServicesChatClient|Wietbot|1.0
+37:SendMessageRetryRequest|WietbotServicesChatClient|Wietbot|1.0
+38:EditMessageRetryRequest|WietbotServicesChatClient|Wietbot|1.0

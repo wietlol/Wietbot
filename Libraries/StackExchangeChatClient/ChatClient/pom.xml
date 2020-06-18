@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>me.wietlol.wietbot</groupId>
+		<artifactId>libraries-stack-exchange-chat-client</artifactId>
+		<version>1.1.0</version>
+	</parent>
+	
+	<artifactId>libraries-stack-exchange-chat-client-chat-client</artifactId>
+	<packaging>jar</packaging>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-assembly.version>2.6</maven-assembly.version>
+		<wagon.git.version>0.2.5</wagon.git.version>
+		
+		<kotlin.version>1.3.60</kotlin.version>
+		
+		<jackson.version>2.9.7</jackson.version>
+		<khttp.version>0.1.0</khttp.version>
+		<konfig.version>1.0</konfig.version>
+	</properties>
+	
+	<repositories>
+<!--		<repository>-->
+<!--			<id>central</id>-->
+<!--			<name>bintray</name>-->
+<!--			<url>http://jcenter.bintray.com</url>-->
+<!--		</repository>-->
+	</repositories>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-test-junit</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- serialization -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-kotlin</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		
+		<!-- http requests -->
+		<!-- https://mvnrepository.com/artifact/khttp/khttp -->
+		<dependency>
+			<groupId>khttp</groupId>
+			<artifactId>khttp</artifactId>
+			<version>${khttp.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>me.wietlol.konfig</groupId>
+			<artifactId>konfig-api</artifactId>
+			<version>${konfig.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>${kotlin.version}</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<jvmTarget>1.8</jvmTarget>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<extensions>
+			<extension>
+				<groupId>ar.com.synergian</groupId>
+				<artifactId>wagon-git</artifactId>
+				<version>${wagon.git.version}</version>
+			</extension>
+		</extensions>
+	</build>
+</project>

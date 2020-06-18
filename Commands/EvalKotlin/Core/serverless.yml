@@ -1,0 +1,57 @@
+service: 'wietbot-commands-eval-kotlin'
+
+provider:
+    name: 'aws'
+    runtime: 'java8'
+    region: 'eu-west-1'
+    memorySize: '512'
+    timeout: '26'
+
+    environment:
+        heater_warmupAware: 'true'
+
+    iamRoleStatements:
+
+custom:
+    version: '1.0.0-SNAPSHOT'
+
+plugins:
+    localPath: 'C:/Users/Harry/AppData/Roaming/npm/node_modules'
+    modules:
+        - 'serverless-iam-roles-per-function'
+
+package:
+    artifact: 'target/commands-eval-kotlin-core-${self:custom.version}-jar-with-dependencies.jar'
+
+functions:
+    evalKotlin:
+        handler: 'me.wietlol.wietbot.commands.evalkotlin.core.api.EvalKotlinHandler::evalKotlinSns'
+        timeout: '40'
+        events:
+            -   sns:
+                    arn: !Ref CommandsEvalKotlin
+                    topicName: 'wietbot-commands-evalKotlin'
+        iamRoleStatements:
+            -   Effect: 'Allow'
+                Action:
+                    - 'lambda:InvokeFunction'
+                Resource:
+                    - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-commands-eval-kotlin-dev-evalKotlinPrivate'
+                    - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-services-chat-client-dev-sendMessage'
+    evalKotlinPrivate:
+        handler: 'me.wietlol.wietbot.commands.evalkotlin.core.api.EvalKotlinPrivateHandler::evalKotlinPrivate'
+        memorySize: '1024'
+        vpc:
+            securityGroupIds:
+                - 'sg-4fdd0307'
+            subnetIds:
+                - 'subnet-41e1c709'
+                - 'subnet-2ca23276'
+                - 'subnet-99faadff'
+
+resources:
+    Resources:
+        CommandsEvalKotlin:
+            Type: 'AWS::SNS::Topic'
+            Properties:
+                TopicName: 'wietbot-commands-evalKotlin'

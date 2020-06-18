@@ -1,0 +1,15 @@
+1:String|Base|BitBlock|1.0
+2:Integer|Base|BitBlock|1.0
+3:List|Base|BitBlock|1.0
+
+33:ListCommandsRequest|WietbotDataCommands|Wietbot|1.0
+34:ListCommandsResponse|WietbotDataCommands|Wietbot|1.0
+35:CreateCommandRequest|WietbotDataCommands|Wietbot|1.0
+36:CreateCommandResponse|WietbotDataCommands|Wietbot|1.0
+37:RemoveCommandRequest|WietbotDataCommands|Wietbot|1.0
+38:RemoveCommandResponse|WietbotDataCommands|Wietbot|1.0
+39:Command|WietbotDataCommands|Wietbot|1.0
+40:CommandCall|WietbotDataCommands|Wietbot|1.0
+41:Message|WietbotDataCommands|Wietbot|1.0
+42:User|WietbotDataCommands|Wietbot|1.0
+43:Room|WietbotDataCommands|Wietbot|1.0

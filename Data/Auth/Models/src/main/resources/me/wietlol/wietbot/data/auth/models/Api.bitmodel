@@ -1,0 +1,101 @@
+
+@Module("WietbotDataAuth")
+@Owner("Wietbot")
+@Version("1.0")
+
+@RootPackage("me.wietlol.wietbot.data.auth.models")
+@BuilderPackage(".builders")
+@ModelPackage(".models")
+@SerializerPackage(".serializers")
+
+;
+
+blueprint GetOrCreateUserRequest {
+	property(1) user: User
+}
+blueprint GetOrCreateUserResponse {
+	property(1) user: User
+}
+
+blueprint CreatePermissionRequest {
+	property(1) name: String
+}
+blueprint CreatePermissionResponse {}
+
+blueprint CreateRoleRequest {
+	property(1) name: String
+}
+blueprint CreateRoleResponse {}
+
+blueprint CreatePolicyRequest {
+	property(1) name: String
+}
+blueprint CreatePolicyResponse {}
+
+blueprint CreateGrantedAuthorityRequest {
+	property(1) policy: String
+	property(2) permission: String
+	property(3) resource: String
+}
+blueprint CreateGrantedAuthorityResponse {}
+
+blueprint CreateRevokedAuthorityRequest {
+	property(1) policy: String
+	property(2) permission: String
+	property(3) resource: String
+}
+blueprint CreateRevokedAuthorityResponse {}
+
+blueprint AttachRolePolicyRequest {
+	property(1) role: String
+	property(2) policy: String
+}
+blueprint AttachRolePolicyResponse {}
+
+blueprint DetachRolePolicyRequest {
+	property(1) role: String
+	property(2) policy: String
+}
+blueprint DetachRolePolicyResponse {}
+
+blueprint GetUserRoleRequest {
+	property(1) userId: Int
+}
+blueprint GetUserRoleResponse {
+	property(1) role: Role
+}
+
+blueprint SetUserRoleRequest {
+	property(1) userId: Int
+	property(2) role: String
+}
+blueprint SetUserRoleResponse {}
+
+blueprint ListRolesRequest {}
+blueprint ListRolesResponse {
+	property(1) roles: List<Role>
+}
+
+blueprint IsUserAuthorizedRequest {
+	property(1) userId: Int
+	property(2) permission: String
+	property(3) resource: String = "*"
+}
+blueprint IsUserAuthorizedResponse {
+	property(1) isAuthorized: Boolean
+}
+
+blueprint User {
+	property(1) id: Int
+	property(2) name: String
+}
+
+blueprint Role {
+	property(1) id: Int
+	property(2) name: String
+}
+
+blueprint Permission {
+	property(1) id: Int
+	property(2) name: String
+}
