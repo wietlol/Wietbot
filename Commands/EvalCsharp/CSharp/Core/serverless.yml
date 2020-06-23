@@ -19,7 +19,7 @@ provider:
             - 'subnet-99faadff'
 
 package:
-    artifact: 'bin/release/netcoreapp2.1/deploy-package.zip'
+    artifact: 'bin/release/netcoreapp3.1/deploy-package.zip'
 
 functions:
     evalCSharpPrivate:
