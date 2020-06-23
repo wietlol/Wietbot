@@ -48,18 +48,43 @@ class CommandHandler(
 	private val matchDistance: Int = konfig.get("commandExecute.fuzzySearch.matchDistance")
 	private val suggestDistanceLimit: Int = konfig.get("commandExecute.fuzzySearch.suggestDistanceLimit")
 	
-	private val externalCommands: List<BotCommand> = commandService.listCommands(ListCommandsRequest.of()).commands
-		.map { ExternalCommand(it, snsClient, schema, serializer) }
+	var commands: List<BotCommand>
+		private set
 	
-	val commands: List<BotCommand> = externalCommands + internalCommands
+	private var commandsMap: Map<String, BotCommand>
 	
-	private val commandsMap = commands
-		.map { Pair(it.keyword.toLowerCase(), it) }
-		.toMap()
+	private var commandWords: BkTree<String>
 	
-	private val commandWords: BkTree<String> = DamerauLevenshteinMetric()
-		.let { MutableBkTree<String>(it) }
-		.apply { addAll(commands.map { it.keyword.toLowerCase() }) }
+	init
+	{
+		commands = getAllCommands()
+		commandsMap = createCommandsMap(commands)
+		commandWords = createCommandWords(commands)
+	}
+	
+	fun refreshCommands()
+	{
+		commands = getAllCommands()
+		commandsMap = createCommandsMap(commands)
+		commandWords = createCommandWords(commands)
+	}
+	
+	private fun getAllCommands(): List<BotCommand> =
+		getExternalCommands() + internalCommands
+	
+	private fun getExternalCommands(): List<BotCommand> =
+		commandService.listCommands(ListCommandsRequest.of()).commands
+			.map { ExternalCommand(it, snsClient, schema, serializer) }
+	
+	private fun createCommandsMap(commands: List<BotCommand>): Map<String, BotCommand> =
+		commands
+			.map { Pair(it.keyword.toLowerCase(), it) }
+			.toMap()
+	
+	private fun createCommandWords(commands: List<BotCommand>): BkTree<String> =
+		DamerauLevenshteinMetric()
+			.let { MutableBkTree<String>(it) }
+			.apply { addAll(commands.map { it.keyword.toLowerCase() }) }
 	
 	private val staticIgnoredUsers = listOf(11_345_663)
 	
