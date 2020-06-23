@@ -54,6 +54,17 @@ val internalCommands: List<BotCommand> = listOf(
 			))
 		}
 	},
+	InternalCommand("shutdown") { call ->
+		webSocketClient.leaveAllRooms()
+		webSocketClient.close()
+		
+		chatClient.sendMessage(SendMessageRequest.of(
+			call.message.source.id,
+			"laytar"
+		))
+		
+		exitProcess(0)
+	},
 	InternalCommand("barrelRoll") { call ->
 		val roomId = call.message.source.id
 
@@ -66,17 +77,6 @@ val internalCommands: List<BotCommand> = listOf(
 				webSocketClient.joinRoom(roomId)
 			}
 		webSocketClient.joinRoom(roomId)
-	},
-	InternalCommand("shutdown") { call ->
-		webSocketClient.leaveAllRooms()
-		webSocketClient.close()
-		
-		chatClient.sendMessage(SendMessageRequest.of(
-			call.message.source.id,
-			"laytar"
-		))
-		
-		exitProcess(0)
 	},
 	InternalCommand("slowpoke") { call ->
 		chatClient.sendMessage(SendMessageRequest.of(
