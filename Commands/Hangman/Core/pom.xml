@@ -22,6 +22,9 @@
 		<koin.version>2.0.1</koin.version>
 		<konfig.version>1.0</konfig.version>
 		
+		<exposed.version>0.17.6</exposed.version>
+		<mysql-connector.version>8.0.18</mysql-connector.version>
+		
 		<junit-platform.version>1.5.2</junit-platform.version>
 		<junit-jupiter.version>5.4.2</junit-jupiter.version>
 		<assertj.version>3.12.2</assertj.version>
@@ -94,6 +97,16 @@
 			<artifactId>commands-hangman-models</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>me.wietlol.wietbot</groupId>
+			<artifactId>data-commands-models</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>me.wietlol.wietbot</groupId>
+			<artifactId>services-chat-client-client</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- dependendency injection -->
 		<!-- https://mvnrepository.com/artifact/org.koin/koin-java -->
@@ -131,6 +144,20 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.10.1</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed -->
+		<dependency>
+			<groupId>org.jetbrains.exposed</groupId>
+			<artifactId>exposed</artifactId>
+			<version>${exposed.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-events -->
