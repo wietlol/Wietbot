@@ -54,8 +54,12 @@ val internalCommands: List<BotCommand> = listOf(
 			))
 		}
 	},
-	InternalCommand("refresh") {
+	InternalCommand("refresh") { call ->
 		refreshCommands()
+		chatClient.sendMessage(SendMessageRequest.of(
+			call.message.source.id,
+			"commands refreshed"
+		))
 	},
 	InternalCommand("shutdown") { call ->
 		webSocketClient.leaveAllRooms()
