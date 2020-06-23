@@ -71,7 +71,7 @@ class HttpSeWebSocketClient(
 				if (statusCode == 404)
 					throw RoomNotFoundException("Room $roomId does not exist.")
 			}
-			.also { reconnect(1) }
+			.also { reconnect(initialRoom) }
 	}
 	
 	override fun leaveAllRooms()
