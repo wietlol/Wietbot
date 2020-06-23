@@ -115,7 +115,7 @@ class CommandHandler(
 								val suggestions = searcher.search(commandCall.commandKeyword, suggestDistance)
 								
 								if (suggestions.isEmpty())
-									sendMessage(event.roomId, "I have no clue what you meant right there.")
+									sendMessage(event.roomId, "I have no clue what you meant right there. You can use the `listCommands` command to see all my commands.")
 								else
 									sendMessage(event.roomId, "I don't know this command, did you mean any of the following? ${suggestions.joinToString { it.match }}")
 							}
