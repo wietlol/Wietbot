@@ -54,6 +54,9 @@ val internalCommands: List<BotCommand> = listOf(
 			))
 		}
 	},
+	InternalCommand("refresh") {
+		webSocketClient.reconnect(1)
+	},
 	InternalCommand("shutdown") { call ->
 		webSocketClient.leaveAllRooms()
 		webSocketClient.close()
