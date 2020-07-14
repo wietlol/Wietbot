@@ -2,14 +2,20 @@ service: 'wietbot-commands-abbreviation'
 
 provider:
     name: 'aws'
-    runtime: 'java8'
+    runtime: 'java11'
     region: 'eu-west-1'
     memorySize: '512'
     timeout: '60'
 
     environment:
+        heater_warmupAware: 'true'
 
     iamRoleStatements:
+        -   Effect: 'Allow'
+            Action:
+                - 'lambda:InvokeFunction'
+            Resource:
+                - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-services-chat-client-dev-sendMessage'
 
 custom:
     version: '1.0.0-SNAPSHOT'
@@ -18,3 +24,16 @@ package:
     artifact: 'target/commands-abbreviation-core-${self:custom.version}-jar-with-dependencies.jar'
 
 functions:
+    resolve:
+        handler: 'me.wietlol.wietbot.commands.abbreviation.core.api.AbbreviationHandler::resolveSns'
+        events:
+            -   sns:
+                    arn: !Ref CommandsAbbreviation
+                    topicName: 'wietbot-commands-abbreviation'
+    
+resources:
+    Resources:
+        CommandsAbbreviation:
+            Type: 'AWS::SNS::Topic'
+            Properties:
+                TopicName: 'wietbot-commands-abbreviation'
