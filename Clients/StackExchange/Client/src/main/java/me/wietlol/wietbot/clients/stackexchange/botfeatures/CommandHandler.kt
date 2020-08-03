@@ -3,13 +3,20 @@ package me.wietlol.wietbot.clients.stackexchange.botfeatures
 import com.amazonaws.services.sns.AmazonSNS
 import edu.gatech.gtri.bktree.BkTree
 import edu.gatech.gtri.bktree.BkTreeSearcher
+import edu.gatech.gtri.bktree.BkTreeSearcher.Match
 import edu.gatech.gtri.bktree.MutableBkTree
 import me.wietlol.bitblock.api.serialization.Schema
 import me.wietlol.konfig.api.Konfig
 import me.wietlol.konfig.api.get
+import me.wietlol.loggo.api.Logger
+import me.wietlol.loggo.api.LoggerFactory
+import me.wietlol.loggo.common.CommonLog
+import me.wietlol.loggo.common.EventId
+import me.wietlol.loggo.common.logError
+import me.wietlol.loggo.common.logInformation
 import me.wietlol.reactor.filteredBy
 import me.wietlol.reactor.plus
-import me.wietlol.serialization.JsonSerializer2
+import me.wietlol.serialization.SimpleJsonSerializer
 import me.wietlol.wietbot.clients.stackexchange.botfeatures.commands.BotCommand
 import me.wietlol.wietbot.clients.stackexchange.botfeatures.commands.ExternalCommand
 import me.wietlol.wietbot.clients.stackexchange.botfeatures.commands.internalCommands
@@ -32,18 +39,27 @@ import me.wietlol.wietbot.services.chatclient.models.ChatClientService
 import kotlin.math.max
 import kotlin.math.min
 
+@Suppress("MemberVisibilityCanBePrivate")
 class CommandHandler(
 	val webSocketClient: SeWebSocketClient,
-	val chatEvents: SeChatEvents,
+	chatEvents: SeChatEvents,
 	val snsClient: AmazonSNS,
-	val serializer: JsonSerializer2,
-	val konfig: Konfig,
+	val serializer: SimpleJsonSerializer,
+	konfig: Konfig,
 	val commandService: CommandService,
 	val authService: AuthService,
 	val chatClient: ChatClientService,
-	val schema: Schema
+	val schema: Schema,
+	val loggerFactory: LoggerFactory<CommonLog>
 )
 {
+	private val commandReceivedEventId = EventId(1357661769, "command-received")
+	private val commandExecutedEventId = EventId(1840839112, "command-executed")
+	private val commandRejectedEventId = EventId(1495730559, "command-rejected")
+	private val commandUnknownEventId = EventId(857027356, "command-unknown")
+	private val commandAmbiguousEventId = EventId(806812699, "command-ambiguous")
+	private val commandHandlerErrorEventId = EventId(1569967345, "command-handler-error")
+	
 	private val prefix: String = konfig.get<String>("commandExecute.prefix").toLowerCase()
 	private val matchDistance: Int = konfig.get("commandExecute.fuzzySearch.matchDistance")
 	private val suggestDistanceLimit: Int = konfig.get("commandExecute.fuzzySearch.suggestDistanceLimit")
@@ -94,70 +110,87 @@ class CommandHandler(
 			.filteredBy { staticIgnoredUsers.contains(it.userId).not() }
 			.filteredBy { it.content.toLowerCase().startsWith("$prefix ") }
 			.register { event ->
-				try
-				{
-					val commandCall: CommandCall? = parseCommand(event)
-					
-					if (commandCall != null)
+				loggerFactory.createLogger().use { logger ->
+					try
 					{
-						println("received command '${commandCall.commandKeyword}'")
+						val commandCall: CommandCall? = parseCommand(event)
 						
-						val searcher = BkTreeSearcher(commandWords)
-						val matches = searcher.search(commandCall.commandKeyword.toLowerCase(), matchDistance)
-						
-						val fullMatch = matches.singleOrNull()
-							?: matches.singleOrNull { it.match == commandCall.commandKeyword }
-						
-						when
+						if (commandCall != null)
 						{
-							fullMatch != null ->
+							logger.logInformation(commandReceivedEventId, mapOf(
+								"message" to "received command",
+								"command" to commandCall
+							))
+							
+							val searcher: BkTreeSearcher<String> = BkTreeSearcher(commandWords)
+							val matches: MutableSet<Match<out String>> = searcher.search(commandCall.commandKeyword.toLowerCase(), matchDistance)
+							
+							val fullMatch = matches.singleOrNull()
+								?: matches.singleOrNull { it.match == commandCall.commandKeyword }
+							
+							when
 							{
-								println("processing command '${fullMatch.match}'")
-								
-								ensureUserExists(event.userId, event.userName)
-								
-								val realCommand = commandsMap.getValue(fullMatch.match)
-								if (isUserAuthorized(event.userId, realCommand.keyword))
+								fullMatch != null ->
 								{
-									println("running command '${fullMatch.match}'")
+									logger.logInformation(commandExecutedEventId, mapOf(
+										"message" to "processing command",
+										"fullMatch" to fullMatch
+									))
 									
-									// execute command
-									realCommand.execute(this, commandCall)
+									ensureUserExists(event.userId, event.userName)
+									
+									val realCommand = commandsMap.getValue(fullMatch.match)
+									if (isUserAuthorized(event.userId, realCommand.keyword))
+									{
+										logger.logInformation(commandExecutedEventId, mapOf(
+											"message" to "running command"
+										))
+										
+										// execute command
+										realCommand.execute(this, commandCall)
+									}
+									else
+									{
+										logger.logInformation(commandRejectedEventId, mapOf(
+											"message" to "not authorized to run command"
+										))
+										
+										sendMessage(event.roomId, "@${event.userName.replace(" ", "")} You are not allowed to use the '${fullMatch.match}' command.")
+									}
 								}
-								else
+								matches.isEmpty() ->
 								{
-									println("not authorized")
+									logger.logInformation(commandUnknownEventId, mapOf(
+										"message" to "unknown command"
+									))
 									
-									sendMessage(event.roomId, "@${event.userName.replace(" ", "")} You are not allowed to use the '${fullMatch.match}' command.")
+									// no commands found
+									val suggestDistance = max(1, min(suggestDistanceLimit, commandCall.commandKeyword.length / 2))
+									val suggestions = searcher.search(commandCall.commandKeyword, suggestDistance)
+									
+									if (suggestions.isEmpty())
+										sendMessage(event.roomId, "I have no clue what you meant right there. You can use the `listCommands` command to see all my commands.")
+									else
+										sendMessage(event.roomId, "I don't know this command, did you mean any of the following? ${suggestions.joinToString { it.match }}")
 								}
-							}
-							matches.isEmpty() ->
-							{
-								println("unknown")
-								
-								// no commands found
-								val suggestDistance = max(1, min(suggestDistanceLimit, commandCall.commandKeyword.length / 2))
-								val suggestions = searcher.search(commandCall.commandKeyword, suggestDistance)
-								
-								if (suggestions.isEmpty())
-									sendMessage(event.roomId, "I have no clue what you meant right there. You can use the `listCommands` command to see all my commands.")
-								else
-									sendMessage(event.roomId, "I don't know this command, did you mean any of the following? ${suggestions.joinToString { it.match }}")
-							}
-							else ->
-							{
-								println("ambiguous")
-								
-								// too many fuzzy matched commands found
-								sendMessage(event.roomId, "I don't know which command to choose from. ${matches.joinToString { it.match }}")
+								else ->
+								{
+									logger.logInformation(commandAmbiguousEventId, mapOf(
+										"message" to "ambiguous command",
+										"matches" to matches
+									))
+									
+									// too many fuzzy matched commands found
+									sendMessage(event.roomId, "I don't know which command to choose from. ${matches.joinToString { it.match }}")
+								}
 							}
 						}
 					}
-				}
-				catch (ex: Exception)
-				{
-					ex.printStackTrace()
-					throw ex
+					catch (ex: Exception)
+					{
+						logger.logError(commandHandlerErrorEventId, mapOf<String, Any>(), ex)
+						throw ex
+					}
 				}
 			}
 	}
