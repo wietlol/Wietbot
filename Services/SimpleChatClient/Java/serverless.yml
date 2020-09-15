@@ -1,0 +1,26 @@
+service: 'wietbot-services-scc-wietlol-jvm'
+
+provider:
+    name: 'aws'
+    runtime: 'java11'
+    region: 'eu-west-1'
+    memorySize: '512'
+    timeout: '60'
+    
+    environment:
+        username: '${ssm:/me/wietlol/wietbot/services/stackexchange/wietlol/emailAddress}'
+        password: '${ssm:/me/wietlol/wietbot/services/stackexchange/wietlol/password}'
+
+custom:
+    version: '1.0-SNAPSHOT'
+
+package:
+    artifact: 'target/SimpleChatClient-${self:custom.version}-jar-with-dependencies.jar'
+
+functions:
+    sendMessage:
+        handler: 'me.wietlol.wietbot.services.simplechatclient.core.api.SimpleChatClient::sendMessage'
+    editMessage:
+        handler: 'me.wietlol.wietbot.services.simplechatclient.core.api.SimpleChatClient::editMessage'
+
+# https://dev.to/razcodes/how-to-run-a-lambda-cross-account-in-aws-30e5
