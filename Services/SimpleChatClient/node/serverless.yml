@@ -1,0 +1,23 @@
+service: 'wietbot-services-scc-wietlol'
+
+provider:
+    name: 'aws'
+    runtime: 'nodejs12.x'
+    region: 'eu-west-1'
+    memorySize: '256'
+    timeout: '60'
+    
+    environment:
+        username: '${ssm:/me/wietlol/wietbot/services/stackexchange/wietlol/emailAddress}'
+        password: '${ssm:/me/wietlol/wietbot/services/stackexchange/wietlol/password}'
+
+package:
+    exclude:
+        - '.idea/**'
+        - '.serverless/**'
+
+functions:
+    sendMessage:
+        handler: 'handler.sendMessage'
+    editMessage:
+        handler: 'handler.editMessage'
