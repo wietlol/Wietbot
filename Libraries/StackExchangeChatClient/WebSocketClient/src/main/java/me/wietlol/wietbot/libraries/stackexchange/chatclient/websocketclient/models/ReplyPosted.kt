@@ -5,7 +5,7 @@ import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.mod
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ReplyPosted(
-	val timeStamp: Int,
+	val timeStamp: Long,
 	override val content: String,
 	override val id: Int,
 	override val userId: Int,

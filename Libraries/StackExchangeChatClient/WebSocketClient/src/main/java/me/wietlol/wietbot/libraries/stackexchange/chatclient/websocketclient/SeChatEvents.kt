@@ -1,6 +1,6 @@
 package me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient
 
-import me.wietlol.reactor.ExecutableEvent
+import me.wietlol.reactor.api.ExecutableEvent
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.EventMap
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessageDeleted
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessageEdited

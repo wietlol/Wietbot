@@ -5,7 +5,7 @@ import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.mod
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class MessageStarred(
-	val timeStamp: Int,
+	val timeStamp: Long,
 	val content: String,
 	override val id: Int,
 	override val roomId: Int,

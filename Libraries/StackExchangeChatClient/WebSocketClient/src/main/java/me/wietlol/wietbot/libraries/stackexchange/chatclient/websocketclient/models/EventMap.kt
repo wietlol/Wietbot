@@ -1,6 +1,6 @@
 package me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models
 
-import me.wietlol.reactor.ExecutableEvent
+import me.wietlol.reactor.api.ExecutableEvent
 
 class EventMap
 {

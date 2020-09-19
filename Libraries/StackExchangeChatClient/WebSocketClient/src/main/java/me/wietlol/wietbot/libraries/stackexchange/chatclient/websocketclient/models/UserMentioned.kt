@@ -5,7 +5,7 @@ import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.mod
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class UserMentioned(
-	val timeStamp: Int,
+	val timeStamp: Long,
 	val content: String,
 	override val id: Int,
 	val userId: Int,

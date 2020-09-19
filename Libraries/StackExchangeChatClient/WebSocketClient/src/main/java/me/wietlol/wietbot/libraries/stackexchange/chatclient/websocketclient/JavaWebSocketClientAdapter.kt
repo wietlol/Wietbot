@@ -1,5 +1,6 @@
 package me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient
 
+import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 
@@ -7,7 +8,7 @@ class JavaWebSocketClientAdapter(
 	serverUri: URI?,
 	httpHeaders: Map<String, String>,
 	val listener: WebSocketListener
-) : org.java_websocket.client.WebSocketClient(serverUri, httpHeaders)
+) : WebSocketClient(serverUri, httpHeaders)
 {
 	init
 	{

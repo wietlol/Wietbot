@@ -1,7 +1,7 @@
 package me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient
 
-import me.wietlol.reactor.Event
-import me.wietlol.reactor.filteredBy
+import me.wietlol.reactor.api.Event
+import me.wietlol.reactor.core.filteredBy
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.EventMap
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessageDeleted
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessageEdited

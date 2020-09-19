@@ -1,7 +1,8 @@
 package me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient
 
-import me.wietlol.reactor.ExecutableEvent
-import me.wietlol.reactor.asSwallowed
+import me.wietlol.reactor.api.ExecutableEvent
+import me.wietlol.reactor.core.MappedEvent
+import me.wietlol.reactor.core.asSwallowed
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.EventMap
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessageDeleted
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessageEdited
@@ -16,16 +17,16 @@ import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.mod
 
 class CommonSeChatEvents : SeChatEvents
 {
-	override val onMessageDeleted: ExecutableEvent<MessageDeleted> = ExecutableEvent.create<MessageDeleted>().asSwallowed()
-	override val onMessageEdited: ExecutableEvent<MessageEdited> = ExecutableEvent.create<MessageEdited>().asSwallowed()
-	override val onMessageMovedIn: ExecutableEvent<MessageMovedIn> = ExecutableEvent.create<MessageMovedIn>().asSwallowed()
-	override val onMessageMovedOut: ExecutableEvent<MessageMovedOut> = ExecutableEvent.create<MessageMovedOut>().asSwallowed()
-	override val onMessagePosted: ExecutableEvent<MessagePosted> = ExecutableEvent.create<MessagePosted>().asSwallowed()
-	override val onMessageStarred: ExecutableEvent<MessageStarred> = ExecutableEvent.create<MessageStarred>().asSwallowed()
-	override val onReplyPosted: ExecutableEvent<ReplyPosted> = ExecutableEvent.create<ReplyPosted>().asSwallowed()
-	override val onUserJoined: ExecutableEvent<UserJoined> = ExecutableEvent.create<UserJoined>().asSwallowed()
-	override val onUserLeft: ExecutableEvent<UserLeft> = ExecutableEvent.create<UserLeft>().asSwallowed()
-	override val onUserMentioned: ExecutableEvent<UserMentioned> = ExecutableEvent.create<UserMentioned>().asSwallowed()
+	override val onMessageDeleted: ExecutableEvent<MessageDeleted> = MappedEvent<MessageDeleted>().asSwallowed()
+	override val onMessageEdited: ExecutableEvent<MessageEdited> = MappedEvent<MessageEdited>().asSwallowed()
+	override val onMessageMovedIn: ExecutableEvent<MessageMovedIn> = MappedEvent<MessageMovedIn>().asSwallowed()
+	override val onMessageMovedOut: ExecutableEvent<MessageMovedOut> = MappedEvent<MessageMovedOut>().asSwallowed()
+	override val onMessagePosted: ExecutableEvent<MessagePosted> = MappedEvent<MessagePosted>().asSwallowed()
+	override val onMessageStarred: ExecutableEvent<MessageStarred> = MappedEvent<MessageStarred>().asSwallowed()
+	override val onReplyPosted: ExecutableEvent<ReplyPosted> = MappedEvent<ReplyPosted>().asSwallowed()
+	override val onUserJoined: ExecutableEvent<UserJoined> = MappedEvent<UserJoined>().asSwallowed()
+	override val onUserLeft: ExecutableEvent<UserLeft> = MappedEvent<UserLeft>().asSwallowed()
+	override val onUserMentioned: ExecutableEvent<UserMentioned> = MappedEvent<UserMentioned>().asSwallowed()
 	
 	override val eventMap = EventMap()
 		.also { it.add(onMessageDeleted) }

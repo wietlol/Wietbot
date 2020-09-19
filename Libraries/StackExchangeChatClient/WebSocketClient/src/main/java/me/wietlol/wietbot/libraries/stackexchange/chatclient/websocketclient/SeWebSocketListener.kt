@@ -1,13 +1,13 @@
 package me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient
 
-import me.wietlol.serialization.JsonSerializer2
-import me.wietlol.serialization.deserialize
+import me.wietlol.utils.json.SimpleJsonSerializer
+import me.wietlol.utils.json.deserialize
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.BulkChatEvent
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.EventMap
 
 class SeWebSocketListener(
 	val webSocketListener: WebSocketListener,
-	val serializer: JsonSerializer2,
+	val serializer: SimpleJsonSerializer,
 	val eventMap: EventMap
 ) : WebSocketListener by webSocketListener
 {

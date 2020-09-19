@@ -56,7 +56,6 @@ fun getMainFKey(cookieJar: MutableMap<String, String>): String =
 
 fun login(clientFkey: String, emailAddress: String, password: String, cookieJar: MutableMap<String, String>)
 {
-	
 	val cookieHandler = CookieManager(null, CookiePolicy.ACCEPT_ALL)
 	
 	val client: HttpClient = HttpClient.newBuilder()
