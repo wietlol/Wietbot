@@ -1,4 +1,4 @@
-// hash: #735c6172
+// hash: #c8ebf984
 // @formatter:off
 package me.wietlol.wietbot.clients.stackexchange.models.messages.models
 
@@ -10,10 +10,9 @@ import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
 // @formatter:off
 
 
-data class UserImpl(
-	override val id: Int,
-	override val name: String,
-) : User
+data class ErrorResponseImpl(
+	override val message: String,
+) : ErrorResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -24,10 +23,9 @@ data class UserImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): UserImpl =
+	override fun duplicate(): ErrorResponseImpl =
 		copy(
-			id = id,
-			name = name,
+			message = message,
 		)
 	
 	// @formatter:on

@@ -1,5 +1,5 @@
-// hash: #bac53a5e
-// data: serializationKey:2747f555-2b9e-43c4-9428-919e78f33952
+// hash: #7064a85b
+// data: serializationKey:88f199ce-4146-46d9-b072-cf6cf20e0d5e
 // @formatter:off
 package me.wietlol.wietbot.clients.stackexchange.models.messages.models
 
@@ -16,38 +16,38 @@ import me.wietlol.utils.common.with
 // @formatter:off
 
 
-interface ReverseTextRequest : BitSerializable, ClientCommandRequest, Jsonable
+interface ErrorResponse : BitSerializable, ClientCommandResponse, Jsonable
 {
 	companion object
 	{
 		val serializationKey: UUID
-			get() = UUID.fromString("2747f555-2b9e-43c4-9428-919e78f33952")
+			get() = UUID.fromString("88f199ce-4146-46d9-b072-cf6cf20e0d5e")
 	}
 	
 	override val serializationKey: UUID
 		get() = Companion.serializationKey
 	
-	val text: String
+	val message: String
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
 		if (this === other) return true
 		if (other == null) return false
-		if (other !is ReverseTextRequest) return false
+		if (other !is ErrorResponse) return false
 		
-		if (text != other.text) return false
+		if (message != other.message) return false
 		
 		return true
 	}
 	
 	fun computeHashCode(): Int =
 		emptyHashCode
-			.with(text)
+			.with(message)
 	
 	override fun toJson(): String =
-		"""{"text":${text.toJsonString()}}"""
+		"""{"message":${message.toJsonString()}}"""
 	
-	override fun duplicate(): ReverseTextRequest
+	override fun duplicate(): ErrorResponse
 	
 	// @formatter:on
 	// @tomplot:customCode:start:32T3K8
