@@ -6,7 +6,7 @@
 	
 	<groupId>me.wietlol.wietbot</groupId>
 	<artifactId>libraries-stack-exchange-chat-client</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	
 	<modules>
@@ -22,29 +22,23 @@
 		<maven.compiler.source>${project.java.version}</maven.compiler.source>
 		<maven-source.version>3.2.1</maven-source.version>
 		
-		<wagon.git.version>0.2.5</wagon.git.version>
-		
 		<kotlin.version>1.4.0</kotlin.version>
 		<kotlin-maven.jvm-target>${project.java.version}</kotlin-maven.jvm-target>
 		
 		<junit-platform.version>1.5.2</junit-platform.version>
 		<junit-jupiter.version>5.4.2</junit-jupiter.version>
 		<assertj.version>3.12.2</assertj.version>
+		
+		<jackson.version>2.9.7</jackson.version>
+		<khttp.version>0.1.0</khttp.version>
+		<websocket.version>1.4.0</websocket.version>
+		<jsoup.version>1.12.1</jsoup.version>
+		
+		<utils.version>1.0.0</utils.version>
+		<loggo.version>1.0.0</loggo.version>
+		<konfig.version>1.0.0</konfig.version>
+		<reactor.version>1.0.0</reactor.version>
 	</properties>
-	
-	<repositories>
-		<repository>
-			<id>Wietlol-github</id>
-			<name>maven_repository</name>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<url>https://raw.github.com/Wietlol/maven_repository/releases</url>
-		</repository>
-	</repositories>
 	
 	<dependencies>
 		<dependency>
@@ -91,19 +85,17 @@
 		</dependency>
 	</dependencies>
 	
-	<pluginRepositories>
-		<pluginRepository>
-			<id>synergian-repo</id>
-			<url>https://raw.github.com/synergian/wagon-git/releases</url>
-		</pluginRepository>
-	</pluginRepositories>
-	
 	<distributionManagement>
 		<repository>
-			<id>maven_repository</id>
-			<name>maven_repository</name>
-			<url>git:releases://git@github.com:Wietlol/maven_repository.git</url>
+			<id>central</id>
+			<name>a0vmtz5txwt9h-artifactory-primary-0-releases</name>
+			<url>https://wietlol.jfrog.io/artifactory/libs-release</url>
 		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>a0vmtz5txwt9h-artifactory-primary-0-snapshots</name>
+			<url>https://wietlol.jfrog.io/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
 	</distributionManagement>
 	
 	<build>
@@ -152,12 +144,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<extensions>
-			<extension>
-				<groupId>ar.com.synergian</groupId>
-				<artifactId>wagon-git</artifactId>
-				<version>${wagon.git.version}</version>
-			</extension>
-		</extensions>
 	</build>
 </project>
