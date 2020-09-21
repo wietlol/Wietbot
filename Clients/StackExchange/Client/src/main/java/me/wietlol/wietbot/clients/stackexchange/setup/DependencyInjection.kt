@@ -136,7 +136,7 @@ object DependencyInjection
 	{
 		val schema: Schema = get()
 		val commandHandler: ClientCommandHandler = get()
-		return BitConnect(schema, commandHandler::process)
+		return BitConnect(schema, get(), commandHandler::process)
 	}
 	
 	private fun Scope.buildClientCommandHandler(): ClientCommandHandler

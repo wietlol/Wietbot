@@ -85,6 +85,11 @@
 			<version>${wietbot-libraries-stack-exchange.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>me.wietlol.wietbot</groupId>
+			<artifactId>data-messages-models</artifactId>
+			<version>${wietbot-data-messages.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>me.wietlol.loggo</groupId>
 			<artifactId>loggo-common-jackson</artifactId>
 			<version>${loggo.version}</version>
