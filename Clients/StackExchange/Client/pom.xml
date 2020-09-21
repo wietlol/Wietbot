@@ -8,100 +8,24 @@
 	<parent>
 		<groupId>me.wietlol.wietbot</groupId>
 		<artifactId>clients-stack-exchange</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 	
 	<artifactId>clients-stack-exchange-client</artifactId>
 	<packaging>jar</packaging>
 	
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven-assembly.version>2.6</maven-assembly.version>
-		
-		<kotlin.version>1.3.72</kotlin.version>
-		
-		<koin.version>2.0.1</koin.version>
-		<konfig.version>1.1.0</konfig.version>
-		<bk-tree.version>1.0</bk-tree.version>
-		<bitblock.version>1.1.2</bitblock.version>
-		
-		<aws-lambda.version>1.11.656</aws-lambda.version>
-		
-		<junit-platform.version>1.5.2</junit-platform.version>
-		<junit-jupiter.version>5.4.2</junit-jupiter.version>
-		<assertj.version>3.12.2</assertj.version>
-	</properties>
-	
 	<repositories>
-		<repository>
-			<id>Wietlol-github</id>
-			<name>maven_repository</name>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<url>https://raw.github.com/Wietlol/maven_repository/releases</url>
-		</repository>
 		<repository>
 			<id>jcenter</id>
 			<url>https://jcenter.bintray.com/</url>
-		</repository>
-		<repository>
-			<id>central</id>
-			<name>bintray</name>
-			<url>http://jcenter.bintray.com</url>
 		</repository>
 	</repositories>
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-test-junit</artifactId>
-			<version>${kotlin.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-compiler-embeddable</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-commons</artifactId>
-			<version>${junit-platform.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit-jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${junit-jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>${assertj.version}</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>me.wietlol</groupId>
-			<artifactId>aws-lambda-util</artifactId>
-			<version>1.0</version>
+			<groupId>me.wietlol.wietbot</groupId>
+			<artifactId>clients-stack-exchange-models</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-lambda -->
@@ -114,7 +38,7 @@
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-sns</artifactId>
-			<version>1.11.683</version>
+			<version>${aws-sns.version}</version>
 		</dependency>
 		
 		<!-- dependendency injection -->
@@ -126,11 +50,6 @@
 		</dependency>
 		
 		<!-- configuration -->
-		<dependency>
-			<groupId>me.wietlol.konfig</groupId>
-			<artifactId>konfig-api</artifactId>
-			<version>${konfig.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>me.wietlol.konfig</groupId>
 			<artifactId>konfig-core</artifactId>
@@ -145,11 +64,6 @@
 		<!-- serialization -->
 		<dependency>
 			<groupId>me.wietlol.bitblock</groupId>
-			<artifactId>bitblock-api</artifactId>
-			<version>${bitblock.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>me.wietlol.bitblock</groupId>
 			<artifactId>bitblock-core</artifactId>
 			<version>${bitblock.version}</version>
 		</dependency>
@@ -162,86 +76,59 @@
 		
 		<dependency>
 			<groupId>me.wietlol.wietbot</groupId>
-			<artifactId>data-auth-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>me.wietlol.wietbot</groupId>
-			<artifactId>data-commands-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>me.wietlol.wietbot</groupId>
-			<artifactId>services-chat-client-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>me.wietlol.wietbot</groupId>
 			<artifactId>data-log-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${wietbot-data-log.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>me.wietlol.wietbot</groupId>
 			<artifactId>libraries-stack-exchange-chat-client-websocket-client</artifactId>
-			<version>1.2.0</version>
+			<version>${wietbot-libraries-stack-exchange.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>me.wietlol.loggo</groupId>
 			<artifactId>loggo-common-jackson</artifactId>
-			<version>1.0.0</version>
+			<version>${loggo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>me.wietlol.utils</groupId>
+			<artifactId>utils-common</artifactId>
+			<version>${utils.version}</version>
 		</dependency>
 	</dependencies>
 	
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.jetbrains.kotlin</groupId>
-				<artifactId>kotlin-maven-plugin</artifactId>
-				<version>${kotlin.version}</version>
-				<executions>
-					<execution>
-						<id>compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>test-compile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>test-compile</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<jvmTarget>1.8</jvmTarget>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>${maven-assembly.version}</version>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+				</configuration>
 				<executions>
 					<execution>
-						<id>make-assembly</id>
 						<phase>package</phase>
 						<goals>
-							<goal>single</goal>
+							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<archive>
-								<manifest>
-									<addClasspath>true</addClasspath>
+							<transformers>
+								<transformer implementation="com.github.edwgiz.mavenShadePlugin.log4j2CacheTransformer.PluginsCacheFileTransformer">
+								</transformer>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>me.wietlol.wietbot.clients.stackexchange.Main</mainClass>
-								</manifest>
-							</archive>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
+								</transformer>
+							</transformers>
 						</configuration>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.github.edwgiz</groupId>
+						<artifactId>maven-shade-plugin.log4j2-cachefile-transformer</artifactId>
+						<version>2.8.1</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

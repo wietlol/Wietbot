@@ -10,7 +10,7 @@ object Main
 		try
 		{
 			DependencyInjection.bindServiceCollection()
-			
+
 			Wietbot().start()
 		}
 		catch (ex: Exception)

@@ -1,5 +1,6 @@
 package me.wietlol.wietbot.clients.stackexchange.setup
 
+import com.amazonaws.regions.Regions.EU_WEST_1
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder
 import com.amazonaws.services.sns.AmazonSNSClientBuilder
@@ -7,9 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.LocalModelRegistry
-import me.wietlol.bitblock.core.serialization.ImmutableSchema
+import me.wietlol.bitblock.core.BitBlockBase
+import me.wietlol.bitblock.core.BitSchemaBuilder
 import me.wietlol.konfig.api.Konfig
 import me.wietlol.konfig.api.PathParser
 import me.wietlol.konfig.api.get
@@ -32,34 +32,35 @@ import me.wietlol.loggo.common.logInformation
 import me.wietlol.loggo.common.trace
 import me.wietlol.loggo.common.warning
 import me.wietlol.loggo.core.CachingLoggerFactory
-import me.wietlol.loggo.core.ConverterLogger
-import me.wietlol.loggo.core.FilteredLogger
 import me.wietlol.loggo.core.GenericLoggerFactory
 import me.wietlol.loggo.core.TriggerableLevelFilter
-import me.wietlol.serialization.JacksonSerializerAdapter
-import me.wietlol.serialization.SimpleJsonSerializer
+import me.wietlol.loggo.core.loggers.ConverterLogger
+import me.wietlol.loggo.core.loggers.FilteredLogger
+import me.wietlol.loggo.core.loggers.GenericLogger
+import me.wietlol.utils.json.JacksonSerializerAdapter
+import me.wietlol.utils.json.SimpleJsonSerializer
+import me.wietlol.wietbot.clients.stackexchange.api.BitConnect
+import me.wietlol.wietbot.clients.stackexchange.api.WietbotServer
+import me.wietlol.wietbot.clients.stackexchange.botfeatures.BotFeature
+import me.wietlol.wietbot.clients.stackexchange.botfeatures.ClientCommandHandler
+import me.wietlol.wietbot.clients.stackexchange.botfeatures.SnsProxy
+import me.wietlol.wietbot.clients.stackexchange.models.messages.WietbotClientsStackExchange
+import me.wietlol.wietbot.clients.stackexchange.models.messages.models.ClientCommandRequest
+import me.wietlol.wietbot.clients.stackexchange.models.messages.models.ClientCommandResponse
 import me.wietlol.wietbot.clients.stackexchange.util.LoggingWebSocketListener
-import me.wietlol.wietbot.data.auth.client.AuthClient
-import me.wietlol.wietbot.data.auth.models.AuthService
-import me.wietlol.wietbot.data.commands.client.CommandClient
-import me.wietlol.wietbot.data.commands.models.CommandService
-import me.wietlol.wietbot.data.commands.models.WietbotDataCommands
 import me.wietlol.wietbot.data.log.api.LogClient
 import me.wietlol.wietbot.data.log.models.LogService
-import me.wietlol.wietbot.data.log.models.models.SaveLogsRequest
+import me.wietlol.wietbot.data.log.models.models.SaveLogsRequestImpl
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.chatclient.SeCredentials
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.CommonSeChatEvents
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.HttpSeWebSocketClientFactory
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.NoOpWebSocketListener
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.SeChatEvents
-import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.SeWebSocketClient
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.SeWebSocketClientFactory
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.SeWebSocketListener
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.WebSocketListener
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.BulkChatEvent
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.serializers.BulkChatEventDeserializer
-import me.wietlol.wietbot.services.chatclient.client.ChatClientClient
-import me.wietlol.wietbot.services.chatclient.models.ChatClientService
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.scope.Scope
@@ -106,21 +107,46 @@ object DependencyInjection
 			single { buildBaseLogger() }
 			
 			single { buildKonfig() }
-			
+
 			single { buildLoggerFactory() }
-			
+
 			single { buildLogClient() }
-			single { buildAuthClient() }
 			single { buildSerializer() }
-			single { buildCommandClient() }
-			single { buildCommandClientSchema() }
-			
-			single { buildChatClient() }
-			single { CommonSeChatEvents() as SeChatEvents }
-			factory { buildWebSocketListener() }
+			single { buildStackExchangeMessageEventSchema() }
+
+			single<SeChatEvents> { CommonSeChatEvents() }
+			single { buildWebSocketListener() }
 			single { buildSeWebSocketClientFactory() }
-			single { buildSeWebSocketClient() }
+			
+			single { buildWietbotServer() }
+			single { buildBitConnect() }
+			single { buildClientCommandHandler() }
+			
+			single { buildSnsProxy() }
 		}
+	
+	private fun Scope.buildWietbotServer(): WietbotServer
+	{
+		val config = get<Konfig>()
+		val port = config.get<Int>("server.port")
+		return WietbotServer(get(), port)
+	}
+	
+	private fun Scope.buildBitConnect(): BitConnect<ClientCommandRequest, ClientCommandResponse>
+	{
+		val schema: Schema = get()
+		val commandHandler: ClientCommandHandler = get()
+		return BitConnect(schema, commandHandler::process)
+	}
+	
+	private fun Scope.buildClientCommandHandler(): ClientCommandHandler
+	{
+		val clientFactory: SeWebSocketClientFactory = get()
+		val config: Konfig = get()
+		val credentials: SeCredentials = config.get("credentials")
+		val initialRoomId: Int = config.get("websocket.initialRoom") ?: 1
+		return ClientCommandHandler(clientFactory, credentials, initialRoomId)
+	}
 	
 	private fun Scope.buildKonfig(): Konfig =
 		CommonKonfigBuilder()
@@ -149,20 +175,11 @@ object DependencyInjection
 	private fun Scope.buildKonfigSimpleValueResolver(): SimpleValueResolver =
 		CommonSimpleValueResolver(get())
 	
-	private fun Scope.buildAuthClient(): AuthService =
-		AuthClient(get())
-	
-	private fun Scope.buildCommandClient(): CommandService =
-		CommandClient(get())
-	
-	private fun buildCommandClientSchema(): Schema =
-		LocalModelRegistry()
-			.apply(BitBlock::initialize)
-			.apply(WietbotDataCommands::initialize)
-			.let { ImmutableSchema(WietbotDataCommands::class.java.getResourceAsStream("/me/wietlol/wietbot/data/commands/models/Api.bitschema"), it) }
-	
-	private fun Scope.buildChatClient(): ChatClientService =
-		ChatClientClient(get())
+	private fun buildStackExchangeMessageEventSchema(): Schema =
+		BitSchemaBuilder.buildSchema(
+			WietbotClientsStackExchange::class.java.getResourceAsStream("/me/wietlol/wietbot/clients/stackexchange/models/SeChatMessages.bitschema"),
+			listOf(BitBlockBase, WietbotClientsStackExchange),
+		)
 	
 	private fun buildSerializer(): SimpleJsonSerializer =
 		ObjectMapper()
@@ -198,9 +215,9 @@ object DependencyInjection
 	
 	private fun Scope.buildSeWebSocketClientFactory(): SeWebSocketClientFactory
 	{
-		val konfig: Konfig = get()
+		val config: Konfig = get()
 		
-		val initialRoomId: Int = konfig.get("websocket.initialRoom") ?: 1
+		val initialRoomId: Int = config.get("websocket.initialRoom") ?: 1
 		
 		return HttpSeWebSocketClientFactory(
 			get(),
@@ -211,27 +228,18 @@ object DependencyInjection
 		)
 	}
 	
-	private fun Scope.buildSeWebSocketClient(): SeWebSocketClient
-	{
-		val konfig: Konfig = get()
-		
-		val credentials = konfig.get<SeCredentials>("credentials")
-		
-		return get<SeWebSocketClientFactory>().create(credentials)
-	}
-	
 	private fun Scope.buildLoggerFactory(): LoggerFactory<CommonLog> =
 		GenericLoggerFactory { buildLogger() }
 			.let { CachingLoggerFactory(it) }
 	
 	private fun Scope.buildLogger(): Logger<CommonLog>
 	{
-		val konfig: Konfig = get<Konfig>().getSection("logger.triggerFilter")
+		val config: Konfig = get<Konfig>().getSection("logger.triggerFilter")
 		
 		val filter = TriggerableLevelFilter<CommonLog>(
-			konfig.getLogSeverity("startLevel") ?: information.value,
-			konfig.getLogSeverity("triggerLevel") ?: warning.value,
-			konfig.getLogSeverity("targetLevel") ?: trace.value
+			config.getLogSeverity("startLevel") ?: information.value,
+			config.getLogSeverity("triggerLevel") ?: warning.value,
+			config.getLogSeverity("targetLevel") ?: trace.value
 		)
 		
 		val scopeId = UUID.randomUUID()
@@ -245,26 +253,29 @@ object DependencyInjection
 		val serializer: SimpleJsonSerializer = get()
 		val logService: LogService = get()
 		
-		return object : Logger<String>
-		{
-			override fun log(log: String)
-			{
-				logService.saveLogs(SaveLogsRequest.of(listOf(log)))
-			}
-			
-			override fun close()
-			{
-				// nothing to do
-			}
-		}
+		return GenericLogger<String>({ logService.saveLogs(SaveLogsRequestImpl(it.toList())) })
 			.let { ConverterLogger(it, serializer::serialize) }
 			.let { logger -> ScopedSourceLogger(logger) { it + "wietbot-clients-stack-exchange" } }
 	}
-
+	
 	private fun Scope.buildLogClient(): LogService =
 		LogClient(get())
 	
 	private fun Konfig.getLogSeverity(path: String): Double? =
 		get("$path.value")
 			?: get<String?>("$path.name")?.toDouble()
+	
+	private fun Scope.buildSnsProxy(): BotFeature
+	{
+		val config: Konfig = get()
+		
+		return SnsProxy(
+			get(),
+			get(),
+			get(),
+			get(),
+			get(),
+			config.get("wietbot.stackOverflowMessageQueueArn"),
+		)
+	}
 }

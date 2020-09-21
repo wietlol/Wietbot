@@ -7,18 +7,9 @@ import com.amazonaws.services.sqs.model.SendMessageRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import me.wietlol.aws.lambda.LambdaRequest
 import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.core.BitBlock
 import me.wietlol.bitblock.core.registry.LocalModelRegistry
 import me.wietlol.bitblock.core.serialization.ImmutableSchema
-import me.wietlol.serialization.JacksonSerializerAdapter
-import me.wietlol.serialization.SimpleJsonSerializer
-import me.wietlol.wietbot.data.commands.models.WietbotDataCommands
-import me.wietlol.wietbot.data.commands.models.models.CommandCall
-import me.wietlol.wietbot.data.commands.models.models.Message
-import me.wietlol.wietbot.data.commands.models.models.Room
-import me.wietlol.wietbot.data.commands.models.models.User
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.BulkChatEvent
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.serializers.BulkChatEventDeserializer
 
