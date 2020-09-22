@@ -1,13 +1,25 @@
+// hash: #0334f64d
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import java.util.*
+import me.wietlol.wietbot.data.auth.models.models.CreateRevokedAuthorityResponseImpl
+
+// @formatter:on
+// @tomplot:customCode:start:f5k3GB
+// @tomplot:customCode:end
+// @formatter:off
+
 
 class CreateRevokedAuthorityResponseBuilder
 {
-	
 	fun build(): CreateRevokedAuthorityResponse =
-		CreateRevokedAuthorityResponse.of(
-			
+		CreateRevokedAuthorityResponseImpl(
 		)
+	
+	// @formatter:on
+	// @tomplot:customCode:start:0ETUWm
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

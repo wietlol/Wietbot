@@ -1,20 +1,36 @@
+// hash: #9b3f81c6
+// data: serializationKey:9f4ae267-f5a4-416f-9033-7b4df27c4524
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.auth.models.serializers.IsUserAuthorizedRequestSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface IsUserAuthorizedRequest : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("9f4ae267-f5a4-416f-9033-7b4df27c4524")
+	}
+	
 	override val serializationKey: UUID
-		get() = IsUserAuthorizedRequestSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val userId: Int
+	
 	val permission: String
+	
 	val resource: String
 	
 	fun isEqualTo(other: Any?): Boolean
@@ -37,25 +53,13 @@ interface IsUserAuthorizedRequest : BitSerializable, Jsonable
 			.with(resource)
 	
 	override fun toJson(): String =
-		"""{"userId":${userId.toJson()},"permission":${permission.toJson()},"resource":${resource.toJson()}}"""
+		"""{"userId":${userId.toJsonString()},"permission":${permission.toJsonString()},"resource":${resource.toJsonString()}}"""
 	
-	companion object
-	{
-		fun of(userId: Int, permission: String, resource: String = "*"): IsUserAuthorizedRequest =
-			object : IsUserAuthorizedRequest
-			{
-				override val userId: Int = userId
-				override val permission: String = permission
-				override val resource: String = resource
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): IsUserAuthorizedRequest
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

@@ -17,15 +17,13 @@ import me.wietlol.wietbot.data.auth.models.models.DetachRolePolicyRequest
 import me.wietlol.wietbot.data.auth.models.models.DetachRolePolicyResponse
 import me.wietlol.wietbot.data.auth.models.models.SetUserRoleRequest
 import me.wietlol.wietbot.data.auth.models.models.SetUserRoleResponse
-import me.wietlol.aws.lambda.LambdaException
-import me.wietlol.aws.lambda.LambdaExceptionDeserializer
-import me.wietlol.aws.lambda.LambdaRequest
-import me.wietlol.aws.lambda.LambdaResponse
 import me.wietlol.bitblock.api.serialization.Schema
 import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.LocalModelRegistry
-import me.wietlol.bitblock.core.serialization.ImmutableSchema
+import me.wietlol.bitblock.core.BitBlockBase
+import me.wietlol.bitblock.core.BitSchemaBuilder
+import me.wietlol.utils.common.ByteWrapper
+import me.wietlol.utils.json.lambda.LambdaException
+import me.wietlol.utils.json.lambda.LambdaExceptionDeserializer
 import me.wietlol.wietbot.data.auth.models.AuthService
 import me.wietlol.wietbot.data.auth.models.WietbotDataAuth
 import me.wietlol.wietbot.data.auth.models.models.CreatePermissionRequest
@@ -43,10 +41,10 @@ import me.wietlol.wietbot.data.auth.models.models.ListRolesResponse
 
 class AuthClient(
 	val lambdaClient: AWSLambda,
-	val serializer: Schema = LocalModelRegistry()
-		.apply(BitBlock::initialize)
-		.apply(WietbotDataAuth::initialize)
-		.let { ImmutableSchema(WietbotDataAuth::class.java.getResourceAsStream("/me/wietlol/wietbot/data/auth/models/Api.bitschema"), it) },
+	val serializer: Schema = BitSchemaBuilder.buildSchema(
+		WietbotDataAuth::class.java.getResourceAsStream("/me/wietlol/wietbot/data/auth/models/Api.bitschema"),
+		listOf(BitBlockBase, WietbotDataAuth),
+	),
 	val functionPrefix: String = "wietbot-data-auth-dev-"
 ) : AuthService
 {
@@ -96,7 +94,7 @@ class AuthClient(
 	
 	private inline fun <reified Response : Any> invoke(function: String, request: Any): Response
 	{
-		val lambdaRequest = LambdaRequest(
+		val lambdaRequest = ByteWrapper(
 			serializer.serialize(request)
 		)
 		
@@ -109,7 +107,7 @@ class AuthClient(
 		if (response.functionError != null)
 			throw mapper.readValue(response.payload.array(), LambdaException::class.java)
 		
-		val lambdaResponse = mapper.readValue(response.payload.array(), LambdaResponse::class.java)
+		val lambdaResponse = mapper.readValue(response.payload.array(), ByteWrapper::class.java)
 		
 		return serializer.deserialize(lambdaResponse.payload!!)!!
 	}

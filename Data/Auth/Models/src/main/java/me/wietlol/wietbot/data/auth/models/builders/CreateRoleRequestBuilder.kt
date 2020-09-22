@@ -1,14 +1,29 @@
+// hash: #328fa5e4
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import java.util.*
+import me.wietlol.wietbot.data.auth.models.models.CreateRoleRequestImpl
+
+// @formatter:on
+// @tomplot:customCode:start:f5k3GB
+// @tomplot:customCode:end
+// @formatter:off
+
 
 class CreateRoleRequestBuilder
 {
-	var name: String? = null
+	var name: String?
+		= null
 	
 	fun build(): CreateRoleRequest =
-		CreateRoleRequest.of(
-			name!!
+		CreateRoleRequestImpl(
+			name!!,
 		)
+	
+	// @formatter:on
+	// @tomplot:customCode:start:0ETUWm
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

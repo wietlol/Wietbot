@@ -28,26 +28,26 @@ import me.wietlol.wietbot.data.auth.models.models.ListRolesResponse
 interface AuthService
 {
 	fun getOrCreateUser(request: GetOrCreateUserRequest): GetOrCreateUserResponse
-	
+
 	fun createPermission(request: CreatePermissionRequest): CreatePermissionResponse
-	
+
 	fun createRole(request: CreateRoleRequest): CreateRoleResponse
-	
+
 	fun createPolicy(request: CreatePolicyRequest): CreatePolicyResponse
-	
+
 	fun createGrantedAuthority(request: CreateGrantedAuthorityRequest): CreateGrantedAuthorityResponse
-	
+
 	fun createRevokedAuthority(request: CreateRevokedAuthorityRequest): CreateRevokedAuthorityResponse
-	
+
 	fun attachRolePolicy(request: AttachRolePolicyRequest): AttachRolePolicyResponse
-	
+
 	fun detachRolePolicy(request: DetachRolePolicyRequest): DetachRolePolicyResponse
-	
+
 	fun getUserRole(request: GetUserRoleRequest): GetUserRoleResponse
-	
+
 	fun setUserRole(request: SetUserRoleRequest): SetUserRoleResponse
-	
+
 	fun listRoles(request: ListRolesRequest): ListRolesResponse
-	
+
 	fun isUserAuthorized(request: IsUserAuthorizedRequest): IsUserAuthorizedResponse
 }

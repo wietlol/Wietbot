@@ -1,43 +1,59 @@
+// hash: #18025a29
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.auth.models.builders.SetUserRoleResponseBuilder
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.builders.*
+import me.wietlol.wietbot.data.auth.models.models.SetUserRoleResponse
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object SetUserRoleResponseSerializer : ModelSerializer<SetUserRoleResponse, SetUserRoleResponse>
 {
-	private const val endOfObject = 0
+	private val endOfObject: Int
+		= 0
 	
 	override val modelId: UUID
-		get() = UUID.fromString("3a79db5c-46a5-45f9-8e7e-a032f9a4324f")
+		get() = SetUserRoleResponse.serializationKey
+	
 	override val dataClass: Class<SetUserRoleResponse>
 		get() = SetUserRoleResponse::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: SetUserRoleResponse)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: SetUserRoleResponse)
 	{
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): SetUserRoleResponse
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): SetUserRoleResponse
 	{
-		val builder = SetUserRoleResponseBuilder()
-		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
+				endOfObject -> return SetUserRoleResponseImpl(
+				)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

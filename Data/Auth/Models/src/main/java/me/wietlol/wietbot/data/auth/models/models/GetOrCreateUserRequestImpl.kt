@@ -1,8 +1,8 @@
-// hash: #ce68c12f
+// hash: #e28f8f44
 // @formatter:off
-package me.wietlol.wietbot.clients.stackexchange.models.messages.models
+package me.wietlol.wietbot.data.auth.models.models
 
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
+import me.wietlol.wietbot.data.auth.models.models.*
 
 // @formatter:on
 // @tomplot:customCode:start:B8CiSn
@@ -10,9 +10,9 @@ import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
 // @formatter:off
 
 
-data class ReverseTextResponseImpl(
-	override val text: String,
-) : ReverseTextResponse
+data class GetOrCreateUserRequestImpl(
+	override val user: User,
+) : GetOrCreateUserRequest
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -23,9 +23,9 @@ data class ReverseTextResponseImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): ReverseTextResponseImpl =
+	override fun duplicate(): GetOrCreateUserRequestImpl =
 		copy(
-			text = text,
+			user = user.duplicate(),
 		)
 	
 	// @formatter:on

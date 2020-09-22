@@ -1,48 +1,69 @@
+// hash: #01838dd2
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.auth.models.builders.CreatePermissionRequestBuilder
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.builders.*
+import me.wietlol.wietbot.data.auth.models.models.CreatePermissionRequest
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object CreatePermissionRequestSerializer : ModelSerializer<CreatePermissionRequest, CreatePermissionRequest>
 {
-	private const val endOfObject = 0
-	private const val nameIndex = 1
+	private val endOfObject: Int
+		= 0
+	
+	private val nameIndex: Int
+		= 1
 	
 	override val modelId: UUID
-		get() = UUID.fromString("4d213b21-3f49-4751-85ca-b1f1b3cd3eb8")
+		get() = CreatePermissionRequest.serializationKey
+	
 	override val dataClass: Class<CreatePermissionRequest>
 		get() = CreatePermissionRequest::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: CreatePermissionRequest)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: CreatePermissionRequest)
 	{
 		stream.writeUnsignedVarInt(nameIndex)
-		schema.serialize(stream, entity.name)
+		schema.serialize(serializationContext, stream, entity.name)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): CreatePermissionRequest
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): CreatePermissionRequest
 	{
-		val builder = CreatePermissionRequestBuilder()
+		var name: String? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
-				nameIndex -> builder.name = schema.deserialize(stream)
+				endOfObject -> return CreatePermissionRequestImpl(
+					name!!,
+				)
+				nameIndex -> name = schema.deserialize(deserializationContext, stream)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

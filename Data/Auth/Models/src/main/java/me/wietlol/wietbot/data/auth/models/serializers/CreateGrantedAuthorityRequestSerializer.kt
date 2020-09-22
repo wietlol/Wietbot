@@ -1,58 +1,87 @@
+// hash: #fd922550
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.auth.models.builders.CreateGrantedAuthorityRequestBuilder
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.builders.*
+import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityRequest
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object CreateGrantedAuthorityRequestSerializer : ModelSerializer<CreateGrantedAuthorityRequest, CreateGrantedAuthorityRequest>
 {
-	private const val endOfObject = 0
-	private const val policyIndex = 1
-	private const val permissionIndex = 2
-	private const val resourceIndex = 3
+	private val endOfObject: Int
+		= 0
+	
+	private val policyIndex: Int
+		= 1
+	
+	private val permissionIndex: Int
+		= 2
+	
+	private val resourceIndex: Int
+		= 3
 	
 	override val modelId: UUID
-		get() = UUID.fromString("12480305-5d03-47b7-aaea-54961501371b")
+		get() = CreateGrantedAuthorityRequest.serializationKey
+	
 	override val dataClass: Class<CreateGrantedAuthorityRequest>
 		get() = CreateGrantedAuthorityRequest::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: CreateGrantedAuthorityRequest)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: CreateGrantedAuthorityRequest)
 	{
 		stream.writeUnsignedVarInt(policyIndex)
-		schema.serialize(stream, entity.policy)
+		schema.serialize(serializationContext, stream, entity.policy)
 		
 		stream.writeUnsignedVarInt(permissionIndex)
-		schema.serialize(stream, entity.permission)
+		schema.serialize(serializationContext, stream, entity.permission)
 		
 		stream.writeUnsignedVarInt(resourceIndex)
-		schema.serialize(stream, entity.resource)
+		schema.serialize(serializationContext, stream, entity.resource)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): CreateGrantedAuthorityRequest
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): CreateGrantedAuthorityRequest
 	{
-		val builder = CreateGrantedAuthorityRequestBuilder()
+		var policy: String? = null
+		var permission: String? = null
+		var resource: String? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
-				policyIndex -> builder.policy = schema.deserialize(stream)
-				permissionIndex -> builder.permission = schema.deserialize(stream)
-				resourceIndex -> builder.resource = schema.deserialize(stream)
+				endOfObject -> return CreateGrantedAuthorityRequestImpl(
+					policy!!,
+					permission!!,
+					resource!!,
+				)
+				policyIndex -> policy = schema.deserialize(deserializationContext, stream)
+				permissionIndex -> permission = schema.deserialize(deserializationContext, stream)
+				resourceIndex -> resource = schema.deserialize(deserializationContext, stream)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

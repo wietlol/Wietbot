@@ -1,8 +1,8 @@
-// hash: #887688a2
+// hash: #3cf44ea4
 // @formatter:off
-package me.wietlol.wietbot.clients.stackexchange.models.messages.models
+package me.wietlol.wietbot.data.auth.models.models
 
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
+import me.wietlol.wietbot.data.auth.models.models.*
 
 // @formatter:on
 // @tomplot:customCode:start:B8CiSn
@@ -10,10 +10,7 @@ import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
 // @formatter:off
 
 
-data class RoomImpl(
-	override val id: Int,
-	override val name: String,
-) : Room
+class SetUserRoleResponseImpl : SetUserRoleResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -24,11 +21,8 @@ data class RoomImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): RoomImpl =
-		copy(
-			id = id,
-			name = name,
-		)
+	override fun duplicate(): SetUserRoleResponseImpl =
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB

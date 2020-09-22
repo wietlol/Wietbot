@@ -1,16 +1,33 @@
+// hash: #a1b0cadb
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import java.util.*
+import me.wietlol.wietbot.data.auth.models.models.RoleImpl
+
+// @formatter:on
+// @tomplot:customCode:start:f5k3GB
+// @tomplot:customCode:end
+// @formatter:off
+
 
 class RoleBuilder
 {
-	var id: Int? = null
-	var name: String? = null
+	var id: Int?
+		= null
+	
+	var name: String?
+		= null
 	
 	fun build(): Role =
-		Role.of(
+		RoleImpl(
 			id!!,
-			name!!
+			name!!,
 		)
+	
+	// @formatter:on
+	// @tomplot:customCode:start:0ETUWm
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

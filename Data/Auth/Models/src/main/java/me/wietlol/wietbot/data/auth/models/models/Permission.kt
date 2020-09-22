@@ -1,19 +1,34 @@
+// hash: #37f896c5
+// data: serializationKey:5144e0c2-8783-4e36-b222-4ce06e72ab1f
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.auth.models.serializers.PermissionSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface Permission : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("5144e0c2-8783-4e36-b222-4ce06e72ab1f")
+	}
+	
 	override val serializationKey: UUID
-		get() = PermissionSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val id: Int
+	
 	val name: String
 	
 	fun isEqualTo(other: Any?): Boolean
@@ -34,24 +49,13 @@ interface Permission : BitSerializable, Jsonable
 			.with(name)
 	
 	override fun toJson(): String =
-		"""{"id":${id.toJson()},"name":${name.toJson()}}"""
+		"""{"id":${id.toJsonString()},"name":${name.toJsonString()}}"""
 	
-	companion object
-	{
-		fun of(id: Int, name: String): Permission =
-			object : Permission
-			{
-				override val id: Int = id
-				override val name: String = name
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): Permission
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

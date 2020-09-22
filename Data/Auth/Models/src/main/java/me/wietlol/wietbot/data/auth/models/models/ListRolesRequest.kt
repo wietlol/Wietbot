@@ -1,18 +1,31 @@
+// hash: #e039cee6
+// data: serializationKey:a92a3d37-864e-439c-b923-5b741308bd59
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.auth.models.serializers.ListRolesRequestSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface ListRolesRequest : BitSerializable, Jsonable
 {
-	override val serializationKey: UUID
-		get() = ListRolesRequestSerializer.modelId
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("a92a3d37-864e-439c-b923-5b741308bd59")
+	}
 	
+	override val serializationKey: UUID
+		get() = Companion.serializationKey
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -30,20 +43,11 @@ interface ListRolesRequest : BitSerializable, Jsonable
 	override fun toJson(): String =
 		"""{}"""
 	
-	companion object
-	{
-		fun of(): ListRolesRequest =
-			object : ListRolesRequest
-			{
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): ListRolesRequest
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

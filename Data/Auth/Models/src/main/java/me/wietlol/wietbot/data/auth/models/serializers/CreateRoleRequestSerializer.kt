@@ -1,48 +1,69 @@
+// hash: #7736df87
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.auth.models.builders.CreateRoleRequestBuilder
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.builders.*
+import me.wietlol.wietbot.data.auth.models.models.CreateRoleRequest
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object CreateRoleRequestSerializer : ModelSerializer<CreateRoleRequest, CreateRoleRequest>
 {
-	private const val endOfObject = 0
-	private const val nameIndex = 1
+	private val endOfObject: Int
+		= 0
+	
+	private val nameIndex: Int
+		= 1
 	
 	override val modelId: UUID
-		get() = UUID.fromString("33c7009c-f6f5-4d71-809c-6306b874101e")
+		get() = CreateRoleRequest.serializationKey
+	
 	override val dataClass: Class<CreateRoleRequest>
 		get() = CreateRoleRequest::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: CreateRoleRequest)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: CreateRoleRequest)
 	{
 		stream.writeUnsignedVarInt(nameIndex)
-		schema.serialize(stream, entity.name)
+		schema.serialize(serializationContext, stream, entity.name)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): CreateRoleRequest
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): CreateRoleRequest
 	{
-		val builder = CreateRoleRequestBuilder()
+		var name: String? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
-				nameIndex -> builder.name = schema.deserialize(stream)
+				endOfObject -> return CreateRoleRequestImpl(
+					name!!,
+				)
+				nameIndex -> name = schema.deserialize(deserializationContext, stream)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

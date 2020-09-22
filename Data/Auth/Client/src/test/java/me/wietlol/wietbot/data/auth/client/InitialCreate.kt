@@ -4,6 +4,7 @@ import com.amazonaws.regions.Regions.EU_WEST_1
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder
 import me.wietlol.wietbot.data.auth.models.AuthService
 import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityRequest
+import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityRequestImpl
 
 object InitialCreate
 {
@@ -53,7 +54,7 @@ object InitialCreate
 //				"evalCSharp"
 //			))
 
-			createGrantedAuthority(CreateGrantedAuthorityRequest.of(
+			createGrantedAuthority(CreateGrantedAuthorityRequestImpl(
 				"pleb",
 				"command-execute",
 				"evalSql"

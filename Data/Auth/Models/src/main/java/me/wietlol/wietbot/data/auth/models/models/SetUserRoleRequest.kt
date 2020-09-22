@@ -1,19 +1,34 @@
+// hash: #36b0683f
+// data: serializationKey:972f98c6-48c7-4a87-bfdf-a0c3e22cdc01
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.auth.models.serializers.SetUserRoleRequestSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface SetUserRoleRequest : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("972f98c6-48c7-4a87-bfdf-a0c3e22cdc01")
+	}
+	
 	override val serializationKey: UUID
-		get() = SetUserRoleRequestSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val userId: Int
+	
 	val role: String
 	
 	fun isEqualTo(other: Any?): Boolean
@@ -34,24 +49,13 @@ interface SetUserRoleRequest : BitSerializable, Jsonable
 			.with(role)
 	
 	override fun toJson(): String =
-		"""{"userId":${userId.toJson()},"role":${role.toJson()}}"""
+		"""{"userId":${userId.toJsonString()},"role":${role.toJsonString()}}"""
 	
-	companion object
-	{
-		fun of(userId: Int, role: String): SetUserRoleRequest =
-			object : SetUserRoleRequest
-			{
-				override val userId: Int = userId
-				override val role: String = role
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): SetUserRoleRequest
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

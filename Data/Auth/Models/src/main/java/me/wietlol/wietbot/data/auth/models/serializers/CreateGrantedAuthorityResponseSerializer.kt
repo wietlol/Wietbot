@@ -1,43 +1,59 @@
+// hash: #44f24860
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.auth.models.builders.CreateGrantedAuthorityResponseBuilder
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.builders.*
+import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityResponse
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object CreateGrantedAuthorityResponseSerializer : ModelSerializer<CreateGrantedAuthorityResponse, CreateGrantedAuthorityResponse>
 {
-	private const val endOfObject = 0
+	private val endOfObject: Int
+		= 0
 	
 	override val modelId: UUID
-		get() = UUID.fromString("0c53649a-8e16-4eb5-8982-8a7f693b7e3c")
+		get() = CreateGrantedAuthorityResponse.serializationKey
+	
 	override val dataClass: Class<CreateGrantedAuthorityResponse>
 		get() = CreateGrantedAuthorityResponse::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: CreateGrantedAuthorityResponse)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: CreateGrantedAuthorityResponse)
 	{
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): CreateGrantedAuthorityResponse
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): CreateGrantedAuthorityResponse
 	{
-		val builder = CreateGrantedAuthorityResponseBuilder()
-		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
+				endOfObject -> return CreateGrantedAuthorityResponseImpl(
+				)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

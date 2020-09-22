@@ -1,8 +1,8 @@
-// hash: #3e181d72
+// hash: #854c7958
 // @formatter:off
-package me.wietlol.wietbot.clients.stackexchange.models.messages.models
+package me.wietlol.wietbot.data.auth.models.models
 
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
+import me.wietlol.wietbot.data.auth.models.models.*
 
 // @formatter:on
 // @tomplot:customCode:start:B8CiSn
@@ -10,10 +10,9 @@ import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
 // @formatter:off
 
 
-data class MessageEventListImpl(
-	override val messageId: Int,
-	override val events: List<MessageEvent>,
-) : MessageEventList
+data class CreatePolicyRequestImpl(
+	override val name: String,
+) : CreatePolicyRequest
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -24,10 +23,9 @@ data class MessageEventListImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): MessageEventListImpl =
+	override fun duplicate(): CreatePolicyRequestImpl =
 		copy(
-			messageId = messageId,
-			events = events.map { it.duplicate() }.toMutableList(),
+			name = name,
 		)
 	
 	// @formatter:on

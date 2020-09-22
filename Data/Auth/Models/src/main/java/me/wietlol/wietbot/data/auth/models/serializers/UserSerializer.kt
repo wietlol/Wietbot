@@ -1,53 +1,78 @@
+// hash: #5c6c9d07
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.auth.models.builders.UserBuilder
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.builders.*
+import me.wietlol.wietbot.data.auth.models.models.User
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object UserSerializer : ModelSerializer<User, User>
 {
-	private const val endOfObject = 0
-	private const val idIndex = 1
-	private const val nameIndex = 2
+	private val endOfObject: Int
+		= 0
+	
+	private val idIndex: Int
+		= 1
+	
+	private val nameIndex: Int
+		= 2
 	
 	override val modelId: UUID
-		get() = UUID.fromString("bbb57bdc-faf4-4516-945b-4deaf3faf634")
+		get() = User.serializationKey
+	
 	override val dataClass: Class<User>
 		get() = User::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: User)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: User)
 	{
 		stream.writeUnsignedVarInt(idIndex)
-		schema.serialize(stream, entity.id)
+		schema.serialize(serializationContext, stream, entity.id)
 		
 		stream.writeUnsignedVarInt(nameIndex)
-		schema.serialize(stream, entity.name)
+		schema.serialize(serializationContext, stream, entity.name)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): User
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): User
 	{
-		val builder = UserBuilder()
+		var id: Int? = null
+		var name: String? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
-				idIndex -> builder.id = schema.deserialize(stream)
-				nameIndex -> builder.name = schema.deserialize(stream)
+				endOfObject -> return UserImpl(
+					id!!,
+					name!!,
+				)
+				idIndex -> id = schema.deserialize(deserializationContext, stream)
+				nameIndex -> name = schema.deserialize(deserializationContext, stream)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

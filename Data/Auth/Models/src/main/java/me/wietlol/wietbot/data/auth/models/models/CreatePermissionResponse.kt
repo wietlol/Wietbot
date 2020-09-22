@@ -1,18 +1,31 @@
+// hash: #94bea651
+// data: serializationKey:d6412ee3-0b9d-4969-8722-fb089b3ec892
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.auth.models.serializers.CreatePermissionResponseSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface CreatePermissionResponse : BitSerializable, Jsonable
 {
-	override val serializationKey: UUID
-		get() = CreatePermissionResponseSerializer.modelId
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("d6412ee3-0b9d-4969-8722-fb089b3ec892")
+	}
 	
+	override val serializationKey: UUID
+		get() = Companion.serializationKey
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -30,20 +43,11 @@ interface CreatePermissionResponse : BitSerializable, Jsonable
 	override fun toJson(): String =
 		"""{}"""
 	
-	companion object
-	{
-		fun of(): CreatePermissionResponse =
-			object : CreatePermissionResponse
-			{
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): CreatePermissionResponse
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

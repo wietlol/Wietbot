@@ -1,17 +1,31 @@
+// hash: #ed8a7590
+// data: serializationKey:d18267a5-4694-4c9b-9a1a-8bc69a09dd25
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.auth.models.serializers.GetOrCreateUserRequestSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface GetOrCreateUserRequest : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("d18267a5-4694-4c9b-9a1a-8bc69a09dd25")
+	}
+	
 	override val serializationKey: UUID
-		get() = GetOrCreateUserRequestSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val user: User
 	
@@ -31,23 +45,13 @@ interface GetOrCreateUserRequest : BitSerializable, Jsonable
 			.with(user)
 	
 	override fun toJson(): String =
-		"""{"user":${user.toJson()}}"""
+		"""{"user":${user.toJsonString()}}"""
 	
-	companion object
-	{
-		fun of(user: User): GetOrCreateUserRequest =
-			object : GetOrCreateUserRequest
-			{
-				override val user: User = user
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): GetOrCreateUserRequest
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

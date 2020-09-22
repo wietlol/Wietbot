@@ -3,6 +3,8 @@
 @Owner("Wietbot")
 @Version("1.0")
 
+@Root("../../../../../../../java")
+
 @RootPackage("me.wietlol.wietbot.data.auth.models")
 @BuilderPackage(".builders")
 @ModelPackage(".models")

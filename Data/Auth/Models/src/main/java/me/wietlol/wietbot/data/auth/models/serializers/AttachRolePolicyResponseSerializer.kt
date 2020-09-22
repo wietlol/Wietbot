@@ -1,43 +1,59 @@
+// hash: #f0a6112d
+// @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.auth.models.builders.AttachRolePolicyResponseBuilder
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.builders.*
+import me.wietlol.wietbot.data.auth.models.models.AttachRolePolicyResponse
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object AttachRolePolicyResponseSerializer : ModelSerializer<AttachRolePolicyResponse, AttachRolePolicyResponse>
 {
-	private const val endOfObject = 0
+	private val endOfObject: Int
+		= 0
 	
 	override val modelId: UUID
-		get() = UUID.fromString("a1236a20-8ea3-4433-8462-e23c251aa889")
+		get() = AttachRolePolicyResponse.serializationKey
+	
 	override val dataClass: Class<AttachRolePolicyResponse>
 		get() = AttachRolePolicyResponse::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: AttachRolePolicyResponse)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: AttachRolePolicyResponse)
 	{
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): AttachRolePolicyResponse
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): AttachRolePolicyResponse
 	{
-		val builder = AttachRolePolicyResponseBuilder()
-		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
+				endOfObject -> return AttachRolePolicyResponseImpl(
+				)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

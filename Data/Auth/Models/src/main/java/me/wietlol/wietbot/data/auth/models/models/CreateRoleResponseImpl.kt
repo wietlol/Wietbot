@@ -1,8 +1,8 @@
-// hash: #81eba64b
+// hash: #01830ae3
 // @formatter:off
-package me.wietlol.wietbot.clients.stackexchange.models.messages.models
+package me.wietlol.wietbot.data.auth.models.models
 
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
+import me.wietlol.wietbot.data.auth.models.models.*
 
 // @formatter:on
 // @tomplot:customCode:start:B8CiSn
@@ -10,9 +10,7 @@ import me.wietlol.wietbot.clients.stackexchange.models.messages.models.*
 // @formatter:off
 
 
-data class ReverseTextRequestImpl(
-	override val text: String,
-) : ReverseTextRequest
+class CreateRoleResponseImpl : CreateRoleResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -23,10 +21,8 @@ data class ReverseTextRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): ReverseTextRequestImpl =
-		copy(
-			text = text,
-		)
+	override fun duplicate(): CreateRoleResponseImpl =
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB
