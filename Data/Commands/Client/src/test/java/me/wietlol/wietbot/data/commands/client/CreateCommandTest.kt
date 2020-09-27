@@ -4,6 +4,7 @@ import com.amazonaws.regions.Regions.EU_WEST_1
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder
 import me.wietlol.wietbot.data.commands.models.CommandService
 import me.wietlol.wietbot.data.commands.models.models.CreateCommandRequest
+import me.wietlol.wietbot.data.commands.models.models.CreateCommandRequestImpl
 
 object CreateCommandTest
 {
@@ -40,7 +41,7 @@ object CreateCommandTest
 //			"https://sqs.eu-west-1.amazonaws.com/059598504952/wietbot-commands-evalCSharp"
 //		))
 		
-		commandService.createCommand(CreateCommandRequest.of(
+		commandService.createCommand(CreateCommandRequestImpl(
 			"evalSql",
 			"https://sqs.eu-west-1.amazonaws.com/059598504952/wietbot-commands-evalSql"
 		))

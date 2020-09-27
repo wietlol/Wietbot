@@ -1,19 +1,34 @@
+// hash: #a60faefb
+// data: serializationKey:dcb9cb6e-7ac3-4b65-8a6c-3f64d74e982e
+// @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.services.chatclient.models.serializers.SendMessageRequestSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface SendMessageRequest : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("dcb9cb6e-7ac3-4b65-8a6c-3f64d74e982e")
+	}
+	
 	override val serializationKey: UUID
-		get() = SendMessageRequestSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val roomId: Int
+	
 	val text: String
 	
 	fun isEqualTo(other: Any?): Boolean
@@ -34,36 +49,13 @@ interface SendMessageRequest : BitSerializable, Jsonable
 			.with(text)
 	
 	override fun toJson(): String =
-		"""{"roomId":${roomId.toJson()},"text":${text.toJson()}}"""
+		"""{"roomId":${roomId.toJsonString()},"text":${text.toJsonString()}}"""
 	
 	fun duplicate(): SendMessageRequest
 	
-	companion object
-	{
-		fun of(roomId: Int, text: String): SendMessageRequest
-		{
-			return Implementation(roomId, text)
-		}
-		
-		private data class Implementation(
-			override var roomId: Int,
-			override var text: String
-		) : SendMessageRequest
-		{
-			override fun equals(other: Any?): Boolean =
-				isEqualTo(other)
-			
-			override fun hashCode(): Int =
-				computeHashCode()
-			
-			override fun toString(): String =
-				toJson()
-			
-			override fun duplicate(): SendMessageRequest =
-				copy(
-					roomId = roomId,
-					text = text
-				)
-		}
-	}
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

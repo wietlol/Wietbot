@@ -10,8 +10,8 @@ import me.wietlol.loggo.common.logError
 import me.wietlol.loggo.common.logInformation
 import me.wietlol.utils.common.ByteWrapper
 import me.wietlol.utils.json.SimpleJsonSerializer
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.MessageEventList
 import me.wietlol.wietbot.clients.stackexchange.util.MessageCache
+import me.wietlol.wietbot.data.messages.models.models.MessageEventList
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.SeChatEvents
 
 class SnsProxy(
@@ -30,6 +30,8 @@ class SnsProxy(
 	 * on edited/deleted messages:
 	 * - enrich data from cache
 	 * - send message to sns
+	 * on mentions... (which should work from rooms the bot has not yet joined)
+	 * - todo
 	 */
 	
 	private fun sendMessageToSns(messageEventList: MessageEventList)

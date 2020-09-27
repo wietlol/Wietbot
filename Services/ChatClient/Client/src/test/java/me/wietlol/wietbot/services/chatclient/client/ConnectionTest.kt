@@ -3,6 +3,7 @@ package me.wietlol.wietbot.services.chatclient.client
 import com.amazonaws.regions.Regions.EU_WEST_1
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder
 import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequest
+import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequestImpl
 import org.assertj.core.internal.bytebuddy.implementation.bytecode.Throw
 import java.util.stream.Stream
 import kotlin.concurrent.thread
@@ -20,7 +21,7 @@ object ConnectionTest
 		try
 		{
 			val chatClient = ChatClientClient(lambdaClient)
-			chatClient.sendMessage(SendMessageRequest.of(1, "Hello, World!"))
+			chatClient.sendMessage(SendMessageRequestImpl(1, "Hello, World!"))
 		}
 		catch (ex: Throwable)
 		{

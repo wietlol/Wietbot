@@ -28,9 +28,21 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
 			<groupId>me.wietlol.wietbot</groupId>
 			<artifactId>data-auth-models</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>me.wietlol.wietbot</groupId>
+			<artifactId>libraries-lambda-base-dependency-injection</artifactId>
+			<version>${wietbot-libraries-lambda-base.version}</version>
 		</dependency>
 		
 		<!-- dependendency injection -->

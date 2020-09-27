@@ -1,4 +1,4 @@
-// hash: #bac0507c
+// hash: #f83f1df6
 // @formatter:off
 package me.wietlol.wietbot.clients.stackexchange.models.messages
 
@@ -17,8 +17,6 @@ object WietbotClientsStackExchange : RegistrySet
 	
 	private fun createModelSerializers(): Map<ModelRegistryKey, ModelSerializer<*, *>> =
 		mapOf(
-			CommonModelRegistryKey("ReverseTextRequest", "WietbotClientsStackExchange", "Wietbot", "1.0") to ReverseTextRequestSerializer,
-			CommonModelRegistryKey("ReverseTextResponse", "WietbotClientsStackExchange", "Wietbot", "1.0") to ReverseTextResponseSerializer,
 			CommonModelRegistryKey("StartClientRequest", "WietbotClientsStackExchange", "Wietbot", "1.0") to StartClientRequestSerializer,
 			CommonModelRegistryKey("StartClientResponse", "WietbotClientsStackExchange", "Wietbot", "1.0") to StartClientResponseSerializer,
 			CommonModelRegistryKey("ListCommandsRequest", "WietbotClientsStackExchange", "Wietbot", "1.0") to ListCommandsRequestSerializer,
@@ -36,13 +34,6 @@ object WietbotClientsStackExchange : RegistrySet
 			CommonModelRegistryKey("GetInfoRequest", "WietbotClientsStackExchange", "Wietbot", "1.0") to GetInfoRequestSerializer,
 			CommonModelRegistryKey("GetInfoResponse", "WietbotClientsStackExchange", "Wietbot", "1.0") to GetInfoResponseSerializer,
 			CommonModelRegistryKey("ErrorResponse", "WietbotClientsStackExchange", "Wietbot", "1.0") to ErrorResponseSerializer,
-			CommonModelRegistryKey("ChatEventType", "WietbotClientsStackExchange", "Wietbot", "1.0") to ChatEventTypeSerializer,
-			CommonModelRegistryKey("MessageEventList", "WietbotClientsStackExchange", "Wietbot", "1.0") to MessageEventListSerializer,
-			CommonModelRegistryKey("MessagePostedEvent", "WietbotClientsStackExchange", "Wietbot", "1.0") to MessagePostedEventSerializer,
-			CommonModelRegistryKey("MessageEditedEvent", "WietbotClientsStackExchange", "Wietbot", "1.0") to MessageEditedEventSerializer,
-			CommonModelRegistryKey("MessageDeletedEvent", "WietbotClientsStackExchange", "Wietbot", "1.0") to MessageDeletedEventSerializer,
-			CommonModelRegistryKey("User", "WietbotClientsStackExchange", "Wietbot", "1.0") to UserSerializer,
-			CommonModelRegistryKey("Room", "WietbotClientsStackExchange", "Wietbot", "1.0") to RoomSerializer,
 		)
 	
 	override fun initialize(registry: ModelRegistry?) =

@@ -1,19 +1,34 @@
+// hash: #d82c479f
+// data: serializationKey:cb121e37-e4de-479f-bbc9-0b8380a2b94c
+// @formatter:off
 package me.wietlol.wietbot.data.commands.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.commands.models.serializers.CommandSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface Command : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("cb121e37-e4de-479f-bbc9-0b8380a2b94c")
+	}
+	
 	override val serializationKey: UUID
-		get() = CommandSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val keyword: String
+	
 	val listenerQueue: String
 	
 	fun isEqualTo(other: Any?): Boolean
@@ -34,24 +49,13 @@ interface Command : BitSerializable, Jsonable
 			.with(listenerQueue)
 	
 	override fun toJson(): String =
-		"""{"keyword":${keyword.toJson()},"listenerQueue":${listenerQueue.toJson()}}"""
+		"""{"keyword":${keyword.toJsonString()},"listenerQueue":${listenerQueue.toJsonString()}}"""
 	
-	companion object
-	{
-		fun of(keyword: String, listenerQueue: String): Command =
-			object : Command
-			{
-				override val keyword: String = keyword
-				override val listenerQueue: String = listenerQueue
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): Command
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

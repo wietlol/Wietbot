@@ -51,6 +51,7 @@ import me.wietlol.wietbot.clients.stackexchange.util.LoggingWebSocketListener
 import me.wietlol.wietbot.data.log.api.LogClient
 import me.wietlol.wietbot.data.log.models.LogService
 import me.wietlol.wietbot.data.log.models.models.SaveLogsRequestImpl
+import me.wietlol.wietbot.data.messages.models.WietbotDataMessages
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.chatclient.SeCredentials
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.CommonSeChatEvents
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.HttpSeWebSocketClientFactory
@@ -63,6 +64,7 @@ import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.mod
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.serializers.BulkChatEventDeserializer
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import java.util.*
@@ -112,7 +114,8 @@ object DependencyInjection
 
 			single { buildLogClient() }
 			single { buildSerializer() }
-			single { buildStackExchangeMessageEventSchema() }
+			single(named("clients-stack-exchange")) { buildStackExchangeApiSchema() }
+			single(named("data-messages")) { buildBotMessageEventSchema() }
 
 			single<SeChatEvents> { CommonSeChatEvents() }
 			single { buildWebSocketListener() }
@@ -134,7 +137,7 @@ object DependencyInjection
 	
 	private fun Scope.buildBitConnect(): BitConnect<ClientCommandRequest, ClientCommandResponse>
 	{
-		val schema: Schema = get()
+		val schema: Schema = get(named("clients-stack-exchange"))
 		val commandHandler: ClientCommandHandler = get()
 		return BitConnect(schema, get(), commandHandler::process)
 	}
@@ -152,19 +155,19 @@ object DependencyInjection
 		CommonKonfigBuilder()
 			.withPathParser(get())
 			.withValueResolver(CommonValueResolver(
-				get(),
-				get()
+				simpleValueResolver = get(),
+				logger = get()
 			))
 			.withLogger(get())
 			.addSource(PropertiesDataSource(
-				Properties().also { it.load(DependencyInjection.javaClass.getResourceAsStream("/application.properties")) },
-				get()
+				properties = Properties().also { it.load(DependencyInjection.javaClass.getResourceAsStream("/application.properties")) },
+				pathParser = get()
 			))
 			.addSource(
 				ParameterStoreDataSource(
-					get(),
-					"/me/wietlol/wietbot/stackexchange/",
-					get()
+					ssmClient = get(),
+					prefix = "/me/wietlol/wietbot/stackexchange/",
+					pathParser = get()
 				)
 			)
 			.build()
@@ -175,10 +178,16 @@ object DependencyInjection
 	private fun Scope.buildKonfigSimpleValueResolver(): SimpleValueResolver =
 		CommonSimpleValueResolver(get())
 	
-	private fun buildStackExchangeMessageEventSchema(): Schema =
+	private fun buildStackExchangeApiSchema(): Schema =
 		BitSchemaBuilder.buildSchema(
 			WietbotClientsStackExchange::class.java.getResourceAsStream("/me/wietlol/wietbot/clients/stackexchange/models/SeChatMessages.bitschema"),
 			listOf(BitBlockBase, WietbotClientsStackExchange),
+		)
+	
+	private fun buildBotMessageEventSchema(): Schema =
+		BitSchemaBuilder.buildSchema(
+			WietbotDataMessages::class.java.getResourceAsStream("/me/wietlol/wietbot/data/messages/models/WietbotMessages.bitschema"),
+			listOf(BitBlockBase, WietbotDataMessages),
 		)
 	
 	private fun buildSerializer(): SimpleJsonSerializer =
@@ -218,13 +227,15 @@ object DependencyInjection
 		val config: Konfig = get()
 		
 		val initialRoomId: Int = config.get("websocket.initialRoom") ?: 1
+		val reconnectCheckInterval: Int = config.get("websocket.reconnectCheckInterval") ?: 300_000
 		
 		return HttpSeWebSocketClientFactory(
-			get(),
-			get(),
-			get(),
-			initialRoomId,
-			get()
+			listener = get(),
+			chatEvents = get(),
+			serializer = get(),
+			initialRoom = initialRoomId,
+			logger = get(),
+			reconnectCheckInterval = reconnectCheckInterval.toLong()
 		)
 	}
 	
@@ -270,12 +281,12 @@ object DependencyInjection
 		val config: Konfig = get()
 		
 		return SnsProxy(
-			get(),
-			get(),
-			get(),
-			get(),
-			get(),
-			config.get("wietbot.stackOverflowMessageQueueArn"),
+			chatEvents = get(),
+			snsClient = get(),
+			serializer = get(),
+			schema = get(named("data-messages")),
+			logger = get(),
+			stackOverflowMessageQueue = config.get("wietbot.stackOverflowMessageQueueArn"),
 		)
 	}
 }

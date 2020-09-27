@@ -1,4 +1,4 @@
-// hash: #5e60f374
+// hash: #6402acc2
 // @formatter:off
 package me.wietlol.wietbot.clients.stackexchange.models.messages.builders
 
@@ -31,7 +31,13 @@ class GetInfoResponseBuilder
 	var maxMemory: Long?
 		= null
 	
-	var uptime: Long?
+	var runtimeSince: Long?
+		= null
+	
+	var clientIsRunning: Boolean?
+		= null
+	
+	var clientSince: Long?
 		= null
 	
 	fun build(): GetInfoResponse =
@@ -42,7 +48,9 @@ class GetInfoResponseBuilder
 			processors!!,
 			usedMemory!!,
 			maxMemory!!,
-			uptime!!,
+			runtimeSince!!,
+			clientIsRunning!!,
+			clientSince!!,
 		)
 	
 	// @formatter:on

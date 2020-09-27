@@ -10,8 +10,8 @@ import me.wietlol.wietbot.data.commands.models.models.RemoveCommandResponse
 interface CommandService
 {
 	fun createCommand(request: CreateCommandRequest): CreateCommandResponse
-	
+
 	fun removeCommand(request: RemoveCommandRequest): RemoveCommandResponse
-	
+
 	fun listCommands(request: ListCommandsRequest): ListCommandsResponse
 }

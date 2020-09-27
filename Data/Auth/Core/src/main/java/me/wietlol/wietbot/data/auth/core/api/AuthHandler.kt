@@ -1,7 +1,9 @@
 package me.wietlol.wietbot.data.auth.core.api
 
 import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.loggo.api.Logger
+import me.wietlol.loggo.common.CommonLog
+import me.wietlol.loggo.common.EventId
 import me.wietlol.utils.common.ByteWrapper
 import me.wietlol.wietbot.data.auth.core.interfaces.AuthRepository
 import me.wietlol.wietbot.data.auth.core.setup.DependencyInjection
@@ -44,27 +46,89 @@ import me.wietlol.wietbot.data.auth.models.models.SetUserRoleRequest
 import me.wietlol.wietbot.data.auth.models.models.SetUserRoleResponse
 import me.wietlol.wietbot.data.auth.models.models.SetUserRoleResponseImpl
 import me.wietlol.wietbot.data.auth.models.models.UserImpl
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.BaseHandler
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.FunctionEventIdSet
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.lambdaFunction
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
 @Suppress("unused")
-class AuthHandler : KoinComponent, AuthService
+class AuthHandler : KoinComponent, AuthService, BaseHandler
 {
 	init
 	{
 		DependencyInjection.bindServiceCollection()
 	}
 	
-	val authRepository: AuthRepository = get()
-	val schema: Schema = get()
+	private val authRepository: AuthRepository = get()
+	
+	override val requestSchema: Schema = get()
+	override val responseSchema: Schema = requestSchema
+	override val logger: Logger<CommonLog> = get()
+	
+	private val getUserRoleEventIds = FunctionEventIdSet(
+		EventId(1156246108, "getUserRole-request"),
+		EventId(2043522813, "getUserRole-response"),
+		EventId(2027708373, "getUserRole-error"),
+	)
+	private val setUserRoleEventIds = FunctionEventIdSet(
+		EventId(1071603162, "setUserRole-request"),
+		EventId(1138585112, "setUserRole-response"),
+		EventId(1921763365, "setUserRole-error"),
+	)
+	private val getOrCreateUserEventIds = FunctionEventIdSet(
+		EventId(1421207747, "getOrCreateUser-request"),
+		EventId(1634046031, "getOrCreateUser-response"),
+		EventId(1369365992, "getOrCreateUser-error"),
+	)
+	private val createPermissionEventIds = FunctionEventIdSet(
+		EventId(1764008249, "createPermission-request"),
+		EventId(1542483810, "createPermission-response"),
+		EventId(1046556993, "createPermission-error"),
+	)
+	private val isUserAuthorizedEventIds = FunctionEventIdSet(
+		EventId(1173557872, "isUserAuthorized-request"),
+		EventId(1637035158, "isUserAuthorized-response"),
+		EventId(1052228479, "isUserAuthorized-error"),
+	)
+	private val createRoleEventIds = FunctionEventIdSet(
+		EventId(2144296492, "createRole-request"),
+		EventId(1859811039, "createRole-response"),
+		EventId(1771707305, "createRole-error"),
+	)
+	private val createPolicyEventIds = FunctionEventIdSet(
+		EventId(1656984633, "createPolicy-request"),
+		EventId(1323713517, "createPolicy-response"),
+		EventId(1138202132, "createPolicy-error"),
+	)
+	private val createGrantedAuthorityEventIds = FunctionEventIdSet(
+		EventId(1342207955, "createGrantedAuthority-request"),
+		EventId(1497193537, "createGrantedAuthority-response"),
+		EventId(1685939024, "createGrantedAuthority-error"),
+	)
+	private val createRevokedAuthorityEventIds = FunctionEventIdSet(
+		EventId(1081067575, "createRevokedAuthority-request"),
+		EventId(1418554945, "createRevokedAuthority-response"),
+		EventId(1937093126, "createRevokedAuthority-error"),
+	)
+	private val attachRolePolicyEventIds = FunctionEventIdSet(
+		EventId(1274988974, "attachRolePolicy-request"),
+		EventId(2024885754, "attachRolePolicy-response"),
+		EventId(1835770409, "attachRolePolicy-error"),
+	)
+	private val detachRolePolicyEventIds = FunctionEventIdSet(
+		EventId(1329308834, "detachRolePolicy-request"),
+		EventId(1204918986, "detachRolePolicy-response"),
+		EventId(1899611963, "detachRolePolicy-error"),
+	)
+	private val listRolesEventIds = FunctionEventIdSet(
+		EventId(1038032539, "listRoles-request"),
+		EventId(1412393639, "listRoles-response"),
+		EventId(1617062995, "listRoles-error"),
+	)
 	
 	fun getUserRoleBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<GetUserRoleRequest>(it) }
-			?.let { getUserRole(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, getUserRoleEventIds, ::getUserRole)
 	
 	override fun getUserRole(request: GetUserRoleRequest): GetUserRoleResponse
 	{
@@ -79,12 +143,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun setUserRoleBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<SetUserRoleRequest>(it) }
-			?.let { setUserRole(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, setUserRoleEventIds, ::setUserRole)
 	
 	override fun setUserRole(request: SetUserRoleRequest): SetUserRoleResponse
 	{
@@ -94,12 +153,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun getOrCreateUserBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<GetOrCreateUserRequest>(it) }
-			?.let { getOrCreateUser(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, getOrCreateUserEventIds, ::getOrCreateUser)
 	
 	override fun getOrCreateUser(request: GetOrCreateUserRequest): GetOrCreateUserResponse
 	{
@@ -114,12 +168,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun createPermissionBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<CreatePermissionRequest>(it) }
-			?.let { createPermission(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, createPermissionEventIds, ::createPermission)
 	
 	override fun createPermission(request: CreatePermissionRequest): CreatePermissionResponse
 	{
@@ -129,12 +178,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun isUserAuthorizedBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<IsUserAuthorizedRequest>(it) }
-			?.let { isUserAuthorized(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, isUserAuthorizedEventIds, ::isUserAuthorized)
 	
 	override fun isUserAuthorized(request: IsUserAuthorizedRequest): IsUserAuthorizedResponse
 	{
@@ -146,12 +190,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun createRoleBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<CreateRoleRequest>(it) }
-			?.let { createRole(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, createRoleEventIds, ::createRole)
 	
 	override fun createRole(request: CreateRoleRequest): CreateRoleResponse
 	{
@@ -161,12 +200,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun createPolicyBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<CreatePolicyRequest>(it) }
-			?.let { createPolicy(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, createPolicyEventIds, ::createPolicy)
 	
 	override fun createPolicy(request: CreatePolicyRequest): CreatePolicyResponse
 	{
@@ -176,12 +210,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun createGrantedAuthorityBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<CreateGrantedAuthorityRequest>(it) }
-			?.let { createGrantedAuthority(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, createGrantedAuthorityEventIds, ::createGrantedAuthority)
 	
 	override fun createGrantedAuthority(request: CreateGrantedAuthorityRequest): CreateGrantedAuthorityResponse
 	{
@@ -191,12 +220,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun createRevokedAuthorityBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<CreateRevokedAuthorityRequest>(it) }
-			?.let { createRevokedAuthority(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, createRevokedAuthorityEventIds, ::createRevokedAuthority)
 	
 	override fun createRevokedAuthority(request: CreateRevokedAuthorityRequest): CreateRevokedAuthorityResponse
 	{
@@ -206,12 +230,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun attachRolePolicyBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<AttachRolePolicyRequest>(it) }
-			?.let { attachRolePolicy(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, attachRolePolicyEventIds, ::attachRolePolicy)
 	
 	override fun attachRolePolicy(request: AttachRolePolicyRequest): AttachRolePolicyResponse
 	{
@@ -221,12 +240,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun detachRolePolicyBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<DetachRolePolicyRequest>(it) }
-			?.let { detachRolePolicy(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, detachRolePolicyEventIds, ::detachRolePolicy)
 	
 	override fun detachRolePolicy(request: DetachRolePolicyRequest): DetachRolePolicyResponse
 	{
@@ -236,12 +250,7 @@ class AuthHandler : KoinComponent, AuthService
 	}
 	
 	fun listRolesBit(request: ByteWrapper): ByteWrapper? =
-		request
-			.payload
-			?.let { schema.deserialize<ListRolesRequest>(it) }
-			?.let { listRoles(it) }
-			?.let { schema.serialize(it) }
-			?.let { ByteWrapper(it) }
+		lambdaFunction(request, listRolesEventIds, ::listRoles)
 	
 	override fun listRoles(request: ListRolesRequest): ListRolesResponse
 	{

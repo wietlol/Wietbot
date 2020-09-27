@@ -19,22 +19,9 @@ contract ClientCommandRequest {
 contract ClientCommandResponse {
 }
 
-blueprint ReverseTextRequest : ClientCommandRequest {
-	property(1) text: String
-}
-blueprint ReverseTextResponse : ClientCommandResponse {
-	property(1) text: String
-}
-
 blueprint StartClientRequest : ClientCommandRequest {
 }
 blueprint StartClientResponse : ClientCommandResponse {
-}
-
-blueprint ListCommandsRequest : ClientCommandRequest {
-}
-blueprint ListCommandsResponse : ClientCommandResponse {
-	property(1) commands: List<String>
 }
 
 blueprint JoinRoomRequest : ClientCommandRequest {
@@ -74,90 +61,12 @@ blueprint GetInfoResponse : ClientCommandResponse {
 	property(4) processors: Integer
 	property(5) usedMemory: Long
 	property(6) maxMemory: Long
-	property(7) uptime: Long
+	property(7) runtimeSince: Long
+	property(8) clientIsRunning: Boolean
+	property(9) clientSince: Long
 }
 
 blueprint ErrorResponse : ClientCommandResponse {
 	property(1) message: String
 }
 
-contract ChatEvent {
-	value id: Integer
-	value timeStamp: Long
-	value eventType: ChatEventType
-
-	value room: Room
-}
-
-contract MessageEvent : ChatEvent {
-	value messageId: Integer
-}
-
-blueprint ChatEventType {
-	messagePosted(1)
-	messageEdited(2)
-	userJoined(3)
-	userLeft(4)
-	messageStarred(6)
-	userMentioned(8)
-	messageDeleted(10)
-	replyPosted(18)
-	messageMovedOut(19)
-	messageMovedIn(20)
-
-	property(1) id: Integer
-}
-
-blueprint MessageEventList {
-	property(1) messageId: Integer
-	property(2) events: List<MessageEvent>
-}
-
-blueprint MessagePostedEvent : MessageEvent {
-	property(1) id: Integer
-	property(2) timeStamp: Long
-	value eventType: ChatEventType = ChatEventTypeImpl.messagePosted
-
-	property(3) messageId: Integer
-	property(4) content: String
-	property(5) parentId: Integer?
-	property(6) showParent: Boolean?
-
-	property(7) user: User
-	property(8) room: Room
-}
-
-blueprint MessageEditedEvent : MessageEvent {
-	property(1) id: Integer
-	property(2) timeStamp: Long
-	value eventType: ChatEventType = ChatEventTypeImpl.messageEdited
-
-	property(3) messageId: Integer
-	property(4) content: String
-	property(5) messageEdits: Integer
-
-	property(6) user: User
-	property(7) room: Room
-}
-
-blueprint MessageDeletedEvent : MessageEvent {
-	property(1) id: Integer
-	property(2) timeStamp: Long
-	value eventType: ChatEventType = ChatEventTypeImpl.messageEdited
-
-	property(3) messageId: Integer
-	property(4) messageEdits: Integer
-
-	property(5) user: User
-	property(6) room: Room
-}
-
-blueprint User {
-	property(1) id: Integer
-	property(2) name: String
-}
-
-blueprint Room {
-	property(1) id: Integer
-	property(2) name: String
-}

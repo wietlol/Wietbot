@@ -6,62 +6,60 @@ import com.amazonaws.services.lambda.model.InvokeRequest
 import com.amazonaws.services.lambda.runtime.events.SNSEvent
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import me.wietlol.aws.lambda.LambdaException
-import me.wietlol.aws.lambda.LambdaRequest
 import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.loggo.api.Logger
+import me.wietlol.loggo.common.CommonLog
+import me.wietlol.loggo.common.EventId
+import me.wietlol.utils.common.ByteWrapper
+import me.wietlol.utils.json.lambda.LambdaException
 import me.wietlol.wietbot.commands.evalsql.core.api.models.EvalRequest
 import me.wietlol.wietbot.commands.evalsql.core.api.models.EvalResponse
 import me.wietlol.wietbot.commands.evalsql.core.setup.DependencyInjection
 import me.wietlol.wietbot.data.commands.models.models.CommandCall
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.BaseEventHandler
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.BaseHandler
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.FunctionEventIdSet
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.lambdaFunction
 import me.wietlol.wietbot.services.chatclient.models.ChatClientService
 import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequest
+import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequestImpl
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.koin.core.qualifier.named
 
-class EvalSqlHandler : KoinComponent
+class EvalSqlHandler : KoinComponent, BaseEventHandler
 {
 	init
 	{
 		DependencyInjection.bindServiceCollection()
 	}
 	
-	val lambdaClient: AWSLambda = get()
-	val commandSchema: Schema = get(named("commandSchema"))
-	val chatClientSchema: Schema = get(named("chatClientSchema"))
-	val chatClient: ChatClientService = get()
-	val mapper: ObjectMapper = get()
+	private val lambdaClient: AWSLambda = get()
+	private val chatClient: ChatClientService = get()
+	
+	override val requestSchema: Schema = get(named("commandSchema"))
+	override val responseSchema: Schema = get(named("chatClientSchema"))
+	override val logger: Logger<CommonLog> = get()
+	override val mapper: ObjectMapper = get()
+	
+	private val evalSqlEventIds = FunctionEventIdSet(
+		EventId(1087801770, "evalSql-request"),
+		EventId(1080720235, "evalSql-response"),
+		EventId(1010429273, "evalSql-error"),
+	)
 	
 	fun evalSqlSns(request: SNSEvent) =
-		request
-			.records
-			?.singleOrNull()
-			?.sns
-			?.message
-			?.let { mapper.readValue<LambdaRequest>(it) }
-			?.payload
-			?.let { commandSchema.deserialize<CommandCall>(it) }
-			?.let { evalSql(it) }
-			?.let { chatClientSchema.serialize(it) }
-			?.let { LambdaRequest(it) }
+		lambdaFunction(request, evalSqlEventIds, ::evalSql)
 	
 	private fun evalSql(request: CommandCall): SendMessageRequest
 	{
-		println("executing code: ${request.argumentText}")
 		val result = kotlin.runCatching { invokeEvalSqlPrivate(request.argumentText) }
 			.getOrElse { "${it.javaClass.name}(${it.message})" }
-		println("evaluation result: $result")
 		
-		return SendMessageRequest.of(
+		return SendMessageRequestImpl(
 			request.message.source.id,
 			result
-		)
-			.also {
-				println("sending message to room ${request.message.source.id}...")
-				chatClient.sendMessage(it)
-				println("sent message")
-			}
+		).also { chatClient.sendMessage(it) }
 	}
 	
 	private fun invokeEvalSqlPrivate(code: String): String

@@ -25,4 +25,16 @@ class EvalKotlinPrivateHandler : KoinComponent
 		request.code
 			.takeIf { it.isNotEmpty() }
 			?.let { EvalResponse(scriptEvaluator.evaluate(it)) }
+
+}
+
+object Main
+{
+	@JvmStatic
+	fun main(args: Array<String>)
+	{
+		val response = EvalKotlinPrivateHandler().evalKotlinPrivate(EvalRequest("\"ohai\""))
+
+		println(response?.result)
+	}
 }

@@ -1,13 +1,14 @@
 package me.wietlol.wietbot.clients.stackexchange.util
 
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.MessageDeletedEventImpl
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.MessageEditedEventImpl
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.MessageEvent
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.MessageEventList
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.MessageEventListImpl
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.MessagePostedEventImpl
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.RoomImpl
-import me.wietlol.wietbot.clients.stackexchange.models.messages.models.UserImpl
+import me.wietlol.wietbot.data.messages.models.models.ChatEvent
+import me.wietlol.wietbot.data.messages.models.models.ChatUserImpl
+import me.wietlol.wietbot.data.messages.models.models.MessageDeletedEventImpl
+import me.wietlol.wietbot.data.messages.models.models.MessageEditedEventImpl
+import me.wietlol.wietbot.data.messages.models.models.MessageEvent
+import me.wietlol.wietbot.data.messages.models.models.MessageEventList
+import me.wietlol.wietbot.data.messages.models.models.MessageEventListImpl
+import me.wietlol.wietbot.data.messages.models.models.MessagePostedEventImpl
+import me.wietlol.wietbot.data.messages.models.models.MessageSourceImpl
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessageDeleted
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessageEdited
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.websocketclient.models.MessagePosted
@@ -17,7 +18,8 @@ import kotlin.collections.HashMap
 class MessageCache
 {
 	private val map: MutableMap<Int, MessageEventList> = HashMap()
-	private val storageTime: Long = 600
+	private val storageTime: Long = 600 // maybe move to configuration
+	private val platform: String = "stack-overflow" // maybe move to configuration
 	
 	fun processMessage(message: MessagePosted): MessageEventList =
 		messageListOf(message)
@@ -65,13 +67,12 @@ class MessageCache
 			message.timeStamp,
 			message.messageId,
 			message.content,
-			message.parentId,
-			message.showParent,
-			UserImpl(
+			ChatUserImpl(
 				message.userId,
-				message.userName
+				message.userName,
+				platform
 			),
-			RoomImpl(
+			MessageSourceImpl(
 				message.roomId,
 				message.roomName
 			)
@@ -89,12 +90,12 @@ class MessageCache
 			message.timeStamp,
 			message.messageId,
 			message.content,
-			message.messageEdits,
-			UserImpl(
+			ChatUserImpl(
 				message.userId,
-				message.userName
+				message.userName,
+				platform
 			),
-			RoomImpl(
+			MessageSourceImpl(
 				message.roomId,
 				message.roomName
 			)
@@ -106,17 +107,17 @@ class MessageCache
 			originalMessage.events + messageOf(message)
 		)
 	
-	private fun messageOf(message: MessageDeleted): MessageEvent =
+	private fun messageOf(message: MessageDeleted): ChatEvent =
 		MessageDeletedEventImpl(
 			message.id,
 			message.timeStamp,
 			message.messageId,
-			message.messageEdits,
-			UserImpl(
+			ChatUserImpl(
 				message.userId,
-				message.userName
+				message.userName,
+				platform
 			),
-			RoomImpl(
+			MessageSourceImpl(
 				message.roomId,
 				message.roomName
 			)

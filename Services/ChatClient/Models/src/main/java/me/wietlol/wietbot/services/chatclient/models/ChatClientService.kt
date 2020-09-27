@@ -8,6 +8,6 @@ import me.wietlol.wietbot.services.chatclient.models.models.SendMessageResponse
 interface ChatClientService
 {
 	fun sendMessage(request: SendMessageRequest): SendMessageResponse
-	
+
 	fun editMessage(request: EditMessageRequest): EditMessageResponse
 }

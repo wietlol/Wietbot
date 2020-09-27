@@ -3,9 +3,11 @@ package me.wietlol.wietbot.commands.hangman.core.api
 import com.amazonaws.services.lambda.runtime.events.SNSEvent
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import me.wietlol.aws.lambda.LambdaRequest
 import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.loggo.api.Logger
+import me.wietlol.loggo.common.CommonLog
+import me.wietlol.loggo.common.EventId
+import me.wietlol.utils.common.ByteWrapper
 import me.wietlol.wietbot.commands.hangman.core.interfaces.HangmanMessageFormatter
 import me.wietlol.wietbot.commands.hangman.core.interfaces.HangmanRepository
 import me.wietlol.wietbot.commands.hangman.core.interfaces.HangmanService
@@ -14,28 +16,37 @@ import me.wietlol.wietbot.commands.hangman.core.models.HangmanStateChange
 import me.wietlol.wietbot.commands.hangman.core.models.HangmanStateChange.Type.duplicateGuess
 import me.wietlol.wietbot.commands.hangman.core.setup.DependencyInjection
 import me.wietlol.wietbot.data.commands.models.models.CommandCall
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.BaseHandler
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.FunctionEventIdSet
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.lambdaFunction
 import me.wietlol.wietbot.services.chatclient.models.ChatClientService
-import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequest
-import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequest.Companion
+import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequestImpl
 import org.koin.core.KoinComponent
 import org.koin.core.get
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class HangmanHandler : KoinComponent
+class HangmanHandler : KoinComponent, BaseHandler
 {
 	init
 	{
 		DependencyInjection.bindServiceCollection()
 	}
 	
-	val repository: HangmanRepository = get()
-	val hangmanStateFactory: HangmanStateFactory = get()
-	val hangman: HangmanService = get()
-	val messageFormatter: HangmanMessageFormatter = get()
-	val chatClient: ChatClientService = get()
-	val mapper: ObjectMapper = get()
-	val commandSchema: Schema = get()
+	private val repository: HangmanRepository = get()
+	private val hangmanStateFactory: HangmanStateFactory = get()
+	private val hangman: HangmanService = get()
+	private val messageFormatter: HangmanMessageFormatter = get()
+	private val chatClient: ChatClientService = get()
+	private val mapper: ObjectMapper = get()
+	
+	override val requestSchema: Schema = get()
+	override val responseSchema: Schema = requestSchema
+	override val logger: Logger<CommonLog> = get()
+	
+	private val playEventIds = FunctionEventIdSet(
+		EventId(1125870098, "play-request"),
+		EventId(1360813113, "play-response"),
+		EventId(1421485051, "play-error"),
+	)
 	
 	fun playSns(request: SNSEvent) =
 		request
@@ -43,13 +54,10 @@ class HangmanHandler : KoinComponent
 			?.singleOrNull()
 			?.sns
 			?.message
-			?.let { mapper.readValue<LambdaRequest>(it) }
-			?.payload
-			?.let { commandSchema.deserialize<CommandCall>(it) }
-			?.let { play(it) }
+			?.let { mapper.readValue<ByteWrapper>(it) }
+			?.let { lambdaFunction(it, playEventIds, ::play) }
 	
-	
-	private fun play(call: CommandCall)
+	private fun play(call: CommandCall): Int
 	{
 		val roomId = call.message.source.id
 		
@@ -61,14 +69,14 @@ class HangmanHandler : KoinComponent
 		{
 			guess == null ->
 			{
-				chatClient.sendMessage(SendMessageRequest.of(
+				chatClient.sendMessage(SendMessageRequestImpl(
 					roomId,
 					":${call.message.id} please provide a single character as your guess"
 				))
 			}
 			hangman.isGuessValid(guess).not() ->
 			{
-				chatClient.sendMessage(Companion.of(
+				chatClient.sendMessage(SendMessageRequestImpl(
 					roomId,
 					":${call.message.id} please use an english alphabet character as your guess"
 				))
@@ -91,11 +99,13 @@ class HangmanHandler : KoinComponent
 				
 				val response = messageFormatter.formatMessage(stateChange)
 				
-				chatClient.sendMessage(SendMessageRequest.of(
+				chatClient.sendMessage(SendMessageRequestImpl(
 					roomId,
 					response
 				))
 			}
 		}
+		
+		return 0
 	}
 }

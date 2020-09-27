@@ -2,26 +2,31 @@ service: 'wietbot-__maven-project-name__'
 
 provider:
     name: 'aws'
-    runtime: 'java8'
+    runtime: 'java11'
     region: 'eu-west-1'
     memorySize: '512'
-    timeout: '10'
+    timeout: '60'
 
     environment:
+        service__name: '${self:service}'
+        heater_warmupAware: 'true'
 
     iamRoleStatements:
 
     vpc:
-        securityGroupIds:
-            - 'sg-4fdd0307'
-        subnetIds:
-            - 'subnet-41e1c709'
-            - 'subnet-2ca23276'
-            - 'subnet-99faadff'
+
+plugins:
+    - 'serverless-plugin-log-retention'
+    - 'serverless-log-forwarding'
+
 custom:
     version: '1.0.0-SNAPSHOT'
+    logRetentionInDays: '3'
+    logForwarding:
+        destinationARN: 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-data-log-dev-saveLogsCloudwatch'
+        filterPattern: '{ $.severity.value >= 0 }'
 
 package:
-    artifact: 'target/__maven-project-name__-core-${self:custom.version}-jar-with-dependencies.jar'
+    artifact: 'target/__maven-project-name__-core-${self:custom.version}.jar'
 
 functions:

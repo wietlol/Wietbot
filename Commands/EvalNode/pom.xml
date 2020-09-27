@@ -6,7 +6,7 @@
 	
 	<groupId>me.wietlol.wietbot</groupId>
 	<artifactId>commands-eval-node</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	
 	<modules>
@@ -14,4 +14,139 @@
 		<module>Core</module>
 		<module>Models</module>
 	</modules>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.java.version>11</project.java.version>
+		
+		<maven.compiler.target>${project.java.version}</maven.compiler.target>
+		<maven.compiler.source>${project.java.version}</maven.compiler.source>
+		<maven-source.version>3.2.1</maven-source.version>
+		
+		<kotlin.version>1.4.0</kotlin.version>
+		<kotlin-maven.jvm-target>${project.java.version}</kotlin-maven.jvm-target>
+		
+		<junit-platform.version>1.5.2</junit-platform.version>
+		<junit-jupiter.version>5.4.2</junit-jupiter.version>
+		<assertj.version>3.12.2</assertj.version>
+		
+		<aws-lambda.version>1.11.656</aws-lambda.version>
+		<aws-lambda-events.version>2.2.7</aws-lambda-events.version>
+		<koin.version>2.0.1</koin.version>
+		<jackson.version>2.10.1</jackson.version>
+
+		<bitblock.version>1.0.0</bitblock.version>
+		<utils.version>1.0.0</utils.version>
+		<konfig.version>1.0.0</konfig.version>
+		<loggo.version>1.0.0</loggo.version>
+		<wietbot-data-commands.version>1.0.0</wietbot-data-commands.version>
+		<wietbot-services-chat-client.version>1.0.0</wietbot-services-chat-client.version>
+		<wietbot-libraries-lambda-base.version>1.0.0</wietbot-libraries-lambda-base.version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-test-junit</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-source-plugin</artifactId>
+			<version>${maven-source.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-commons</artifactId>
+			<version>${junit-platform.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>${assertj.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<distributionManagement>
+		<repository>
+			<id>central</id>
+			<name>a0vmtz5txwt9h-artifactory-primary-0-releases</name>
+			<url>https://wietlol.jfrog.io/artifactory/libs-release</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>a0vmtz5txwt9h-artifactory-primary-0-snapshots</name>
+			<url>https://wietlol.jfrog.io/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>${kotlin.version}</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<jvmTarget>${kotlin-maven.jvm-target}</jvmTarget>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

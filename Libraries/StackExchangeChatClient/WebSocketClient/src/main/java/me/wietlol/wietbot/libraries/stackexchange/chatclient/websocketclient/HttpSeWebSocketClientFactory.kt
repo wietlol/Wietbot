@@ -17,7 +17,8 @@ class HttpSeWebSocketClientFactory(
 	val chatEvents: SeChatEvents,
 	val serializer: SimpleJsonSerializer,
 	val initialRoom: Int,
-	val logger: CommonLogger
+	val logger: CommonLogger,
+	val reconnectCheckInterval: Long,
 ) : SeWebSocketClientFactory
 {
 	private val loginEventId = EventId(2145437065, "logging-in")
@@ -39,6 +40,6 @@ class HttpSeWebSocketClientFactory(
 		val accountFKey = getAccountFKey(cookieJar)
 		
 		val client = HttpSeChatClient(chatSiteUrl, accountFKey, cookieJar, serializer, logger)
-		return HttpSeWebSocketClient(client, chatSiteUrl, accountFKey, cookieJar, listener, chatEvents, serializer, initialRoom, logger)
+		return HttpSeWebSocketClient(client, chatSiteUrl, accountFKey, cookieJar, listener, chatEvents, serializer, initialRoom, logger, reconnectCheckInterval)
 	}
 }

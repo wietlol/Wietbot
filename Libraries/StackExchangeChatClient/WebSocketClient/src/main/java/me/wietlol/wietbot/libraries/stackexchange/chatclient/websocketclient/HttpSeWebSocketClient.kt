@@ -15,6 +15,7 @@ import java.io.Closeable
 import java.net.URI
 import java.time.Instant
 import java.util.*
+import kotlin.concurrent.schedule
 
 class HttpSeWebSocketClient(
 	private val chatClient: SeChatClient,
@@ -25,7 +26,8 @@ class HttpSeWebSocketClient(
 	private val chatEvents: SeChatEvents,
 	private val serializer: SimpleJsonSerializer,
 	private val initialRoom: Int,
-	logger: CommonLogger
+	logger: CommonLogger,
+	reconnectCheckInterval: Long,
 ) : SeWebSocketClient, SeChatClient by chatClient, Closeable
 {
 	private val logger = ScopedSourceLogger(logger) { it + "HttpSeWebSocketClient" }
@@ -46,26 +48,48 @@ class HttpSeWebSocketClient(
 	
 	private var client: WebSocketClient = connect(initialRoom)
 	
+//	private var hasUnexpectedlyClosed = false
+//	private val timer = Timer("reconnection-timer", false)
+//		.schedule(reconnectCheckInterval, reconnectCheckInterval) {
+//			if (hasUnexpectedlyClosed)
+//				reconnect(initialRoom)
+//		}
+	
 	override fun reconnect(roomId: Int)
 	{
 		logger.logTrace(reconnectEventId, mapOf(
 			"roomId" to roomId
 		))
 		
+		// try to close the existing connection if it exists
 		runCatching {
 			close()
 		}
-			.onFailure { it.printStackTrace() }
 		
-		client = connect(roomId)
+		try
+		{
+			client = connect(roomId)
+		}
+		catch (ex: Throwable)
+		{
+//			hasUnexpectedlyClosed = false
+			throw ex
+		}
 	}
 	
 	private fun reconnectIfNotClosing()
 	{
-		if (isClosing.not())
+		logger.logTrace(closeEventId, mapOf(
+			"isClosing" to isClosing,
+		))
+		
+		if (isClosing)
 		{
-			logger.logTrace(closeEventId, emptyMap<Any, Any>())
-			
+//			timer.cancel()
+		}
+		else
+		{
+//			hasUnexpectedlyClosed = true
 			reconnect(initialRoom)
 		}
 	}
@@ -126,8 +150,8 @@ class HttpSeWebSocketClient(
 		logger.logTrace(closeInvokedEventId, emptyMap<Any, Any>())
 		
 		isClosing = true
-		
 		client.close()
+		isClosing = false
 	}
 	
 	private data class WsAuthResponse(val url: String)
@@ -167,7 +191,7 @@ class HttpSeWebSocketClient(
 				ReconnectingWebSocketListener(it) { reconnectIfNotClosing() }
 			}
 			
-			return JavaWebSocketClientAdapter(URI(webSocketUrl), mapOf("Origin" to chatSiteUrl), listener)
+			return JavaWebSocketClientAdapter(URI(webSocketUrl), mapOf("Origin" to chatSiteUrl), listener, logger)
 				.apply { connect() }
 				.also {
 					logger.logTrace(connectedEventId, emptyMap<Any, Any>())

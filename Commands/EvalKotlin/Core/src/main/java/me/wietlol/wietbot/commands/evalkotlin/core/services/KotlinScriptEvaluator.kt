@@ -4,18 +4,21 @@ import me.wietlol.wietbot.commands.evalkotlin.core.interfaces.ScriptEvaluator
 import java.io.StringWriter
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
-import javax.script.ScriptEngineManager
+import javax.script.ScriptEngineFactory
 
 class KotlinScriptEvaluator : ScriptEvaluator
 {
-	init {
+	init
+	{
 		System.setProperty("idea.io.use.fallback", "true")
 		System.setProperty("idea.use.native.fs.for.win", "false")
 	}
 	
 	override fun evaluate(script: String): String
 	{
-		val engine: ScriptEngine = ScriptEngineManager().getEngineByExtension("kts")
+//		val engine: ScriptEngine = ScriptEngineManager().getEngineByExtension("kts")
+		val factory: ScriptEngineFactory = KotlinScriptEngineFactory()
+		val engine: ScriptEngine = factory.scriptEngine
 		
 		val sw = StringWriter()
 		engine.context.apply {

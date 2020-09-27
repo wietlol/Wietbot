@@ -41,6 +41,7 @@
 		<utils.version>1.0.0</utils.version>
 		<konfig.version>1.0.0</konfig.version>
 		<loggo.version>1.0.0</loggo.version>
+		<wietbot-libraries-lambda-base.version>1.0.0</wietbot-libraries-lambda-base.version>
 	</properties>
 	
 	<dependencies>

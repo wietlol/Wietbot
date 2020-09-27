@@ -8,6 +8,7 @@ provider:
     timeout: '60'
 
     environment:
+        service__name: '${self:service}'
         heater_warmupAware: 'true'
         database_host: '${ssm:/me/wietlol/wietbot/common/database/host}'
         database_name: '${ssm:/me/wietlol/wietbot/common/database/name}'
@@ -27,11 +28,19 @@ provider:
             Resource:
                 - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-services-chat-client-dev-sendMessage'
 
+plugins:
+    - 'serverless-plugin-log-retention'
+    - 'serverless-log-forwarding'
+
 custom:
-    version: '1.0.0-SNAPSHOT'
+    version: '1.0.0'
+    logRetentionInDays: '3'
+    logForwarding:
+        destinationARN: 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-data-log-dev-saveLogsCloudwatch'
+        filterPattern: '{ $.severity.value >= 0 }'
 
 package:
-    artifact: 'target/commands-hangman-core-${self:custom.version}-jar-with-dependencies.jar'
+    artifact: 'target/commands-hangman-core-${self:custom.version}.jar'
 
 functions:
     play:

@@ -1,17 +1,31 @@
+// hash: #5b61caf1
+// data: serializationKey:f45a1e40-debb-4eea-a636-ab67abf4f59d
+// @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.services.chatclient.models.serializers.SendMessageResponseSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface SendMessageResponse : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("f45a1e40-debb-4eea-a636-ab67abf4f59d")
+	}
+	
 	override val serializationKey: UUID
-		get() = SendMessageResponseSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val id: Int
 	
@@ -31,34 +45,13 @@ interface SendMessageResponse : BitSerializable, Jsonable
 			.with(id)
 	
 	override fun toJson(): String =
-		"""{"id":${id.toJson()}}"""
+		"""{"id":${id.toJsonString()}}"""
 	
 	fun duplicate(): SendMessageResponse
 	
-	companion object
-	{
-		fun of(id: Int): SendMessageResponse
-		{
-			return Implementation(id)
-		}
-		
-		private data class Implementation(
-			override var id: Int
-		) : SendMessageResponse
-		{
-			override fun equals(other: Any?): Boolean =
-				isEqualTo(other)
-			
-			override fun hashCode(): Int =
-				computeHashCode()
-			
-			override fun toString(): String =
-				toJson()
-			
-			override fun duplicate(): SendMessageResponse =
-				copy(
-					id = id
-				)
-		}
-	}
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

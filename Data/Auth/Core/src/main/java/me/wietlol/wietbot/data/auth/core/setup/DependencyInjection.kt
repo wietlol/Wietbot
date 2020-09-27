@@ -12,11 +12,14 @@ import me.wietlol.konfig.core.CommonSimpleValueResolver
 import me.wietlol.konfig.core.CommonValueResolver
 import me.wietlol.konfig.core.SimpleValueResolver
 import me.wietlol.konfig.core.datasources.EnvironmentDataSource
+import me.wietlol.loggo.common.CommonLogger
+import me.wietlol.loggo.core.loggers.DummyLogger
 import me.wietlol.wietbot.data.auth.core.interfaces.AuthRepository
 import me.wietlol.wietbot.data.auth.core.repository.DatabaseProvider
 import me.wietlol.wietbot.data.auth.core.repository.DatabaseSettings
 import me.wietlol.wietbot.data.auth.core.repository.ExposedAuthRepository
 import me.wietlol.wietbot.data.auth.models.WietbotDataAuth
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.setup.BaseDependencyInjection
 import org.jetbrains.exposed.sql.Database
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -28,15 +31,13 @@ object DependencyInjection
 	fun bindServiceCollection()
 	{
 		startKoin {
+			modules(BaseDependencyInjection.defaultServicesModules())
 			modules(buildMainModule())
 		}
 	}
 	
 	private fun buildMainModule(): Module =
 		module {
-			single { buildConfig() }
-			single { buildConfigPathParser() }
-			single { buildConfigSimpleValueResolver() }
 			single { buildDatabase() }
 			single { buildSerialization() }
 			single<AuthRepository> { ExposedAuthRepository(get()) }
@@ -56,17 +57,4 @@ object DependencyInjection
 		
 		return DatabaseProvider.getDatabase(settings)
 	}
-	
-	private fun Scope.buildConfig(): Konfig =
-		CommonKonfigBuilder()
-			.withPathParser(get())
-			.withValueResolver(CommonValueResolver(get(), get()))
-			.addSource(EnvironmentDataSource(get()))
-			.build()
-	
-	private fun buildConfigPathParser(): PathParser =
-		CommonPathParser(".")
-	
-	private fun Scope.buildConfigSimpleValueResolver(): SimpleValueResolver =
-		CommonSimpleValueResolver(get())
 }

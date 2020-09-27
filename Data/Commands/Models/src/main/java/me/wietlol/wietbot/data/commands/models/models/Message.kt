@@ -1,22 +1,39 @@
+// hash: #976907e3
+// data: serializationKey:54337246-e140-4583-a5f1-2c536cbcd0ba
+// @formatter:off
 package me.wietlol.wietbot.data.commands.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.commands.models.serializers.MessageSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface Message : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("54337246-e140-4583-a5f1-2c536cbcd0ba")
+	}
+	
 	override val serializationKey: UUID
-		get() = MessageSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val id: Int
-	val sender: User
+	
+	val sender: ChatUser
+	
 	val fullText: String
-	val source: Room
+	
+	val source: MessageSource
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -40,26 +57,13 @@ interface Message : BitSerializable, Jsonable
 			.with(source)
 	
 	override fun toJson(): String =
-		"""{"id":${id.toJson()},"sender":${sender.toJson()},"fullText":${fullText.toJson()},"source":${source.toJson()}}"""
+		"""{"id":${id.toJsonString()},"sender":${sender.toJsonString()},"fullText":${fullText.toJsonString()},"source":${source.toJsonString()}}"""
 	
-	companion object
-	{
-		fun of(id: Int, sender: User, fullText: String, source: Room): Message =
-			object : Message
-			{
-				override val id: Int = id
-				override val sender: User = sender
-				override val fullText: String = fullText
-				override val source: Room = source
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): Message
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

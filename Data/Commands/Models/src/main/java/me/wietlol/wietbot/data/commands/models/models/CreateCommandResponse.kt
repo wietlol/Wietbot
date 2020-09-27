@@ -1,18 +1,31 @@
+// hash: #921bee77
+// data: serializationKey:c0964905-b610-4d54-a8b6-2aef03c7f2a2
+// @formatter:off
 package me.wietlol.wietbot.data.commands.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.data.commands.models.serializers.CreateCommandResponseSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface CreateCommandResponse : BitSerializable, Jsonable
 {
-	override val serializationKey: UUID
-		get() = CreateCommandResponseSerializer.modelId
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("c0964905-b610-4d54-a8b6-2aef03c7f2a2")
+	}
 	
+	override val serializationKey: UUID
+		get() = Companion.serializationKey
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -30,20 +43,11 @@ interface CreateCommandResponse : BitSerializable, Jsonable
 	override fun toJson(): String =
 		"""{}"""
 	
-	companion object
-	{
-		fun of(): CreateCommandResponse =
-			object : CreateCommandResponse
-			{
-				
-				override fun equals(other: Any?): Boolean =
-					isEqualTo(other)
-				
-				override fun hashCode(): Int =
-					computeHashCode()
-				
-				override fun toString(): String =
-					toJson()
-			}
-	}
+	fun duplicate(): CreateCommandResponse
+	
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

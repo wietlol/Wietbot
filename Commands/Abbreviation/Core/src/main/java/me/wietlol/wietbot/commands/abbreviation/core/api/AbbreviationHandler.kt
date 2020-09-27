@@ -2,48 +2,50 @@ package me.wietlol.wietbot.commands.abbreviation.core.api
 
 import com.amazonaws.services.lambda.runtime.events.SNSEvent
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import me.wietlol.aws.lambda.LambdaRequest
 import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.loggo.api.Logger
+import me.wietlol.loggo.common.CommonLog
+import me.wietlol.loggo.common.EventId
 import me.wietlol.wietbot.commands.abbreviation.core.interfaces.AbbreviationResolver
-import me.wietlol.wietbot.commands.abbreviation.core.models.AbbreviationSearchResult
 import me.wietlol.wietbot.commands.abbreviation.core.models.Definition
 import me.wietlol.wietbot.commands.abbreviation.core.setup.DependencyInjection
 import me.wietlol.wietbot.data.commands.models.models.CommandCall
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.BaseEventHandler
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.FunctionEventIdSet
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.lambdaFunction
 import me.wietlol.wietbot.services.chatclient.models.ChatClientService
-import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequest
-import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequest.Companion
+import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequestImpl
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import java.lang.StringBuilder
 
-class AbbreviationHandler : KoinComponent
+class AbbreviationHandler : KoinComponent, BaseEventHandler
 {
 	init
 	{
 		DependencyInjection.bindServiceCollection()
 	}
 	
-	val chatClient: ChatClientService = get()
-	val mapper: ObjectMapper = get()
-	val commandSchema: Schema = get()
-	val abbreviationResolver: AbbreviationResolver = get()
+	private val chatClient: ChatClientService = get()
+	private val abbreviationResolver: AbbreviationResolver = get()
 	
-	val maximumResults: Int = 5
+	private val maximumResults: Int = 5
+	
+	override val requestSchema: Schema = get()
+	override val responseSchema: Schema = requestSchema
+	override val logger: Logger<CommonLog> = get()
+	override val mapper: ObjectMapper = get()
+	
+	private val resolveEventIds = FunctionEventIdSet(
+		EventId(1844626768, "resolve-request"),
+		EventId(1356687980, "resolve-response"),
+		EventId(1670115860, "resolve-error"),
+	)
 	
 	fun resolveSns(request: SNSEvent) =
-		request
-			.records
-			?.singleOrNull()
-			?.sns
-			?.message
-			?.let { mapper.readValue<LambdaRequest>(it) }
-			?.payload
-			?.let { commandSchema.deserialize<CommandCall>(it) }
-			?.let { resolve(it) }
+		lambdaFunction(request, resolveEventIds, ::resolve)
 	
-	private fun resolve(call: CommandCall)
+	private fun resolve(call: CommandCall): Int
 	{
 		val abbreviations = call.argumentText
 			.split(" ")
@@ -53,7 +55,7 @@ class AbbreviationHandler : KoinComponent
 		{
 			0 ->
 			{
-				chatClient.sendMessage(SendMessageRequest.of(
+				chatClient.sendMessage(SendMessageRequestImpl(
 					call.message.source.id,
 					"I need at least one abbreviation to search for."
 				))
@@ -65,7 +67,7 @@ class AbbreviationHandler : KoinComponent
 				
 				if (definitions.isEmpty())
 				{
-					chatClient.sendMessage(SendMessageRequest.of(
+					chatClient.sendMessage(SendMessageRequestImpl(
 						call.message.source.id,
 						"No definitions found for '$abbreviation', did you mean any of the following: ${suggestions.joinToString(", ")}."
 					))
@@ -84,7 +86,7 @@ class AbbreviationHandler : KoinComponent
 					
 					textBuilder.append("powered by https://www.abbreviations.com/")
 					
-					chatClient.sendMessage(SendMessageRequest.of(
+					chatClient.sendMessage(SendMessageRequestImpl(
 						call.message.source.id,
 						textBuilder.toString()
 					))
@@ -92,12 +94,14 @@ class AbbreviationHandler : KoinComponent
 			}
 			else ->
 			{
-				chatClient.sendMessage(SendMessageRequest.of(
+				chatClient.sendMessage(SendMessageRequestImpl(
 					call.message.source.id,
 					"Dang it! I can't do it all at once!"
 				))
 			}
 		}
+
+		return 0
 	}
 	
 	private fun getRatingText(definition: Definition): String =

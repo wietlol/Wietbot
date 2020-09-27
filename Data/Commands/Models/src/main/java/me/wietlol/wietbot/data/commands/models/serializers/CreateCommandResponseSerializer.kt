@@ -1,43 +1,59 @@
+// hash: #df600b0d
+// @formatter:off
 package me.wietlol.wietbot.data.commands.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.commands.models.builders.CreateCommandResponseBuilder
 import me.wietlol.wietbot.data.commands.models.models.*
-import me.wietlol.wietbot.data.commands.models.builders.*
+import me.wietlol.wietbot.data.commands.models.models.CreateCommandResponse
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object CreateCommandResponseSerializer : ModelSerializer<CreateCommandResponse, CreateCommandResponse>
 {
-	private const val endOfObject = 0
+	private val endOfObject: Int
+		= 0
 	
 	override val modelId: UUID
-		get() = UUID.fromString("f410ddd2-41ff-40aa-96dc-f554b8fe24de")
+		get() = CreateCommandResponse.serializationKey
+	
 	override val dataClass: Class<CreateCommandResponse>
 		get() = CreateCommandResponse::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: CreateCommandResponse)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: CreateCommandResponse)
 	{
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): CreateCommandResponse
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): CreateCommandResponse
 	{
-		val builder = CreateCommandResponseBuilder()
-		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
+				endOfObject -> return CreateCommandResponseImpl(
+				)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

@@ -29,22 +29,37 @@ class ClientCommandHandler(
 	val initialRoom: Int,
 )
 {
+	private var clientStateSince: Long = System.currentTimeMillis()
 	private var client: SeWebSocketClient? = null
+		get()
+		{
+			val c = field
+			
+//			if (c != null && c.isOpen.not())
+//				c.reconnect(initialRoom)
+			
+			return c
+		}
+		set(value)
+		{
+			clientStateSince = System.currentTimeMillis()
+			field = value
+		}
 	
 	fun process(command: ClientCommandRequest): ClientCommandResponse =
 		when (command)
 		{
-			is StartClientRequest -> startClient(command)
+			is StartClientRequest -> startClient()
 			is JoinRoomRequest -> joinRoom(command)
 			is LeaveRoomRequest -> leaveRoom(command)
-			is ReconnectRequest -> reconnect(command)
+			is ReconnectRequest -> reconnect()
 			is BarrelRollRequest -> barrelRoll(command)
-			is ShutdownRequest -> shutdown(command)
-			is GetInfoRequest -> getInfo(command)
-			else -> TODO()
+			is ShutdownRequest -> shutdown()
+			is GetInfoRequest -> getInfo()
+			else -> TODO("unrecognized command")
 		}
 	
-	private fun startClient(command: StartClientRequest): ClientCommandResponse =
+	private fun startClient(): ClientCommandResponse =
 		if (client == null)
 		{
 			client = webSocketClientFactory.create(credentials)
@@ -83,7 +98,7 @@ class ClientCommandHandler(
 		}
 	}
 	
-	private fun reconnect(command: ReconnectRequest): ClientCommandResponse
+	private fun reconnect(): ClientCommandResponse
 	{
 		val client = client
 		return if (client == null)
@@ -120,7 +135,7 @@ class ClientCommandHandler(
 		}
 	}
 	
-	private fun shutdown(command: ShutdownRequest): ClientCommandResponse
+	private fun shutdown(): ClientCommandResponse
 	{
 		val client = client
 		return if (client == null)
@@ -135,10 +150,8 @@ class ClientCommandHandler(
 		}
 	}
 	
-	private fun getInfo(command: GetInfoRequest): ClientCommandResponse
+	private fun getInfo(): ClientCommandResponse
 	{
-		// todo include information about how long the web socket connection is up
-		
 		val runtime = Runtime.getRuntime()
 		val freeMemory = runtime.freeMemory()
 		val totalMemory = runtime.totalMemory()
@@ -154,7 +167,9 @@ class ClientCommandHandler(
 			os.availableProcessors,
 			usedMemory,
 			maxMemory,
-			runtime2.uptime,
+			runtime2.startTime,
+			client != null,
+			clientStateSince,
 		)
 	}
 }

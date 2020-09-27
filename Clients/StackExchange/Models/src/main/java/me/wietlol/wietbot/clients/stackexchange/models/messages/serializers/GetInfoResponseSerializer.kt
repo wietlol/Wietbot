@@ -1,4 +1,4 @@
-// hash: #67aba0ee
+// hash: #da4dd6e2
 // @formatter:off
 package me.wietlol.wietbot.clients.stackexchange.models.messages.serializers
 
@@ -45,8 +45,14 @@ object GetInfoResponseSerializer : ModelSerializer<GetInfoResponse, GetInfoRespo
 	private val maxMemoryIndex: Int
 		= 6
 	
-	private val uptimeIndex: Int
+	private val runtimeSinceIndex: Int
 		= 7
+	
+	private val clientIsRunningIndex: Int
+		= 8
+	
+	private val clientSinceIndex: Int
+		= 9
 	
 	override val modelId: UUID
 		get() = GetInfoResponse.serializationKey
@@ -74,8 +80,14 @@ object GetInfoResponseSerializer : ModelSerializer<GetInfoResponse, GetInfoRespo
 		stream.writeUnsignedVarInt(maxMemoryIndex)
 		schema.serialize(serializationContext, stream, entity.maxMemory)
 		
-		stream.writeUnsignedVarInt(uptimeIndex)
-		schema.serialize(serializationContext, stream, entity.uptime)
+		stream.writeUnsignedVarInt(runtimeSinceIndex)
+		schema.serialize(serializationContext, stream, entity.runtimeSince)
+		
+		stream.writeUnsignedVarInt(clientIsRunningIndex)
+		schema.serialize(serializationContext, stream, entity.clientIsRunning)
+		
+		stream.writeUnsignedVarInt(clientSinceIndex)
+		schema.serialize(serializationContext, stream, entity.clientSince)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
@@ -88,7 +100,9 @@ object GetInfoResponseSerializer : ModelSerializer<GetInfoResponse, GetInfoRespo
 		var processors: Int? = null
 		var usedMemory: Long? = null
 		var maxMemory: Long? = null
-		var uptime: Long? = null
+		var runtimeSince: Long? = null
+		var clientIsRunning: Boolean? = null
+		var clientSince: Long? = null
 		
 		while (true)
 		{
@@ -101,7 +115,9 @@ object GetInfoResponseSerializer : ModelSerializer<GetInfoResponse, GetInfoRespo
 					processors!!,
 					usedMemory!!,
 					maxMemory!!,
-					uptime!!,
+					runtimeSince!!,
+					clientIsRunning!!,
+					clientSince!!,
 				)
 				nameIndex -> name = schema.deserialize(deserializationContext, stream)
 				architectureIndex -> architecture = schema.deserialize(deserializationContext, stream)
@@ -109,7 +125,9 @@ object GetInfoResponseSerializer : ModelSerializer<GetInfoResponse, GetInfoRespo
 				processorsIndex -> processors = schema.deserialize(deserializationContext, stream)
 				usedMemoryIndex -> usedMemory = schema.deserialize(deserializationContext, stream)
 				maxMemoryIndex -> maxMemory = schema.deserialize(deserializationContext, stream)
-				uptimeIndex -> uptime = schema.deserialize(deserializationContext, stream)
+				runtimeSinceIndex -> runtimeSince = schema.deserialize(deserializationContext, stream)
+				clientIsRunningIndex -> clientIsRunning = schema.deserialize(deserializationContext, stream)
+				clientSinceIndex -> clientSince = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}

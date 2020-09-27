@@ -1,74 +1,79 @@
 package me.wietlol.wietbot.services.chatclient.core.api
 
-import me.wietlol.aws.lambda.LambdaRequest
-import me.wietlol.aws.lambda.LambdaResponse
 import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.loggo.api.Logger
+import me.wietlol.loggo.common.CommonLog
+import me.wietlol.loggo.common.EventId
+import me.wietlol.utils.common.ByteWrapper
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.BaseHandler
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.FunctionEventIdSet
+import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.lambdaFunction
 import me.wietlol.wietbot.libraries.stackexchange.chatclient.chatclient.SeChatClient
-import me.wietlol.wietbot.services.chatclient.core.interfaces.ChatRetryService
+import me.wietlol.wietbot.libraries.stackexchange.chatclient.chatclient.SeChatClientFactory
+import me.wietlol.wietbot.libraries.stackexchange.chatclient.chatclient.SeCredentials
 import me.wietlol.wietbot.services.chatclient.core.setup.DependencyInjection
 import me.wietlol.wietbot.services.chatclient.models.ChatClientService
 import me.wietlol.wietbot.services.chatclient.models.models.EditMessageRequest
 import me.wietlol.wietbot.services.chatclient.models.models.EditMessageResponse
+import me.wietlol.wietbot.services.chatclient.models.models.EditMessageResponseImpl
 import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequest
 import me.wietlol.wietbot.services.chatclient.models.models.SendMessageResponse
+import me.wietlol.wietbot.services.chatclient.models.models.SendMessageResponseImpl
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
-class ChatClientHandler : KoinComponent, ChatClientService
+class ChatClientHandler : KoinComponent, ChatClientService, BaseHandler
 {
 	init
 	{
 		DependencyInjection.bindServiceCollection()
 	}
 	
-	val chatClient: SeChatClient = get()
-	val schema: Schema = get()
-	val chatRetryService: ChatRetryService = get()
+	private val chatClientFactory: SeChatClientFactory = get()
+	private val credentials: SeCredentials = get()
+	private var chatClient: SeChatClient = chatClientFactory.create(credentials)
 	
-	fun sendMessageBit(request: LambdaRequest): LambdaResponse? =
-		request
-			.payload
-			?.let { schema.deserialize<SendMessageRequest>(it) }
-			?.let { sendMessage(it) }
-			?.let { schema.serialize(it) }
-			?.let { LambdaResponse(it) }
+	override val requestSchema: Schema = get()
+	override val responseSchema: Schema = requestSchema
+	override val logger: Logger<CommonLog> = get()
 	
-	override fun sendMessage(request: SendMessageRequest): SendMessageResponse
-	{
-		try
-		{
+	private val sendMessageEventIds = FunctionEventIdSet(
+		EventId(1220909344, "sendMessage-request"),
+		EventId(1717808799, "sendMessage-response"),
+		EventId(1585545767, "sendMessage-error"),
+	)
+	private val editMessageEventIds = FunctionEventIdSet(
+		EventId(1267151029, "editMessage-request"),
+		EventId(1832470963, "editMessage-response"),
+		EventId(1764820660, "editMessage-error"),
+	)
+	
+	fun sendMessageBit(request: ByteWrapper): ByteWrapper? =
+		lambdaFunction(request, sendMessageEventIds, ::sendMessage)
+	
+	override fun sendMessage(request: SendMessageRequest): SendMessageResponse =
+		invoke {
 			val id = chatClient.sendMessage(request.roomId, request.text)
-
-			return SendMessageResponse.of(id)
+			SendMessageResponseImpl(id)
 		}
-		catch (ex: Throwable)
-		{
-			chatRetryService.retrySendMessage(request, 1)
-			throw ex
+	
+	fun editMessageBit(request: ByteWrapper): ByteWrapper? =
+		lambdaFunction(request, editMessageEventIds, ::editMessage)
+	
+	override fun editMessage(request: EditMessageRequest): EditMessageResponse =
+		invoke {
+			chatClient.editMessage(request.messageId, request.text)
+			EditMessageResponseImpl()
 		}
-	}
 	
-	fun editMessageBit(request: LambdaRequest): LambdaResponse? =
-		request
-			.payload
-			?.let { schema.deserialize<EditMessageRequest>(it) }
-			?.let { editMessage(it) }
-			?.let { schema.serialize(it) }
-			?.let { LambdaResponse(it) }
-	
-	override fun editMessage(request: EditMessageRequest): EditMessageResponse
-	{
+	private fun <R> invoke(action: () -> R): R =
 		try
 		{
-			chatClient.editMessage(request.messageId, request.text)
-			
-			return EditMessageResponse.of()
+			action()
 		}
 		catch (ex: Throwable)
 		{
-			chatRetryService.retryEditMessage(request, 1)
-			throw ex
+			chatClient = chatClientFactory.create(credentials)
+			action()
 		}
-	}
 }

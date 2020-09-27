@@ -2,12 +2,13 @@ service: 'wietbot-commands-eval-csharp'
 
 provider:
     name: 'aws'
-    runtime: 'java8'
+    runtime: 'java11'
     region: 'eu-west-1'
     memorySize: '512'
-    timeout: '30'
+    timeout: '60'
 
     environment:
+        service__name: '${self:service}'
         heater_warmupAware: 'true'
 
     iamRoleStatements:
@@ -18,11 +19,19 @@ provider:
                 - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-commands-eval-csharp-2-dev-evalCSharpPrivate'
                 - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-services-chat-client-dev-sendMessage'
 
+plugins:
+    - 'serverless-plugin-log-retention'
+    - 'serverless-log-forwarding'
+
 custom:
-    version: '1.0.0-SNAPSHOT'
+    version: '1.0.0'
+    logRetentionInDays: '3'
+    logForwarding:
+        destinationARN: 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-data-log-dev-saveLogsCloudwatch'
+        filterPattern: '{ $.severity.value >= 0 }'
 
 package:
-    artifact: 'target/commands-eval-csharp-core-${self:custom.version}-jar-with-dependencies.jar'
+    artifact: 'target/commands-eval-csharp-core-${self:custom.version}.jar'
 
 functions:
     evalCSharp:

@@ -1,53 +1,78 @@
+// hash: #ffc087e1
+// @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.services.chatclient.models.builders.EditMessageRequestBuilder
 import me.wietlol.wietbot.services.chatclient.models.models.*
-import me.wietlol.wietbot.services.chatclient.models.builders.*
+import me.wietlol.wietbot.services.chatclient.models.models.EditMessageRequest
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object EditMessageRequestSerializer : ModelSerializer<EditMessageRequest, EditMessageRequest>
 {
-	private const val endOfObject = 0
-	private const val messageIdIndex = 1
-	private const val textIndex = 2
+	private val endOfObject: Int
+		= 0
+	
+	private val messageIdIndex: Int
+		= 1
+	
+	private val textIndex: Int
+		= 2
 	
 	override val modelId: UUID
-		get() = UUID.fromString("6e027d37-2a4b-47c5-99fc-8875db239e0b")
+		get() = EditMessageRequest.serializationKey
+	
 	override val dataClass: Class<EditMessageRequest>
 		get() = EditMessageRequest::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: EditMessageRequest)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: EditMessageRequest)
 	{
 		stream.writeUnsignedVarInt(messageIdIndex)
-		schema.serialize(stream, entity.messageId)
+		schema.serialize(serializationContext, stream, entity.messageId)
 		
 		stream.writeUnsignedVarInt(textIndex)
-		schema.serialize(stream, entity.text)
+		schema.serialize(serializationContext, stream, entity.text)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): EditMessageRequest
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): EditMessageRequest
 	{
-		val builder = EditMessageRequestBuilder()
+		var messageId: Int? = null
+		var text: String? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
-				messageIdIndex -> builder.messageId = schema.deserialize(stream)
-				textIndex -> builder.text = schema.deserialize(stream)
+				endOfObject -> return EditMessageRequestImpl(
+					messageId!!,
+					text!!,
+				)
+				messageIdIndex -> messageId = schema.deserialize(deserializationContext, stream)
+				textIndex -> text = schema.deserialize(deserializationContext, stream)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

@@ -1,64 +1,69 @@
+// hash: #216b3c5d
+// @formatter:off
 package me.wietlol.wietbot.data.commands.models.serializers
 
-import me.wietlol.bitblock.api.serialization.ModelSerializer
-import me.wietlol.bitblock.api.serialization.Schema
-import me.wietlol.bitblock.api.serialization.deserialize
-import me.wietlol.bitblock.core.BitBlock
-import me.wietlol.bitblock.core.registry.CommonModelRegistryKey
-import me.wietlol.common.readUnsignedVarInt
-import me.wietlol.common.writeUnsignedVarInt
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
-
+import java.util.UUID
+import me.wietlol.bitblock.api.serialization.DeserializationContext
+import me.wietlol.bitblock.api.serialization.ModelSerializer
+import me.wietlol.bitblock.api.serialization.Schema
+import me.wietlol.bitblock.api.serialization.SerializationContext
+import me.wietlol.bitblock.api.serialization.deserialize
+import me.wietlol.utils.common.streams.readUnsignedVarInt
+import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.commands.models.builders.ListCommandsResponseBuilder
 import me.wietlol.wietbot.data.commands.models.models.*
-import me.wietlol.wietbot.data.commands.models.builders.*
+import me.wietlol.wietbot.data.commands.models.models.ListCommandsResponse
+
+// @formatter:on
+// @tomplot:customCode:start:70v0f9
+// @tomplot:customCode:end
+// @formatter:off
+
 
 object ListCommandsResponseSerializer : ModelSerializer<ListCommandsResponse, ListCommandsResponse>
 {
-	private const val endOfObject = 0
-	private const val commandsIndex = 1
+	private val endOfObject: Int
+		= 0
+	
+	private val commandsIndex: Int
+		= 1
 	
 	override val modelId: UUID
-		get() = UUID.fromString("0bab9d88-834a-4654-b151-28c11b8a2ea9")
+		get() = ListCommandsResponse.serializationKey
+	
 	override val dataClass: Class<ListCommandsResponse>
 		get() = ListCommandsResponse::class.java
 	
-	override fun serialize(stream: OutputStream, schema: Schema, entity: ListCommandsResponse)
+	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: ListCommandsResponse)
 	{
-		if (entity.commands.isNotEmpty())
-		{
-			stream.writeUnsignedVarInt(commandsIndex)
-			entity.commands.forEach {
-				schema.serialize(stream, it)
-			}
-			stream.writeUnsignedVarInt(endOfObject)
-		}
+		stream.writeUnsignedVarInt(commandsIndex)
+		schema.serialize(serializationContext, stream, entity.commands)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
-	override fun deserialize(stream: InputStream, schema: Schema): ListCommandsResponse
+	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): ListCommandsResponse
 	{
-		val builder = ListCommandsResponseBuilder()
+		var commands: MutableList<Command>? = mutableListOf()
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return builder.build()
-				commandsIndex ->
-				{
-					while (true)
-					{
-						val key = stream.readUnsignedVarInt()
-						if (key == 0)
-							break
-						
-						builder.commands.add(schema.deserialize(stream, key))
-					}
-				}
+				endOfObject -> return ListCommandsResponseImpl(
+					commands!!.toMutableList(),
+				)
+				commandsIndex -> commands = schema.deserialize(deserializationContext, stream)
+				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}
 	}
+	
+	// @formatter:on
+	// @tomplot:customCode:start:5CFs54
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

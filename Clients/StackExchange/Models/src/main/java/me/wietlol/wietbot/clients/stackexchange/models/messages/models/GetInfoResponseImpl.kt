@@ -1,4 +1,4 @@
-// hash: #08288a8e
+// hash: #0bebc143
 // @formatter:off
 package me.wietlol.wietbot.clients.stackexchange.models.messages.models
 
@@ -17,7 +17,9 @@ data class GetInfoResponseImpl(
 	override val processors: Int,
 	override val usedMemory: Long,
 	override val maxMemory: Long,
-	override val uptime: Long,
+	override val runtimeSince: Long,
+	override val clientIsRunning: Boolean,
+	override val clientSince: Long,
 ) : GetInfoResponse
 {
 	override fun equals(other: Any?): Boolean =
@@ -37,7 +39,9 @@ data class GetInfoResponseImpl(
 			processors = processors,
 			usedMemory = usedMemory,
 			maxMemory = maxMemory,
-			uptime = uptime,
+			runtimeSince = runtimeSince,
+			clientIsRunning = clientIsRunning,
+			clientSince = clientSince,
 		)
 	
 	// @formatter:on

@@ -1,19 +1,34 @@
+// hash: #944f2d52
+// data: serializationKey:d8200d78-b573-42a8-8152-88f227d477ba
+// @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
 
+import java.util.UUID
 import me.wietlol.bitblock.api.serialization.BitSerializable
-import me.wietlol.common.emptyHashCode
-import me.wietlol.common.Jsonable
-import me.wietlol.common.toJson
-import me.wietlol.common.with
-import java.util.*
-import me.wietlol.wietbot.services.chatclient.models.serializers.EditMessageRequestSerializer
+import me.wietlol.utils.common.Jsonable
+import me.wietlol.utils.common.emptyHashCode
+import me.wietlol.utils.common.toJsonString
+import me.wietlol.utils.common.with
+
+// @formatter:on
+// @tomplot:customCode:start:gAeCSq
+// @tomplot:customCode:end
+// @formatter:off
+
 
 interface EditMessageRequest : BitSerializable, Jsonable
 {
+	companion object
+	{
+		val serializationKey: UUID
+			get() = UUID.fromString("d8200d78-b573-42a8-8152-88f227d477ba")
+	}
+	
 	override val serializationKey: UUID
-		get() = EditMessageRequestSerializer.modelId
+		get() = Companion.serializationKey
 	
 	val messageId: Int
+	
 	val text: String
 	
 	fun isEqualTo(other: Any?): Boolean
@@ -34,36 +49,13 @@ interface EditMessageRequest : BitSerializable, Jsonable
 			.with(text)
 	
 	override fun toJson(): String =
-		"""{"messageId":${messageId.toJson()},"text":${text.toJson()}}"""
+		"""{"messageId":${messageId.toJsonString()},"text":${text.toJsonString()}}"""
 	
 	fun duplicate(): EditMessageRequest
 	
-	companion object
-	{
-		fun of(messageId: Int, text: String): EditMessageRequest
-		{
-			return Implementation(messageId, text)
-		}
-		
-		private data class Implementation(
-			override var messageId: Int,
-			override var text: String
-		) : EditMessageRequest
-		{
-			override fun equals(other: Any?): Boolean =
-				isEqualTo(other)
-			
-			override fun hashCode(): Int =
-				computeHashCode()
-			
-			override fun toString(): String =
-				toJson()
-			
-			override fun duplicate(): EditMessageRequest =
-				copy(
-					messageId = messageId,
-					text = text
-				)
-		}
-	}
+	// @formatter:on
+	// @tomplot:customCode:start:32T3K8
+	// @tomplot:customCode:end
+	// @formatter:off
 }
+// @formatter:on

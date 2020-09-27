@@ -6,10 +6,11 @@ provider:
     region: 'eu-west-1'
     memorySize: '512'
     timeout: '60'
-
+    
     environment:
+        service__name: '${self:service}'
         heater_warmupAware: 'true'
-
+    
     iamRoleStatements:
         -   Effect: 'Allow'
             Action:
@@ -17,11 +18,19 @@ provider:
             Resource:
                 - 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-services-chat-client-dev-sendMessage'
 
+plugins:
+    - 'serverless-plugin-log-retention'
+    - 'serverless-log-forwarding'
+
 custom:
-    version: '1.0.0-SNAPSHOT'
+    version: '1.0.0'
+    logRetentionInDays: '3'
+    logForwarding:
+        destinationARN: 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-data-log-dev-saveLogsCloudwatch'
+        filterPattern: '{ $.severity.value >= 0 }'
 
 package:
-    artifact: 'target/commands-abbreviation-core-${self:custom.version}-jar-with-dependencies.jar'
+    artifact: 'target/commands-abbreviation-core-${self:custom.version}.jar'
 
 functions:
     resolve:
@@ -30,7 +39,7 @@ functions:
             -   sns:
                     arn: !Ref CommandsAbbreviation
                     topicName: 'wietbot-commands-abbreviation'
-    
+
 resources:
     Resources:
         CommandsAbbreviation:

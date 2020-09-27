@@ -1,4 +1,4 @@
-// hash: #5c5f9be9
+// hash: #edae8d45
 // data: serializationKey:d310fcea-e2b4-424b-a4b1-6dda202550d5
 // @formatter:off
 package me.wietlol.wietbot.clients.stackexchange.models.messages.models
@@ -39,7 +39,11 @@ interface GetInfoResponse : BitSerializable, ClientCommandResponse, Jsonable
 	
 	val maxMemory: Long
 	
-	val uptime: Long
+	val runtimeSince: Long
+	
+	val clientIsRunning: Boolean
+	
+	val clientSince: Long
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -53,7 +57,9 @@ interface GetInfoResponse : BitSerializable, ClientCommandResponse, Jsonable
 		if (processors != other.processors) return false
 		if (usedMemory != other.usedMemory) return false
 		if (maxMemory != other.maxMemory) return false
-		if (uptime != other.uptime) return false
+		if (runtimeSince != other.runtimeSince) return false
+		if (clientIsRunning != other.clientIsRunning) return false
+		if (clientSince != other.clientSince) return false
 		
 		return true
 	}
@@ -66,10 +72,12 @@ interface GetInfoResponse : BitSerializable, ClientCommandResponse, Jsonable
 			.with(processors)
 			.with(usedMemory)
 			.with(maxMemory)
-			.with(uptime)
+			.with(runtimeSince)
+			.with(clientIsRunning)
+			.with(clientSince)
 	
 	override fun toJson(): String =
-		"""{"name":${name.toJsonString()},"architecture":${architecture.toJsonString()},"version":${version.toJsonString()},"processors":${processors.toJsonString()},"usedMemory":${usedMemory.toJsonString()},"maxMemory":${maxMemory.toJsonString()},"uptime":${uptime.toJsonString()}}"""
+		"""{"name":${name.toJsonString()},"architecture":${architecture.toJsonString()},"version":${version.toJsonString()},"processors":${processors.toJsonString()},"usedMemory":${usedMemory.toJsonString()},"maxMemory":${maxMemory.toJsonString()},"runtimeSince":${runtimeSince.toJsonString()},"clientIsRunning":${clientIsRunning.toJsonString()},"clientSince":${clientSince.toJsonString()}}"""
 	
 	override fun duplicate(): GetInfoResponse
 	

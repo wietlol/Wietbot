@@ -1,0 +1,27 @@
+
+@Module("WietbotServicesChatClient")
+@Owner("Wietbot")
+@Version("1.0")
+
+@Root("../../../../../../../java")
+
+@RootPackage("me.wietlol.wietbot.services.chatclient.models")
+@BuilderPackage(".builders")
+@ModelPackage(".models")
+@SerializerPackage(".serializers")
+
+;
+
+blueprint SendMessageRequest {
+	property(1) roomId: Integer
+	property(2) text: String
+}
+blueprint SendMessageResponse {
+	property(1) id: Integer
+}
+
+blueprint EditMessageRequest {
+	property(1) messageId: Integer
+	property(2) text: String
+}
+blueprint EditMessageResponse {}
