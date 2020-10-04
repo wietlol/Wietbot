@@ -1,5 +1,5 @@
-// hash: #f1015d16
-// data: serializationKey:dcb9cb6e-7ac3-4b65-8a6c-3f64d74e982e
+// hash: #78bcfd50
+// data: serializationKey:b207d3c9-0cdf-4785-afba-7d8308be8497
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
 
@@ -9,7 +9,6 @@ import me.wietlol.utils.common.Jsonable
 import me.wietlol.utils.common.emptyHashCode
 import me.wietlol.utils.common.toJsonString
 import me.wietlol.utils.common.with
-import me.wietlol.wietbot.data.messages.models.models.Content
 
 // @formatter:on
 // @tomplot:customCode:start:gAeCSq
@@ -17,46 +16,42 @@ import me.wietlol.wietbot.data.messages.models.models.Content
 // @formatter:off
 
 
-interface SendMessageRequest : BitSerializable, Jsonable
+interface EditMessageRetryRequest : BitSerializable, Jsonable
 {
 	companion object
 	{
 		val serializationKey: UUID
-			get() = UUID.fromString("dcb9cb6e-7ac3-4b65-8a6c-3f64d74e982e")
+			get() = UUID.fromString("b207d3c9-0cdf-4785-afba-7d8308be8497")
 	}
 	
 	override val serializationKey: UUID
 		get() = Companion.serializationKey
 	
-	val platform: String
+	val request: EditMessageRequest
 	
-	val target: String
-	
-	val content: Content
+	val tryCount: Int
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
 		if (this === other) return true
 		if (other == null) return false
-		if (other !is SendMessageRequest) return false
+		if (other !is EditMessageRetryRequest) return false
 		
-		if (platform != other.platform) return false
-		if (target != other.target) return false
-		if (content != other.content) return false
+		if (request != other.request) return false
+		if (tryCount != other.tryCount) return false
 		
 		return true
 	}
 	
 	fun computeHashCode(): Int =
 		emptyHashCode
-			.with(platform)
-			.with(target)
-			.with(content)
+			.with(request)
+			.with(tryCount)
 	
 	override fun toJson(): String =
-		"""{"platform":${platform.toJsonString()},"target":${target.toJsonString()},"content":${content.toJsonString()}}"""
+		"""{"request":${request.toJsonString()},"tryCount":${tryCount.toJsonString()}}"""
 	
-	fun duplicate(): SendMessageRequest
+	fun duplicate(): EditMessageRetryRequest
 	
 	// @formatter:on
 	// @tomplot:customCode:start:32T3K8

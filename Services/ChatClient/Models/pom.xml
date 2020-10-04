@@ -27,5 +27,11 @@
 			<version>${bitblock.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>me.wietlol.Wietbot</groupId>
+			<artifactId>data-messages-models</artifactId>
+			<version>${wietbot-data-messages.version}</version>
+		</dependency>
 	</dependencies>
 </project>

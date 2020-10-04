@@ -1,4 +1,4 @@
-// hash: #ca99db6e
+// hash: #743eb6a0
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
 
@@ -6,13 +6,17 @@ import me.wietlol.wietbot.services.chatclient.models.models.*
 
 // @formatter:on
 // @tomplot:customCode:start:B8CiSn
+
+import me.wietlol.wietbot.data.messages.models.models.Content
+
 // @tomplot:customCode:end
 // @formatter:off
 
 
 data class EditMessageRequestImpl(
-	override val messageId: Int,
-	override val text: String,
+	override val platform: String,
+	override val messageId: String,
+	override val content: Content,
 ) : EditMessageRequest
 {
 	override fun equals(other: Any?): Boolean =
@@ -26,8 +30,9 @@ data class EditMessageRequestImpl(
 	
 	override fun duplicate(): EditMessageRequestImpl =
 		copy(
+			platform = platform,
 			messageId = messageId,
-			text = text,
+			content = content.duplicate(),
 		)
 	
 	// @formatter:on

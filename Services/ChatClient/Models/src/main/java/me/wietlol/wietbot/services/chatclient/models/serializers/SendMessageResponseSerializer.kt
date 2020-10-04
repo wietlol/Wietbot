@@ -1,4 +1,4 @@
-// hash: #b64c5c9c
+// hash: #b38f592f
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.serializers
 
@@ -27,9 +27,6 @@ object SendMessageResponseSerializer : ModelSerializer<SendMessageResponse, Send
 	private val endOfObject: Int
 		= 0
 	
-	private val idIndex: Int
-		= 1
-	
 	override val modelId: UUID
 		get() = SendMessageResponse.serializationKey
 	
@@ -38,24 +35,17 @@ object SendMessageResponseSerializer : ModelSerializer<SendMessageResponse, Send
 	
 	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: SendMessageResponse)
 	{
-		stream.writeUnsignedVarInt(idIndex)
-		schema.serialize(serializationContext, stream, entity.id)
-		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
 	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): SendMessageResponse
 	{
-		var id: Int? = null
-		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
 				endOfObject -> return SendMessageResponseImpl(
-					id!!,
 				)
-				idIndex -> id = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}

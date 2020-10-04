@@ -12,16 +12,26 @@
 
 ;
 
+@Import("me.wietlol.wietbot.data.messages.models.models.Content")
 blueprint SendMessageRequest {
-	property(1) roomId: Integer
-	property(2) text: String
+	property(1) platform: String
+	property(2) target: String
+	property(3) content: Content
 }
-blueprint SendMessageResponse {
-	property(1) id: Integer
+blueprint SendMessageRetryRequest {
+	property(1) request: SendMessageRequest
+	property(2) tryCount: Integer
 }
+blueprint SendMessageResponse {}
 
+@Import("me.wietlol.wietbot.data.messages.models.models.Content")
 blueprint EditMessageRequest {
-	property(1) messageId: Integer
-	property(2) text: String
+	property(1) platform: String
+	property(2) messageId: String
+	property(3) content: Content
+}
+blueprint EditMessageRetryRequest {
+	property(1) request: EditMessageRequest
+	property(2) tryCount: Integer
 }
 blueprint EditMessageResponse {}

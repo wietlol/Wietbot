@@ -1,7 +1,8 @@
-// hash: #edbd48f6
+// hash: #8282e5fd
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.builders
 
+import me.wietlol.wietbot.data.messages.models.models.Content
 import me.wietlol.wietbot.services.chatclient.models.models.*
 import me.wietlol.wietbot.services.chatclient.models.models.EditMessageRequestImpl
 
@@ -13,16 +14,20 @@ import me.wietlol.wietbot.services.chatclient.models.models.EditMessageRequestIm
 
 class EditMessageRequestBuilder
 {
-	var messageId: Int?
+	var platform: String?
 		= null
 	
-	var text: String?
+	var messageId: String?
+		= null
+	
+	var content: Content?
 		= null
 	
 	fun build(): EditMessageRequest =
 		EditMessageRequestImpl(
+			platform!!,
 			messageId!!,
-			text!!,
+			content!!,
 		)
 	
 	// @formatter:on

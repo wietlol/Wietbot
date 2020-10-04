@@ -1,4 +1,4 @@
-// hash: #9f37df33
+// hash: #ffc2d773
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.serializers
 
@@ -12,6 +12,7 @@ import me.wietlol.bitblock.api.serialization.SerializationContext
 import me.wietlol.bitblock.api.serialization.deserialize
 import me.wietlol.utils.common.streams.readUnsignedVarInt
 import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.messages.models.models.Content
 import me.wietlol.wietbot.services.chatclient.models.builders.SendMessageRequestBuilder
 import me.wietlol.wietbot.services.chatclient.models.models.*
 import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequest
@@ -27,11 +28,14 @@ object SendMessageRequestSerializer : ModelSerializer<SendMessageRequest, SendMe
 	private val endOfObject: Int
 		= 0
 	
-	private val roomIdIndex: Int
+	private val platformIndex: Int
 		= 1
 	
-	private val textIndex: Int
+	private val targetIndex: Int
 		= 2
+	
+	private val contentIndex: Int
+		= 3
 	
 	override val modelId: UUID
 		get() = SendMessageRequest.serializationKey
@@ -41,30 +45,36 @@ object SendMessageRequestSerializer : ModelSerializer<SendMessageRequest, SendMe
 	
 	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: SendMessageRequest)
 	{
-		stream.writeUnsignedVarInt(roomIdIndex)
-		schema.serialize(serializationContext, stream, entity.roomId)
+		stream.writeUnsignedVarInt(platformIndex)
+		schema.serialize(serializationContext, stream, entity.platform)
 		
-		stream.writeUnsignedVarInt(textIndex)
-		schema.serialize(serializationContext, stream, entity.text)
+		stream.writeUnsignedVarInt(targetIndex)
+		schema.serialize(serializationContext, stream, entity.target)
+		
+		stream.writeUnsignedVarInt(contentIndex)
+		schema.serialize(serializationContext, stream, entity.content)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
 	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): SendMessageRequest
 	{
-		var roomId: Int? = null
-		var text: String? = null
+		var platform: String? = null
+		var target: String? = null
+		var content: Content? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
 				endOfObject -> return SendMessageRequestImpl(
-					roomId!!,
-					text!!,
+					platform!!,
+					target!!,
+					content!!,
 				)
-				roomIdIndex -> roomId = schema.deserialize(deserializationContext, stream)
-				textIndex -> text = schema.deserialize(deserializationContext, stream)
+				platformIndex -> platform = schema.deserialize(deserializationContext, stream)
+				targetIndex -> target = schema.deserialize(deserializationContext, stream)
+				contentIndex -> content = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}

@@ -1,4 +1,4 @@
-// hash: #ffc087e1
+// hash: #1a02e056
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.serializers
 
@@ -12,6 +12,7 @@ import me.wietlol.bitblock.api.serialization.SerializationContext
 import me.wietlol.bitblock.api.serialization.deserialize
 import me.wietlol.utils.common.streams.readUnsignedVarInt
 import me.wietlol.utils.common.streams.writeUnsignedVarInt
+import me.wietlol.wietbot.data.messages.models.models.Content
 import me.wietlol.wietbot.services.chatclient.models.builders.EditMessageRequestBuilder
 import me.wietlol.wietbot.services.chatclient.models.models.*
 import me.wietlol.wietbot.services.chatclient.models.models.EditMessageRequest
@@ -27,11 +28,14 @@ object EditMessageRequestSerializer : ModelSerializer<EditMessageRequest, EditMe
 	private val endOfObject: Int
 		= 0
 	
-	private val messageIdIndex: Int
+	private val platformIndex: Int
 		= 1
 	
-	private val textIndex: Int
+	private val messageIdIndex: Int
 		= 2
+	
+	private val contentIndex: Int
+		= 3
 	
 	override val modelId: UUID
 		get() = EditMessageRequest.serializationKey
@@ -41,30 +45,36 @@ object EditMessageRequestSerializer : ModelSerializer<EditMessageRequest, EditMe
 	
 	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: EditMessageRequest)
 	{
+		stream.writeUnsignedVarInt(platformIndex)
+		schema.serialize(serializationContext, stream, entity.platform)
+		
 		stream.writeUnsignedVarInt(messageIdIndex)
 		schema.serialize(serializationContext, stream, entity.messageId)
 		
-		stream.writeUnsignedVarInt(textIndex)
-		schema.serialize(serializationContext, stream, entity.text)
+		stream.writeUnsignedVarInt(contentIndex)
+		schema.serialize(serializationContext, stream, entity.content)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
 	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): EditMessageRequest
 	{
-		var messageId: Int? = null
-		var text: String? = null
+		var platform: String? = null
+		var messageId: String? = null
+		var content: Content? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
 				endOfObject -> return EditMessageRequestImpl(
+					platform!!,
 					messageId!!,
-					text!!,
+					content!!,
 				)
+				platformIndex -> platform = schema.deserialize(deserializationContext, stream)
 				messageIdIndex -> messageId = schema.deserialize(deserializationContext, stream)
-				textIndex -> text = schema.deserialize(deserializationContext, stream)
+				contentIndex -> content = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}

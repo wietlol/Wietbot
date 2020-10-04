@@ -1,4 +1,4 @@
-// hash: #944f2d52
+// hash: #5f1d6cc5
 // data: serializationKey:d8200d78-b573-42a8-8152-88f227d477ba
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
@@ -9,6 +9,7 @@ import me.wietlol.utils.common.Jsonable
 import me.wietlol.utils.common.emptyHashCode
 import me.wietlol.utils.common.toJsonString
 import me.wietlol.utils.common.with
+import me.wietlol.wietbot.data.messages.models.models.Content
 
 // @formatter:on
 // @tomplot:customCode:start:gAeCSq
@@ -27,9 +28,11 @@ interface EditMessageRequest : BitSerializable, Jsonable
 	override val serializationKey: UUID
 		get() = Companion.serializationKey
 	
-	val messageId: Int
+	val platform: String
 	
-	val text: String
+	val messageId: String
+	
+	val content: Content
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -37,19 +40,21 @@ interface EditMessageRequest : BitSerializable, Jsonable
 		if (other == null) return false
 		if (other !is EditMessageRequest) return false
 		
+		if (platform != other.platform) return false
 		if (messageId != other.messageId) return false
-		if (text != other.text) return false
+		if (content != other.content) return false
 		
 		return true
 	}
 	
 	fun computeHashCode(): Int =
 		emptyHashCode
+			.with(platform)
 			.with(messageId)
-			.with(text)
+			.with(content)
 	
 	override fun toJson(): String =
-		"""{"messageId":${messageId.toJsonString()},"text":${text.toJsonString()}}"""
+		"""{"platform":${platform.toJsonString()},"messageId":${messageId.toJsonString()},"content":${content.toJsonString()}}"""
 	
 	fun duplicate(): EditMessageRequest
 	

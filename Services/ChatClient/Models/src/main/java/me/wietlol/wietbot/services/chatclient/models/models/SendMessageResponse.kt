@@ -1,4 +1,4 @@
-// hash: #5b61caf1
+// hash: #76e50c2e
 // data: serializationKey:f45a1e40-debb-4eea-a636-ab67abf4f59d
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
@@ -27,25 +27,21 @@ interface SendMessageResponse : BitSerializable, Jsonable
 	override val serializationKey: UUID
 		get() = Companion.serializationKey
 	
-	val id: Int
-	
 	fun isEqualTo(other: Any?): Boolean
 	{
 		if (this === other) return true
 		if (other == null) return false
 		if (other !is SendMessageResponse) return false
 		
-		if (id != other.id) return false
 		
 		return true
 	}
 	
 	fun computeHashCode(): Int =
 		emptyHashCode
-			.with(id)
 	
 	override fun toJson(): String =
-		"""{"id":${id.toJsonString()}}"""
+		"""{}"""
 	
 	fun duplicate(): SendMessageResponse
 	

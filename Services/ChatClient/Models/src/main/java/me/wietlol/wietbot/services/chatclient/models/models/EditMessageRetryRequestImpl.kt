@@ -1,4 +1,4 @@
-// hash: #53611ae3
+// hash: #1bf16d57
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
 
@@ -6,18 +6,14 @@ import me.wietlol.wietbot.services.chatclient.models.models.*
 
 // @formatter:on
 // @tomplot:customCode:start:B8CiSn
-
-import me.wietlol.wietbot.data.messages.models.models.Content
-
 // @tomplot:customCode:end
 // @formatter:off
 
 
-data class SendMessageRequestImpl(
-	override val platform: String,
-	override val target: String,
-	override val content: Content,
-) : SendMessageRequest
+data class EditMessageRetryRequestImpl(
+	override val request: EditMessageRequest,
+	override val tryCount: Int,
+) : EditMessageRetryRequest
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -28,11 +24,10 @@ data class SendMessageRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): SendMessageRequestImpl =
+	override fun duplicate(): EditMessageRetryRequestImpl =
 		copy(
-			platform = platform,
-			target = target,
-			content = content.duplicate(),
+			request = request.duplicate(),
+			tryCount = tryCount,
 		)
 	
 	// @formatter:on

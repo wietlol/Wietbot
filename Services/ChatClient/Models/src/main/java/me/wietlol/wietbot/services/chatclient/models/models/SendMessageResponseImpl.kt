@@ -1,4 +1,4 @@
-// hash: #8641b02d
+// hash: #860e535a
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.models
 
@@ -10,9 +10,7 @@ import me.wietlol.wietbot.services.chatclient.models.models.*
 // @formatter:off
 
 
-data class SendMessageResponseImpl(
-	override val id: Int,
-) : SendMessageResponse
+class SendMessageResponseImpl : SendMessageResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -24,9 +22,7 @@ data class SendMessageResponseImpl(
 		toJson()
 	
 	override fun duplicate(): SendMessageResponseImpl =
-		copy(
-			id = id,
-		)
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB

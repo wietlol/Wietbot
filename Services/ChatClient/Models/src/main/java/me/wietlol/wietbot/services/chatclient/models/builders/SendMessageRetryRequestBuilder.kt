@@ -1,10 +1,9 @@
-// hash: #d8d7cd0d
+// hash: #35370a07
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.builders
 
-import me.wietlol.wietbot.data.messages.models.models.Content
 import me.wietlol.wietbot.services.chatclient.models.models.*
-import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequestImpl
+import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRetryRequestImpl
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -12,22 +11,18 @@ import me.wietlol.wietbot.services.chatclient.models.models.SendMessageRequestIm
 // @formatter:off
 
 
-class SendMessageRequestBuilder
+class SendMessageRetryRequestBuilder
 {
-	var platform: String?
+	var request: SendMessageRequest?
 		= null
 	
-	var target: String?
+	var tryCount: Int?
 		= null
 	
-	var content: Content?
-		= null
-	
-	fun build(): SendMessageRequest =
-		SendMessageRequestImpl(
-			platform!!,
-			target!!,
-			content!!,
+	fun build(): SendMessageRetryRequest =
+		SendMessageRetryRequestImpl(
+			request!!,
+			tryCount!!,
 		)
 	
 	// @formatter:on

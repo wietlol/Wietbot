@@ -1,4 +1,4 @@
-// hash: #34a30db1
+// hash: #566ecda2
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models.builders
 
@@ -13,12 +13,8 @@ import me.wietlol.wietbot.services.chatclient.models.models.SendMessageResponseI
 
 class SendMessageResponseBuilder
 {
-	var id: Int?
-		= null
-	
 	fun build(): SendMessageResponse =
 		SendMessageResponseImpl(
-			id!!,
 		)
 	
 	// @formatter:on

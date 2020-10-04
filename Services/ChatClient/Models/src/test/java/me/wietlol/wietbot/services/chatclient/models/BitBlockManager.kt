@@ -2,6 +2,7 @@ package me.wietlol.wietbot.services.chatclient.models
 
 import me.wietlol.bitblock.codegenerator.BitModuleProcessor
 import me.wietlol.bitblock.core.BitSchemaBuilder
+import me.wietlol.wietbot.data.messages.models.WietbotDataMessages
 import org.junit.Test
 import java.io.File
 
@@ -11,12 +12,17 @@ class BitBlockManager
 	fun processBitModule()
 	{
 		// bitblock processBitModule <filepath>
-		BitModuleProcessor.processBitModule(File("src/main/resources/me/wietlol/wietbot/services/chatclient/models/Api.bitmodule"))
+		BitModuleProcessor.processBitModule(
+			File("src/main/resources/me/wietlol/wietbot/services/chatclient/models/Api.bitmodule")
+		)
 	}
 	
 	@Test
 	fun buildBitSchema()
 	{
-		BitSchemaBuilder.buildSchema(File("src/main/resources/me/wietlol/wietbot/services/chatclient/models/Api.bitschema"), WietbotServicesChatClient.modelSerializers)
+		BitSchemaBuilder.buildSchema(
+			File("src/main/resources/me/wietlol/wietbot/services/chatclient/models/Api.bitschema"),
+			WietbotServicesChatClient.modelSerializers + WietbotDataMessages.modelSerializers
+		)
 	}
 }

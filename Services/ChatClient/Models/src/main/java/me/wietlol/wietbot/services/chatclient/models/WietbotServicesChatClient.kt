@@ -1,4 +1,4 @@
-// hash: #635e7cb0
+// hash: #04affe80
 // @formatter:off
 package me.wietlol.wietbot.services.chatclient.models
 
@@ -18,8 +18,10 @@ object WietbotServicesChatClient : RegistrySet
 	private fun createModelSerializers(): Map<ModelRegistryKey, ModelSerializer<*, *>> =
 		mapOf(
 			CommonModelRegistryKey("SendMessageRequest", "WietbotServicesChatClient", "Wietbot", "1.0") to SendMessageRequestSerializer,
+			CommonModelRegistryKey("SendMessageRetryRequest", "WietbotServicesChatClient", "Wietbot", "1.0") to SendMessageRetryRequestSerializer,
 			CommonModelRegistryKey("SendMessageResponse", "WietbotServicesChatClient", "Wietbot", "1.0") to SendMessageResponseSerializer,
 			CommonModelRegistryKey("EditMessageRequest", "WietbotServicesChatClient", "Wietbot", "1.0") to EditMessageRequestSerializer,
+			CommonModelRegistryKey("EditMessageRetryRequest", "WietbotServicesChatClient", "Wietbot", "1.0") to EditMessageRetryRequestSerializer,
 			CommonModelRegistryKey("EditMessageResponse", "WietbotServicesChatClient", "Wietbot", "1.0") to EditMessageResponseSerializer,
 		)
 	
