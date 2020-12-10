@@ -1,9 +1,9 @@
-// hash: #0916279b
+// hash: #afb76607
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.PermissionImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultPermission
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -20,7 +20,7 @@ class PermissionBuilder
 		= null
 	
 	fun build(): Permission =
-		PermissionImpl(
+		DefaultPermission(
 			id!!,
 			name!!,
 		)

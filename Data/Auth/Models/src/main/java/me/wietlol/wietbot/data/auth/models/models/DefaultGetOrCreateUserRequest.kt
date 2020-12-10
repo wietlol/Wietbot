@@ -1,4 +1,4 @@
-// hash: #f055844b
+// hash: #a6265dec
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,10 +10,11 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class DetachRolePolicyRequestImpl(
-	override val role: String,
-	override val policy: String,
-) : DetachRolePolicyRequest
+data class DefaultGetOrCreateUserRequest(
+	override val localId: String,
+	override val localName: String,
+	override val platform: Platform,
+) : GetOrCreateUserRequest
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -24,10 +25,11 @@ data class DetachRolePolicyRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): DetachRolePolicyRequestImpl =
+	override fun duplicate(): DefaultGetOrCreateUserRequest =
 		copy(
-			role = role,
-			policy = policy,
+			localId = localId,
+			localName = localName,
+			platform = platform.duplicate(),
 		)
 	
 	// @formatter:on

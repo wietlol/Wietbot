@@ -1,4 +1,4 @@
-// hash: #50fff9bd
+// hash: #a6840aa7
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,10 +10,7 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class AttachRolePolicyRequestImpl(
-	override val role: String,
-	override val policy: String,
-) : AttachRolePolicyRequest
+class DefaultCreateRoleResponse : CreateRoleResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -24,11 +21,8 @@ data class AttachRolePolicyRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): AttachRolePolicyRequestImpl =
-		copy(
-			role = role,
-			policy = policy,
-		)
+	override fun duplicate(): DefaultCreateRoleResponse =
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB

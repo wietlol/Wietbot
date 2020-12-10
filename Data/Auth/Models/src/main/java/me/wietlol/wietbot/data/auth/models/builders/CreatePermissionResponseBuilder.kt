@@ -1,9 +1,9 @@
-// hash: #0f921c0d
+// hash: #a2b61729
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.CreatePermissionResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreatePermissionResponse
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -14,7 +14,7 @@ import me.wietlol.wietbot.data.auth.models.models.CreatePermissionResponseImpl
 class CreatePermissionResponseBuilder
 {
 	fun build(): CreatePermissionResponse =
-		CreatePermissionResponseImpl(
+		DefaultCreatePermissionResponse(
 		)
 	
 	// @formatter:on

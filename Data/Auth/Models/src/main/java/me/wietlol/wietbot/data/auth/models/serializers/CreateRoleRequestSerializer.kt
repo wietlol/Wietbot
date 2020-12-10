@@ -1,4 +1,4 @@
-// hash: #7736df87
+// hash: #c320b86a
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -52,7 +52,7 @@ object CreateRoleRequestSerializer : ModelSerializer<CreateRoleRequest, CreateRo
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return CreateRoleRequestImpl(
+				endOfObject -> return DefaultCreateRoleRequest(
 					name!!,
 				)
 				nameIndex -> name = schema.deserialize(deserializationContext, stream)

@@ -1,4 +1,4 @@
-// hash: #7d429fd4
+// hash: #b71d3c91
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,9 +10,9 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class CreateRoleRequestImpl(
+data class DefaultCreatePermissionRequest(
 	override val name: String,
-) : CreateRoleRequest
+) : CreatePermissionRequest
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -23,7 +23,7 @@ data class CreateRoleRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): CreateRoleRequestImpl =
+	override fun duplicate(): DefaultCreatePermissionRequest =
 		copy(
 			name = name,
 		)

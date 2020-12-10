@@ -1,4 +1,4 @@
-// hash: #6648b27b
+// hash: #3c5f7777
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,9 +10,9 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class CreatePermissionRequestImpl(
-	override val name: String,
-) : CreatePermissionRequest
+data class DefaultListRolesResponse(
+	override val roles: List<Role>,
+) : ListRolesResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -23,9 +23,9 @@ data class CreatePermissionRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): CreatePermissionRequestImpl =
+	override fun duplicate(): DefaultListRolesResponse =
 		copy(
-			name = name,
+			roles = roles.map { it.duplicate() }.toMutableList(),
 		)
 	
 	// @formatter:on

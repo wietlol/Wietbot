@@ -1,4 +1,4 @@
-// hash: #f50bf695
+// hash: #2298b224
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -52,7 +52,7 @@ object GetOrCreateUserResponseSerializer : ModelSerializer<GetOrCreateUserRespon
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return GetOrCreateUserResponseImpl(
+				endOfObject -> return DefaultGetOrCreateUserResponse(
 					user!!,
 				)
 				userIndex -> user = schema.deserialize(deserializationContext, stream)

@@ -1,9 +1,9 @@
-// hash: #49326ab4
+// hash: #4ed6d650
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.CreatePolicyRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreatePolicyRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -17,7 +17,7 @@ class CreatePolicyRequestBuilder
 		= null
 	
 	fun build(): CreatePolicyRequest =
-		CreatePolicyRequestImpl(
+		DefaultCreatePolicyRequest(
 			name!!,
 		)
 	

@@ -37,7 +37,7 @@
 		<mysql-connector.version>8.0.18</mysql-connector.version>
 		<jackson.version>2.10.1</jackson.version>
 
-		<bitblock.version>1.0.0</bitblock.version>
+		<bitblock.version>1.1.0</bitblock.version>
 		<utils.version>1.0.0</utils.version>
 		<konfig.version>1.0.0</konfig.version>
 		<loggo.version>1.0.0</loggo.version>

@@ -1,9 +1,9 @@
-// hash: #6332d070
+// hash: #35179e42
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.CreateRevokedAuthorityRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreateRevokedAuthorityRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -23,7 +23,7 @@ class CreateRevokedAuthorityRequestBuilder
 		= null
 	
 	fun build(): CreateRevokedAuthorityRequest =
-		CreateRevokedAuthorityRequestImpl(
+		DefaultCreateRevokedAuthorityRequest(
 			policy!!,
 			permission!!,
 			resource!!,

@@ -1,9 +1,9 @@
-// hash: #b5d84e0d
+// hash: #ef6265a1
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.ListRolesRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultListRolesRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -14,7 +14,7 @@ import me.wietlol.wietbot.data.auth.models.models.ListRolesRequestImpl
 class ListRolesRequestBuilder
 {
 	fun build(): ListRolesRequest =
-		ListRolesRequestImpl(
+		DefaultListRolesRequest(
 		)
 	
 	// @formatter:on

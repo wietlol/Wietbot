@@ -1,4 +1,4 @@
-// hash: #0ea08a56
+// hash: #46178539
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,11 +10,7 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class SetUserRoleRequestImpl(
-	override val localUserId: String,
-	override val platform: Platform,
-	override val role: String,
-) : SetUserRoleRequest
+class DefaultCreateGrantedAuthorityResponse : CreateGrantedAuthorityResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -25,12 +21,8 @@ data class SetUserRoleRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): SetUserRoleRequestImpl =
-		copy(
-			localUserId = localUserId,
-			platform = platform.duplicate(),
-			role = role,
-		)
+	override fun duplicate(): DefaultCreateGrantedAuthorityResponse =
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB

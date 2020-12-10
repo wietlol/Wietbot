@@ -1,9 +1,9 @@
-// hash: #fcd2ce89
+// hash: #6a520ab7
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.IsUserAuthorizedResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultIsUserAuthorizedResponse
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -17,7 +17,7 @@ class IsUserAuthorizedResponseBuilder
 		= null
 	
 	fun build(): IsUserAuthorizedResponse =
-		IsUserAuthorizedResponseImpl(
+		DefaultIsUserAuthorizedResponse(
 			isAuthorized!!,
 		)
 	

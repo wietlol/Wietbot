@@ -1,9 +1,9 @@
-// hash: #c1daa3a9
+// hash: #0f94ac8b
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.AttachRolePolicyRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultAttachRolePolicyRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -20,7 +20,7 @@ class AttachRolePolicyRequestBuilder
 		= null
 	
 	fun build(): AttachRolePolicyRequest =
-		AttachRolePolicyRequestImpl(
+		DefaultAttachRolePolicyRequest(
 			role!!,
 			policy!!,
 		)

@@ -1,9 +1,9 @@
-// hash: #702eaec0
+// hash: #e10e032a
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.CreatePermissionRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreatePermissionRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -17,7 +17,7 @@ class CreatePermissionRequestBuilder
 		= null
 	
 	fun build(): CreatePermissionRequest =
-		CreatePermissionRequestImpl(
+		DefaultCreatePermissionRequest(
 			name!!,
 		)
 	

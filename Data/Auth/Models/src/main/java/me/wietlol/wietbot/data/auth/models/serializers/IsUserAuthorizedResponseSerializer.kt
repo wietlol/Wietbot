@@ -1,4 +1,4 @@
-// hash: #015ea02c
+// hash: #1b4e46fb
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -52,7 +52,7 @@ object IsUserAuthorizedResponseSerializer : ModelSerializer<IsUserAuthorizedResp
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return IsUserAuthorizedResponseImpl(
+				endOfObject -> return DefaultIsUserAuthorizedResponse(
 					isAuthorized!!,
 				)
 				isAuthorizedIndex -> isAuthorized = schema.deserialize(deserializationContext, stream)

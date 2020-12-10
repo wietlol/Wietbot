@@ -12,7 +12,7 @@ import me.wietlol.wietbot.data.auth.core.repository.models.Role
 import me.wietlol.wietbot.data.auth.core.repository.models.Roles
 import me.wietlol.wietbot.data.auth.core.repository.models.User
 import me.wietlol.wietbot.data.auth.core.repository.models.Users
-import me.wietlol.wietbot.data.auth.models.models.PlatformImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultPlatform
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SizedCollection
@@ -140,18 +140,18 @@ class ExposedAuthRepository(
 	private fun User.setPrimaryKey(platform: String, id: String): Unit =
 		when (platform)
 		{
-			PlatformImpl.stackOverflow.name -> stackOverflowName = id
-			PlatformImpl.discord.name -> discordId = id
-			PlatformImpl.wietbotWebsite.name -> wietbotWebsiteId = id
+			DefaultPlatform.stackOverflow.name -> stackOverflowName = id
+			DefaultPlatform.discord.name -> discordId = id
+			DefaultPlatform.wietbotWebsite.name -> wietbotWebsiteId = id
 			else -> TODO("Not yet implemented.")
 		}
 	
 	private fun getPrimaryKey(platform: String): Column<String> =
 		when (platform)
 		{
-			PlatformImpl.stackOverflow.name -> Users.stackOverflowName
-			PlatformImpl.discord.name -> Users.discordId
-			PlatformImpl.wietbotWebsite.name -> Users.wietbotWebsiteId
+			DefaultPlatform.stackOverflow.name -> Users.stackOverflowName
+			DefaultPlatform.discord.name -> Users.discordId
+			DefaultPlatform.wietbotWebsite.name -> Users.wietbotWebsiteId
 			else -> TODO("Not yet implemented.")
 		}
 	
@@ -159,9 +159,9 @@ class ExposedAuthRepository(
 	{
 		when (platform)
 		{
-			PlatformImpl.stackOverflow.name -> stackOverflowName = name
-			PlatformImpl.discord.name -> discordName = name
-			PlatformImpl.wietbotWebsite.name -> wietbotWebsiteName = name
+			DefaultPlatform.stackOverflow.name -> stackOverflowName = name
+			DefaultPlatform.discord.name -> discordName = name
+			DefaultPlatform.wietbotWebsite.name -> wietbotWebsiteName = name
 			else -> TODO("Not yet implemented.")
 		}
 	}

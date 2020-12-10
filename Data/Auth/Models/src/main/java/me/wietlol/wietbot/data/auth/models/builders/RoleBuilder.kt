@@ -1,9 +1,9 @@
-// hash: #a1b0cadb
+// hash: #3bea8b99
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.RoleImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultRole
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -20,7 +20,7 @@ class RoleBuilder
 		= null
 	
 	fun build(): Role =
-		RoleImpl(
+		DefaultRole(
 			id!!,
 			name!!,
 		)

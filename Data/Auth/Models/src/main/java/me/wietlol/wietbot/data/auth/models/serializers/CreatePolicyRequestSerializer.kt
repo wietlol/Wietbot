@@ -1,4 +1,4 @@
-// hash: #6a17a23b
+// hash: #66f44d7e
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -52,7 +52,7 @@ object CreatePolicyRequestSerializer : ModelSerializer<CreatePolicyRequest, Crea
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return CreatePolicyRequestImpl(
+				endOfObject -> return DefaultCreatePolicyRequest(
 					name!!,
 				)
 				nameIndex -> name = schema.deserialize(deserializationContext, stream)

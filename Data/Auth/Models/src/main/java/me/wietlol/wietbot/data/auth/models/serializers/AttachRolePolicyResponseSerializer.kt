@@ -1,4 +1,4 @@
-// hash: #f0a6112d
+// hash: #b2df40d8
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -44,7 +44,7 @@ object AttachRolePolicyResponseSerializer : ModelSerializer<AttachRolePolicyResp
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return AttachRolePolicyResponseImpl(
+				endOfObject -> return DefaultAttachRolePolicyResponse(
 				)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}

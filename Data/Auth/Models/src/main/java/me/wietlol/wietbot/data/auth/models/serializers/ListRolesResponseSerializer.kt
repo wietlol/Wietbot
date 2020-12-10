@@ -1,4 +1,4 @@
-// hash: #1851437a
+// hash: #c326ca0b
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -52,7 +52,7 @@ object ListRolesResponseSerializer : ModelSerializer<ListRolesResponse, ListRole
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return ListRolesResponseImpl(
+				endOfObject -> return DefaultListRolesResponse(
 					roles!!.toMutableList(),
 				)
 				rolesIndex -> roles = schema.deserialize(deserializationContext, stream)

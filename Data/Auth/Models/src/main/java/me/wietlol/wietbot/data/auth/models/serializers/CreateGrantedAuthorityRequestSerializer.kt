@@ -1,4 +1,4 @@
-// hash: #fd922550
+// hash: #d961b911
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -66,7 +66,7 @@ object CreateGrantedAuthorityRequestSerializer : ModelSerializer<CreateGrantedAu
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return CreateGrantedAuthorityRequestImpl(
+				endOfObject -> return DefaultCreateGrantedAuthorityRequest(
 					policy!!,
 					permission!!,
 					resource!!,

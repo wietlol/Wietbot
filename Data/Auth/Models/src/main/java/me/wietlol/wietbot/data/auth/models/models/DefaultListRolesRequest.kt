@@ -1,4 +1,4 @@
-// hash: #fa33c8e4
+// hash: #4a41e4e4
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,10 +10,7 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class PermissionImpl(
-	override val id: Int,
-	override val name: String,
-) : Permission
+class DefaultListRolesRequest : ListRolesRequest
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -24,11 +21,8 @@ data class PermissionImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): PermissionImpl =
-		copy(
-			id = id,
-			name = name,
-		)
+	override fun duplicate(): DefaultListRolesRequest =
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB

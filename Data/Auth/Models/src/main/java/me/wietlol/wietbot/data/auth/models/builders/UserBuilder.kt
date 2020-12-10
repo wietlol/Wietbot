@@ -1,9 +1,9 @@
-// hash: #b8ed69ad
+// hash: #ccfd486b
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.UserImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultUser
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -47,7 +47,7 @@ class UserBuilder
 		= null
 	
 	fun build(): User =
-		UserImpl(
+		DefaultUser(
 			localId!!,
 			localName!!,
 			platform!!,

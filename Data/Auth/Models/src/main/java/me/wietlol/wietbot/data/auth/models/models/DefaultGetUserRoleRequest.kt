@@ -1,4 +1,4 @@
-// hash: #394d14d1
+// hash: #0fc84359
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,12 +10,10 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class IsUserAuthorizedRequestImpl(
-	override val userId: String,
+data class DefaultGetUserRoleRequest(
+	override val localUserId: String,
 	override val platform: Platform,
-	override val permission: String,
-	override val resource: String = "*",
-) : IsUserAuthorizedRequest
+) : GetUserRoleRequest
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -26,12 +24,10 @@ data class IsUserAuthorizedRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): IsUserAuthorizedRequestImpl =
+	override fun duplicate(): DefaultGetUserRoleRequest =
 		copy(
-			userId = userId,
+			localUserId = localUserId,
 			platform = platform.duplicate(),
-			permission = permission,
-			resource = resource,
 		)
 	
 	// @formatter:on

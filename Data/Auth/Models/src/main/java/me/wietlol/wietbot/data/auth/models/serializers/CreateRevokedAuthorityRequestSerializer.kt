@@ -1,4 +1,4 @@
-// hash: #1e154107
+// hash: #25a930a0
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -66,7 +66,7 @@ object CreateRevokedAuthorityRequestSerializer : ModelSerializer<CreateRevokedAu
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return CreateRevokedAuthorityRequestImpl(
+				endOfObject -> return DefaultCreateRevokedAuthorityRequest(
 					policy!!,
 					permission!!,
 					resource!!,

@@ -1,4 +1,4 @@
-// hash: #40a584be
+// hash: #1b981865
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -59,7 +59,7 @@ object GetUserRoleRequestSerializer : ModelSerializer<GetUserRoleRequest, GetUse
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return GetUserRoleRequestImpl(
+				endOfObject -> return DefaultGetUserRoleRequest(
 					localUserId!!,
 					platform!!,
 				)

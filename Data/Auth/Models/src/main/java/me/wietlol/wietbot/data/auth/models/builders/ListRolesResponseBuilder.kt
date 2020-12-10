@@ -1,9 +1,9 @@
-// hash: #013bf7d0
+// hash: #cff87038
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.ListRolesResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultListRolesResponse
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -17,7 +17,7 @@ class ListRolesResponseBuilder
 		= mutableListOf()
 	
 	fun build(): ListRolesResponse =
-		ListRolesResponseImpl(
+		DefaultListRolesResponse(
 			roles!!.toMutableList(),
 		)
 	

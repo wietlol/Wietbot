@@ -1,4 +1,4 @@
-// hash: #425c8b9e
+// hash: #5d9fa830
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,7 +10,7 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-class AttachRolePolicyResponseImpl : AttachRolePolicyResponse
+class DefaultDetachRolePolicyResponse : DetachRolePolicyResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -21,7 +21,7 @@ class AttachRolePolicyResponseImpl : AttachRolePolicyResponse
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): AttachRolePolicyResponseImpl =
+	override fun duplicate(): DefaultDetachRolePolicyResponse =
 		this
 	
 	// @formatter:on

@@ -1,4 +1,4 @@
-// hash: #7083863a
+// hash: #c8774e55
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -66,7 +66,7 @@ object GetOrCreateUserRequestSerializer : ModelSerializer<GetOrCreateUserRequest
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return GetOrCreateUserRequestImpl(
+				endOfObject -> return DefaultGetOrCreateUserRequest(
 					localId!!,
 					localName!!,
 					platform!!,

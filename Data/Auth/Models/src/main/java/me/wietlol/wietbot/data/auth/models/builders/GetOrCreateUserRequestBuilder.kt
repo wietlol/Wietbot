@@ -1,9 +1,9 @@
-// hash: #4a6ce2a0
+// hash: #2a073b5a
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.GetOrCreateUserRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultGetOrCreateUserRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -23,7 +23,7 @@ class GetOrCreateUserRequestBuilder
 		= null
 	
 	fun build(): GetOrCreateUserRequest =
-		GetOrCreateUserRequestImpl(
+		DefaultGetOrCreateUserRequest(
 			localId!!,
 			localName!!,
 			platform!!,

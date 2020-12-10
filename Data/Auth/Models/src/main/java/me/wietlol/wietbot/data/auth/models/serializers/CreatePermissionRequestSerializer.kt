@@ -1,4 +1,4 @@
-// hash: #01838dd2
+// hash: #66395e6d
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -52,7 +52,7 @@ object CreatePermissionRequestSerializer : ModelSerializer<CreatePermissionReque
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return CreatePermissionRequestImpl(
+				endOfObject -> return DefaultCreatePermissionRequest(
 					name!!,
 				)
 				nameIndex -> name = schema.deserialize(deserializationContext, stream)

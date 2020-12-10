@@ -1,4 +1,4 @@
-// hash: #7ca9e73b
+// hash: #8a0ec7e4
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -122,7 +122,7 @@ object UserSerializer : ModelSerializer<User, User>
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return UserImpl(
+				endOfObject -> return DefaultUser(
 					localId!!,
 					localName!!,
 					platform!!,

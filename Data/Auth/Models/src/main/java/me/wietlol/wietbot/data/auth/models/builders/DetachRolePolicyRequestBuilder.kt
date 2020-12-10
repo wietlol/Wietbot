@@ -1,9 +1,9 @@
-// hash: #909c14e1
+// hash: #599021af
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.DetachRolePolicyRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultDetachRolePolicyRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -20,7 +20,7 @@ class DetachRolePolicyRequestBuilder
 		= null
 	
 	fun build(): DetachRolePolicyRequest =
-		DetachRolePolicyRequestImpl(
+		DefaultDetachRolePolicyRequest(
 			role!!,
 			policy!!,
 		)

@@ -1,4 +1,4 @@
-// hash: #51d198fb
+// hash: #7f798fcc
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -59,7 +59,7 @@ object PermissionSerializer : ModelSerializer<Permission, Permission>
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return PermissionImpl(
+				endOfObject -> return DefaultPermission(
 					id!!,
 					name!!,
 				)

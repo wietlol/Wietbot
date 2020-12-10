@@ -1,9 +1,9 @@
-// hash: #92984ee4
+// hash: #6acd2ea8
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreateGrantedAuthorityRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -23,7 +23,7 @@ class CreateGrantedAuthorityRequestBuilder
 		= null
 	
 	fun build(): CreateGrantedAuthorityRequest =
-		CreateGrantedAuthorityRequestImpl(
+		DefaultCreateGrantedAuthorityRequest(
 			policy!!,
 			permission!!,
 			resource!!,

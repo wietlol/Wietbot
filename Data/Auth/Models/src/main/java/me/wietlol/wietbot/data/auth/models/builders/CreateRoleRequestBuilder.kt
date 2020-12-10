@@ -1,9 +1,9 @@
-// hash: #328fa5e4
+// hash: #9e3cd3d8
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.CreateRoleRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreateRoleRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -17,7 +17,7 @@ class CreateRoleRequestBuilder
 		= null
 	
 	fun build(): CreateRoleRequest =
-		CreateRoleRequestImpl(
+		DefaultCreateRoleRequest(
 			name!!,
 		)
 	

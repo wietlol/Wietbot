@@ -1,6 +1,7 @@
 package me.wietlol.wietbot.data.auth.models
 
 import me.wietlol.bitblock.codegenerator.BitModuleProcessor
+import me.wietlol.bitblock.codegenerator.generators.kotlin.BitModuleKotlinGenerator
 import me.wietlol.bitblock.core.BitSchemaBuilder
 import org.junit.Test
 import java.io.File
@@ -12,7 +13,8 @@ class BitBlockManager
 	{
 		// bitblock processBitModule <filepath>
 		BitModuleProcessor.processBitModule(
-			File("src/main/resources/me/wietlol/wietbot/data/auth/models/Api.bitmodule")
+			File("src/main/resources/me/wietlol/wietbot/data/auth/models/Api.bitmodule"),
+			BitModuleKotlinGenerator(),
 		)
 	}
 	
@@ -21,7 +23,7 @@ class BitBlockManager
 	{
 		BitSchemaBuilder.buildSchema(
 			File("src/main/resources/me/wietlol/wietbot/data/auth/models/Api.bitschema"),
-			WietbotDataAuth.modelSerializers
+			WietbotDataAuth.modelSerializers,
 		)
 	}
 }

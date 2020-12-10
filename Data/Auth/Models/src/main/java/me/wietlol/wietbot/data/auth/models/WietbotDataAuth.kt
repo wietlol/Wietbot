@@ -1,4 +1,4 @@
-// hash: #1eed27b7
+// hash: #785c126b
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models
 
@@ -12,7 +12,7 @@ import me.wietlol.wietbot.data.auth.models.serializers.*
 
 object WietbotDataAuth : RegistrySet
 {
-	val modelSerializers: Map<ModelRegistryKey, ModelSerializer<*, *>>
+	override val modelSerializers: Map<ModelRegistryKey, ModelSerializer<*, *>>
 		= createModelSerializers()
 	
 	private fun createModelSerializers(): Map<ModelRegistryKey, ModelSerializer<*, *>> =

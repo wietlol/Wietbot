@@ -10,43 +10,43 @@ import me.wietlol.wietbot.data.auth.core.setup.DependencyInjection
 import me.wietlol.wietbot.data.auth.models.AuthService
 import me.wietlol.wietbot.data.auth.models.models.AttachRolePolicyRequest
 import me.wietlol.wietbot.data.auth.models.models.AttachRolePolicyResponse
-import me.wietlol.wietbot.data.auth.models.models.AttachRolePolicyResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultAttachRolePolicyResponse
 import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityRequest
 import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityResponse
-import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreateGrantedAuthorityResponse
 import me.wietlol.wietbot.data.auth.models.models.CreatePermissionRequest
 import me.wietlol.wietbot.data.auth.models.models.CreatePermissionResponse
-import me.wietlol.wietbot.data.auth.models.models.CreatePermissionResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreatePermissionResponse
 import me.wietlol.wietbot.data.auth.models.models.CreatePolicyRequest
 import me.wietlol.wietbot.data.auth.models.models.CreatePolicyResponse
-import me.wietlol.wietbot.data.auth.models.models.CreatePolicyResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreatePolicyResponse
 import me.wietlol.wietbot.data.auth.models.models.CreateRevokedAuthorityRequest
 import me.wietlol.wietbot.data.auth.models.models.CreateRevokedAuthorityResponse
-import me.wietlol.wietbot.data.auth.models.models.CreateRevokedAuthorityResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreateRevokedAuthorityResponse
 import me.wietlol.wietbot.data.auth.models.models.CreateRoleRequest
 import me.wietlol.wietbot.data.auth.models.models.CreateRoleResponse
-import me.wietlol.wietbot.data.auth.models.models.CreateRoleResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreateRoleResponse
 import me.wietlol.wietbot.data.auth.models.models.DetachRolePolicyRequest
 import me.wietlol.wietbot.data.auth.models.models.DetachRolePolicyResponse
-import me.wietlol.wietbot.data.auth.models.models.DetachRolePolicyResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultDetachRolePolicyResponse
 import me.wietlol.wietbot.data.auth.models.models.GetOrCreateUserRequest
 import me.wietlol.wietbot.data.auth.models.models.GetOrCreateUserResponse
-import me.wietlol.wietbot.data.auth.models.models.GetOrCreateUserResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultGetOrCreateUserResponse
 import me.wietlol.wietbot.data.auth.models.models.GetUserRoleRequest
 import me.wietlol.wietbot.data.auth.models.models.GetUserRoleResponse
-import me.wietlol.wietbot.data.auth.models.models.GetUserRoleResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultGetUserRoleResponse
 import me.wietlol.wietbot.data.auth.models.models.IsUserAuthorizedRequest
 import me.wietlol.wietbot.data.auth.models.models.IsUserAuthorizedResponse
-import me.wietlol.wietbot.data.auth.models.models.IsUserAuthorizedResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultIsUserAuthorizedResponse
 import me.wietlol.wietbot.data.auth.models.models.ListRolesRequest
 import me.wietlol.wietbot.data.auth.models.models.ListRolesResponse
-import me.wietlol.wietbot.data.auth.models.models.ListRolesResponseImpl
-import me.wietlol.wietbot.data.auth.models.models.PlatformImpl
-import me.wietlol.wietbot.data.auth.models.models.RoleImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultListRolesResponse
+import me.wietlol.wietbot.data.auth.models.models.DefaultPlatform
+import me.wietlol.wietbot.data.auth.models.models.DefaultRole
 import me.wietlol.wietbot.data.auth.models.models.SetUserRoleRequest
 import me.wietlol.wietbot.data.auth.models.models.SetUserRoleResponse
-import me.wietlol.wietbot.data.auth.models.models.SetUserRoleResponseImpl
-import me.wietlol.wietbot.data.auth.models.models.UserImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultSetUserRoleResponse
+import me.wietlol.wietbot.data.auth.models.models.DefaultUser
 import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.BaseHandler
 import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.FunctionEventIdSet
 import me.wietlol.wietbot.libraries.lambdabase.dependencyinjection.api.lambdaFunction
@@ -135,8 +135,8 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		val role = authRepository.getUserRole(request.localUserId, request.platform.name)
 		
-		return GetUserRoleResponseImpl(
-			RoleImpl(
+		return DefaultGetUserRoleResponse(
+			DefaultRole(
 				role.id.value,
 				role.name
 			)
@@ -150,7 +150,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		authRepository.setUserRole(request.localUserId, request.platform.name, request.role)
 		
-		return SetUserRoleResponseImpl()
+		return DefaultSetUserRoleResponse()
 	}
 	
 	fun getOrCreateUserBit(request: ByteWrapper): ByteWrapper? =
@@ -160,20 +160,20 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		val user = authRepository.getOrCreateUser(request.localId, request.platform.name, request.localName)
 		
-		return GetOrCreateUserResponseImpl(
-			UserImpl(
+		return DefaultGetOrCreateUserResponse(
+			DefaultUser(
 				when (request.platform.name)
 				{
-					PlatformImpl.stackOverflow.name -> user.stackOverflowId
-					PlatformImpl.discord.name -> user.discordId
-					PlatformImpl.wietbotWebsite.name -> user.wietbotWebsiteId
+					DefaultPlatform.stackOverflow.name -> user.stackOverflowId
+					DefaultPlatform.discord.name -> user.discordId
+					DefaultPlatform.wietbotWebsite.name -> user.wietbotWebsiteId
 					else -> "-"
 				},
 				when (request.platform.name)
 				{
-					PlatformImpl.stackOverflow.name -> user.stackOverflowName
-					PlatformImpl.discord.name -> user.discordName
-					PlatformImpl.wietbotWebsite.name -> user.wietbotWebsiteName
+					DefaultPlatform.stackOverflow.name -> user.stackOverflowName
+					DefaultPlatform.discord.name -> user.discordName
+					DefaultPlatform.wietbotWebsite.name -> user.wietbotWebsiteName
 					else -> "-"
 				},
 				request.platform,
@@ -196,7 +196,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		authRepository.createPermission(request.name)
 		
-		return CreatePermissionResponseImpl()
+		return DefaultCreatePermissionResponse()
 	}
 	
 	fun isUserAuthorizedBit(request: ByteWrapper): ByteWrapper? =
@@ -206,7 +206,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		val isAuthorized = authRepository.isUserAuthorized(request.userId, request.platform.name, request.permission, request.resource)
 		
-		return IsUserAuthorizedResponseImpl(
+		return DefaultIsUserAuthorizedResponse(
 			isAuthorized
 		)
 	}
@@ -218,7 +218,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		authRepository.createRole(request.name)
 		
-		return CreateRoleResponseImpl()
+		return DefaultCreateRoleResponse()
 	}
 	
 	fun createPolicyBit(request: ByteWrapper): ByteWrapper? =
@@ -228,7 +228,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		authRepository.createPolicy(request.name)
 		
-		return CreatePolicyResponseImpl()
+		return DefaultCreatePolicyResponse()
 	}
 	
 	fun createGrantedAuthorityBit(request: ByteWrapper): ByteWrapper? =
@@ -238,7 +238,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		authRepository.createGrantedAuthority(request.policy, request.permission, request.resource)
 		
-		return CreateGrantedAuthorityResponseImpl()
+		return DefaultCreateGrantedAuthorityResponse()
 	}
 	
 	fun createRevokedAuthorityBit(request: ByteWrapper): ByteWrapper? =
@@ -248,7 +248,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		authRepository.createRevokedAuthority(request.policy, request.permission, request.resource)
 		
-		return CreateRevokedAuthorityResponseImpl()
+		return DefaultCreateRevokedAuthorityResponse()
 	}
 	
 	fun attachRolePolicyBit(request: ByteWrapper): ByteWrapper? =
@@ -258,7 +258,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		authRepository.attachRolePolicy(request.role, request.policy)
 		
-		return AttachRolePolicyResponseImpl()
+		return DefaultAttachRolePolicyResponse()
 	}
 	
 	fun detachRolePolicyBit(request: ByteWrapper): ByteWrapper? =
@@ -268,7 +268,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		authRepository.detachRolePolicy(request.role, request.policy)
 		
-		return DetachRolePolicyResponseImpl()
+		return DefaultDetachRolePolicyResponse()
 	}
 	
 	fun listRolesBit(request: ByteWrapper): ByteWrapper? =
@@ -278,9 +278,9 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	{
 		val roles = authRepository.listRoles()
 		
-		return ListRolesResponseImpl(
+		return DefaultListRolesResponse(
 			roles.map {
-				RoleImpl(
+				DefaultRole(
 					it.id.value,
 					it.name
 				)

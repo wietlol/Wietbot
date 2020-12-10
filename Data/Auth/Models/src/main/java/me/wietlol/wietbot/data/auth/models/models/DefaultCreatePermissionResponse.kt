@@ -1,4 +1,4 @@
-// hash: #0806b666
+// hash: #af958ce0
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,11 +10,7 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class CreateGrantedAuthorityRequestImpl(
-	override val policy: String,
-	override val permission: String,
-	override val resource: String,
-) : CreateGrantedAuthorityRequest
+class DefaultCreatePermissionResponse : CreatePermissionResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -25,12 +21,8 @@ data class CreateGrantedAuthorityRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): CreateGrantedAuthorityRequestImpl =
-		copy(
-			policy = policy,
-			permission = permission,
-			resource = resource,
-		)
+	override fun duplicate(): DefaultCreatePermissionResponse =
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB

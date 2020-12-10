@@ -1,4 +1,4 @@
-// hash: #d68ff9e9
+// hash: #3a235508
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,10 +10,7 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class GetUserRoleRequestImpl(
-	override val localUserId: String,
-	override val platform: Platform,
-) : GetUserRoleRequest
+class DefaultSetUserRoleResponse : SetUserRoleResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -24,11 +21,8 @@ data class GetUserRoleRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): GetUserRoleRequestImpl =
-		copy(
-			localUserId = localUserId,
-			platform = platform.duplicate(),
-		)
+	override fun duplicate(): DefaultSetUserRoleResponse =
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB

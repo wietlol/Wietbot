@@ -1,9 +1,9 @@
-// hash: #2f45508c
+// hash: #114776ec
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.SetUserRoleRequestImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultSetUserRoleRequest
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -23,7 +23,7 @@ class SetUserRoleRequestBuilder
 		= null
 	
 	fun build(): SetUserRoleRequest =
-		SetUserRoleRequestImpl(
+		DefaultSetUserRoleRequest(
 			localUserId!!,
 			platform!!,
 			role!!,

@@ -1,4 +1,4 @@
-// hash: #1cdece20
+// hash: #ab994771
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,9 +10,10 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class GetOrCreateUserResponseImpl(
-	override val user: User,
-) : GetOrCreateUserResponse
+data class DefaultRole(
+	override val id: Int,
+	override val name: String,
+) : Role
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -23,9 +24,10 @@ data class GetOrCreateUserResponseImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): GetOrCreateUserResponseImpl =
+	override fun duplicate(): DefaultRole =
 		copy(
-			user = user.duplicate(),
+			id = id,
+			name = name,
 		)
 	
 	// @formatter:on

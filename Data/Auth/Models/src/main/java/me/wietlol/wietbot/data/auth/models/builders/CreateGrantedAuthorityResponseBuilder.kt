@@ -1,9 +1,9 @@
-// hash: #09f87c0d
+// hash: #8b33f917
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.DefaultCreateGrantedAuthorityResponse
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -14,7 +14,7 @@ import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityResponse
 class CreateGrantedAuthorityResponseBuilder
 {
 	fun build(): CreateGrantedAuthorityResponse =
-		CreateGrantedAuthorityResponseImpl(
+		DefaultCreateGrantedAuthorityResponse(
 		)
 	
 	// @formatter:on

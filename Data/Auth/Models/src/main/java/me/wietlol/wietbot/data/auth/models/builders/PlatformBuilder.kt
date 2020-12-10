@@ -1,9 +1,9 @@
-// hash: #b3ed889d
+// hash: #cf2ff510
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
 import me.wietlol.wietbot.data.auth.models.models.*
-import me.wietlol.wietbot.data.auth.models.models.DefaultGetUserRoleResponse
+import me.wietlol.wietbot.data.auth.models.models.DefaultPlatform
 
 // @formatter:on
 // @tomplot:customCode:start:f5k3GB
@@ -11,14 +11,14 @@ import me.wietlol.wietbot.data.auth.models.models.DefaultGetUserRoleResponse
 // @formatter:off
 
 
-class GetUserRoleResponseBuilder
+class PlatformBuilder
 {
-	var role: Role?
+	var name: String?
 		= null
 	
-	fun build(): GetUserRoleResponse =
-		DefaultGetUserRoleResponse(
-			role!!,
+	fun build(): Platform =
+		DefaultPlatform(
+			name!!,
 		)
 	
 	// @formatter:on

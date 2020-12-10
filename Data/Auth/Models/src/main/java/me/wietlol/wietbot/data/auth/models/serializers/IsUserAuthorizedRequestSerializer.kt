@@ -1,4 +1,4 @@
-// hash: #98c2cfed
+// hash: #9128b490
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -73,7 +73,7 @@ object IsUserAuthorizedRequestSerializer : ModelSerializer<IsUserAuthorizedReque
 		{
 			when (stream.readUnsignedVarInt())
 			{
-				endOfObject -> return IsUserAuthorizedRequestImpl(
+				endOfObject -> return DefaultIsUserAuthorizedRequest(
 					userId!!,
 					platform!!,
 					permission!!,

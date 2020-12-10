@@ -1,4 +1,4 @@
-// hash: #55f0e3a9
+// hash: #3d598b76
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,12 +10,22 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class CreateRevokedAuthorityRequestImpl(
-	override val policy: String,
-	override val permission: String,
-	override val resource: String,
-) : CreateRevokedAuthorityRequest
+data class DefaultPlatform(
+	override val name: String,
+) : Platform
 {
+	companion object
+	{
+		val stackOverflow: DefaultPlatform
+			= DefaultPlatform("stack-overflow")
+		
+		val discord: DefaultPlatform
+			= DefaultPlatform("discord")
+		
+		val wietbotWebsite: DefaultPlatform
+			= DefaultPlatform("wietbot-website")
+	}
+	
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
 	
@@ -25,11 +35,9 @@ data class CreateRevokedAuthorityRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): CreateRevokedAuthorityRequestImpl =
+	override fun duplicate(): DefaultPlatform =
 		copy(
-			policy = policy,
-			permission = permission,
-			resource = resource,
+			name = name,
 		)
 	
 	// @formatter:on

@@ -1,4 +1,4 @@
-// hash: #c00d44ca
+// hash: #bd684073
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,11 +10,19 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class GetOrCreateUserRequestImpl(
+data class DefaultUser(
 	override val localId: String,
 	override val localName: String,
 	override val platform: Platform,
-) : GetOrCreateUserRequest
+	override val internalId: Long,
+	override val stackExchangeId: String,
+	override val stackExchangeName: String,
+	override val discordId: String,
+	override val discordName: String,
+	override val wietbotWebsiteId: String,
+	override val wietbotWebsiteName: String,
+	override val role: Int,
+) : User
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -25,11 +33,19 @@ data class GetOrCreateUserRequestImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): GetOrCreateUserRequestImpl =
+	override fun duplicate(): DefaultUser =
 		copy(
 			localId = localId,
 			localName = localName,
 			platform = platform.duplicate(),
+			internalId = internalId,
+			stackExchangeId = stackExchangeId,
+			stackExchangeName = stackExchangeName,
+			discordId = discordId,
+			discordName = discordName,
+			wietbotWebsiteId = wietbotWebsiteId,
+			wietbotWebsiteName = wietbotWebsiteName,
+			role = role,
 		)
 	
 	// @formatter:on

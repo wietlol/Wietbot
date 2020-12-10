@@ -1,4 +1,4 @@
-// hash: #38dd74b7
+// hash: #445c0596
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,9 +10,7 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-data class GetUserRoleResponseImpl(
-	override val role: Role,
-) : GetUserRoleResponse
+class DefaultCreateRevokedAuthorityResponse : CreateRevokedAuthorityResponse
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -23,10 +21,8 @@ data class GetUserRoleResponseImpl(
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): GetUserRoleResponseImpl =
-		copy(
-			role = role.duplicate(),
-		)
+	override fun duplicate(): DefaultCreateRevokedAuthorityResponse =
+		this
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB

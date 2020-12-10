@@ -1,4 +1,4 @@
-// hash: #7b918eac
+// hash: #fb7eb109
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -10,7 +10,12 @@ import me.wietlol.wietbot.data.auth.models.models.*
 // @formatter:off
 
 
-class DetachRolePolicyResponseImpl : DetachRolePolicyResponse
+data class DefaultIsUserAuthorizedRequest(
+	override val userId: String,
+	override val platform: Platform,
+	override val permission: String,
+	override val resource: String = "*",
+) : IsUserAuthorizedRequest
 {
 	override fun equals(other: Any?): Boolean =
 		isEqualTo(other)
@@ -21,8 +26,13 @@ class DetachRolePolicyResponseImpl : DetachRolePolicyResponse
 	override fun toString(): String =
 		toJson()
 	
-	override fun duplicate(): DetachRolePolicyResponseImpl =
-		this
+	override fun duplicate(): DefaultIsUserAuthorizedRequest =
+		copy(
+			userId = userId,
+			platform = platform.duplicate(),
+			permission = permission,
+			resource = resource,
+		)
 	
 	// @formatter:on
 	// @tomplot:customCode:start:fIpaBB
