@@ -7,12 +7,12 @@ import org.jetbrains.exposed.dao.LongIdTable
 
 object Users : LongIdTable("auth_user")
 {
-	val stackOverflowId = varchar("stackOverflowId", 256).index()
-	val stackOverflowName = varchar("stackOverflowName", 512).index()
-	val discordId = varchar("discordId", 256).index()
-	val discordName = varchar("discordName", 512).index()
-	val wietbotWebsiteId = varchar("wietbotWebsiteId", 256).index()
-	val wietbotWebsiteName = varchar("wietbotWebsiteName", 512).index()
+	val stackOverflowId = varchar("stackOverflowId", 256).nullable().index()
+	val stackOverflowName = varchar("stackOverflowName", 512).nullable().index()
+	val discordId = varchar("discordId", 256).nullable().index()
+	val discordName = varchar("discordName", 512).nullable().index()
+	val wietbotWebsiteId = varchar("wietbotWebsiteId", 256).nullable().index()
+	val wietbotWebsiteName = varchar("wietbotWebsiteName", 512).nullable().index()
 	val role = reference("role", Roles)
 }
 

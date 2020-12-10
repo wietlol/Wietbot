@@ -164,16 +164,16 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 			DefaultUser(
 				when (request.platform.name)
 				{
-					DefaultPlatform.stackOverflow.name -> user.stackOverflowId
-					DefaultPlatform.discord.name -> user.discordId
-					DefaultPlatform.wietbotWebsite.name -> user.wietbotWebsiteId
+					DefaultPlatform.stackOverflow.name -> user.stackOverflowId!!
+					DefaultPlatform.discord.name -> user.discordId!!
+					DefaultPlatform.wietbotWebsite.name -> user.wietbotWebsiteId!!
 					else -> "-"
 				},
 				when (request.platform.name)
 				{
-					DefaultPlatform.stackOverflow.name -> user.stackOverflowName
-					DefaultPlatform.discord.name -> user.discordName
-					DefaultPlatform.wietbotWebsite.name -> user.wietbotWebsiteName
+					DefaultPlatform.stackOverflow.name -> user.stackOverflowName!!
+					DefaultPlatform.discord.name -> user.discordName!!
+					DefaultPlatform.wietbotWebsite.name -> user.wietbotWebsiteName!!
 					else -> "-"
 				},
 				request.platform,
@@ -184,7 +184,6 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 				user.discordName,
 				user.wietbotWebsiteId,
 				user.wietbotWebsiteName,
-				user.role.id.value,
 			)
 		)
 	}

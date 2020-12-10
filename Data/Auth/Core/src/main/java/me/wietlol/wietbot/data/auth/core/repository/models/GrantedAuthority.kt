@@ -13,7 +13,7 @@ object GrantedAuthorities : IntIdTable("auth_granted_authority")
 	
 	init
 	{
-		index(true, policy, permission)
+		index(true, policy, permission, resource)
 	}
 }
 

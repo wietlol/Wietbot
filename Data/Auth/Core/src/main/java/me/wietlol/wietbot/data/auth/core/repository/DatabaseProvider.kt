@@ -11,7 +11,7 @@ object DatabaseProvider
 		Database.connect(settings.url, settings.driver, settings.user, settings.password)
 			.also {
 				transaction {
-					SchemaUtils.create(Users, Roles, RolePolicies, Policies, GrantedAuthorities, RevokedAuthorities, Permissions)
+					SchemaUtils.createMissingTablesAndColumns(Users, Roles, RolePolicies, Policies, GrantedAuthorities, RevokedAuthorities, Permissions)
 				}
 			}
 }

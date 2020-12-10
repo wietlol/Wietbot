@@ -13,7 +13,7 @@ object RevokedAuthorities : IntIdTable("auth_revoked_authority")
 	
 	init
 	{
-		GrantedAuthorities.index(true, GrantedAuthorities.policy, GrantedAuthorities.permission)
+		index(true, policy, permission, resource)
 	}
 }
 

@@ -97,13 +97,12 @@ blueprint User {
 	property(2) localName: String
 	property(3) platform: Platform
 	property(4) internalId: Long
-	property(5) stackExchangeId: String
-	property(6) stackExchangeName: String
-	property(7) discordId: String
-	property(8) discordName: String
-	property(9) wietbotWebsiteId: String
-	property(10) wietbotWebsiteName: String
-	property(11) role: Integer
+	property(5) stackOverflowId: String?
+	property(6) stackOverflowName: String?
+	property(7) discordId: String?
+	property(8) discordName: String?
+	property(9) wietbotWebsiteId: String?
+	property(10) wietbotWebsiteName: String?
 }
 
 blueprint Role {

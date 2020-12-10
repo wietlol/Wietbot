@@ -5,6 +5,9 @@ import com.amazonaws.services.lambda.AWSLambdaClientBuilder
 import me.wietlol.wietbot.data.auth.models.AuthService
 import me.wietlol.wietbot.data.auth.models.models.CreateGrantedAuthorityRequest
 import me.wietlol.wietbot.data.auth.models.models.DefaultCreateGrantedAuthorityRequest
+import me.wietlol.wietbot.data.auth.models.models.DefaultGetOrCreateUserRequest
+import me.wietlol.wietbot.data.auth.models.models.DefaultListRolesRequest
+import me.wietlol.wietbot.data.auth.models.models.DefaultPlatform
 
 object InitialCreate
 {
@@ -17,6 +20,10 @@ object InitialCreate
 		val authClient: AuthService = AuthClient(lambdaClient)
 		
 		with(authClient) {
+//			println("roles:")
+//			listRoles(DefaultListRolesRequest()).roles.forEach {
+//				println(it)
+//			}
 			
 //			createGrantedAuthority(CreateGrantedAuthorityRequest.of(
 //				"pleb",
@@ -54,11 +61,11 @@ object InitialCreate
 //				"evalCSharp"
 //			))
 
-			createGrantedAuthority(DefaultCreateGrantedAuthorityRequest(
-				"pleb",
-				"command-execute",
-				"evalSql"
-			))
+//			createGrantedAuthority(DefaultCreateGrantedAuthorityRequest(
+//				"pleb",
+//				"command-execute",
+//				"evalSql"
+//			))
 			
 			
 //			createPermission(CreatePermissionRequest.of("command-execute"))

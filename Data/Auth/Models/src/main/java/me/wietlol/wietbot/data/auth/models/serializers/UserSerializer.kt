@@ -1,4 +1,4 @@
-// hash: #8a0ec7e4
+// hash: #9d118f23
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -39,10 +39,10 @@ object UserSerializer : ModelSerializer<User, User>
 	private val internalIdIndex: Int
 		= 4
 	
-	private val stackExchangeIdIndex: Int
+	private val stackOverflowIdIndex: Int
 		= 5
 	
-	private val stackExchangeNameIndex: Int
+	private val stackOverflowNameIndex: Int
 		= 6
 	
 	private val discordIdIndex: Int
@@ -56,9 +56,6 @@ object UserSerializer : ModelSerializer<User, User>
 	
 	private val wietbotWebsiteNameIndex: Int
 		= 10
-	
-	private val roleIndex: Int
-		= 11
 	
 	override val modelId: UUID
 		get() = User.serializationKey
@@ -80,26 +77,35 @@ object UserSerializer : ModelSerializer<User, User>
 		stream.writeUnsignedVarInt(internalIdIndex)
 		schema.serialize(serializationContext, stream, entity.internalId)
 		
-		stream.writeUnsignedVarInt(stackExchangeIdIndex)
-		schema.serialize(serializationContext, stream, entity.stackExchangeId)
+		entity.stackOverflowId?.also {
+			stream.writeUnsignedVarInt(stackOverflowIdIndex)
+			schema.serialize(serializationContext, stream, it)
+		}
 		
-		stream.writeUnsignedVarInt(stackExchangeNameIndex)
-		schema.serialize(serializationContext, stream, entity.stackExchangeName)
+		entity.stackOverflowName?.also {
+			stream.writeUnsignedVarInt(stackOverflowNameIndex)
+			schema.serialize(serializationContext, stream, it)
+		}
 		
-		stream.writeUnsignedVarInt(discordIdIndex)
-		schema.serialize(serializationContext, stream, entity.discordId)
+		entity.discordId?.also {
+			stream.writeUnsignedVarInt(discordIdIndex)
+			schema.serialize(serializationContext, stream, it)
+		}
 		
-		stream.writeUnsignedVarInt(discordNameIndex)
-		schema.serialize(serializationContext, stream, entity.discordName)
+		entity.discordName?.also {
+			stream.writeUnsignedVarInt(discordNameIndex)
+			schema.serialize(serializationContext, stream, it)
+		}
 		
-		stream.writeUnsignedVarInt(wietbotWebsiteIdIndex)
-		schema.serialize(serializationContext, stream, entity.wietbotWebsiteId)
+		entity.wietbotWebsiteId?.also {
+			stream.writeUnsignedVarInt(wietbotWebsiteIdIndex)
+			schema.serialize(serializationContext, stream, it)
+		}
 		
-		stream.writeUnsignedVarInt(wietbotWebsiteNameIndex)
-		schema.serialize(serializationContext, stream, entity.wietbotWebsiteName)
-		
-		stream.writeUnsignedVarInt(roleIndex)
-		schema.serialize(serializationContext, stream, entity.role)
+		entity.wietbotWebsiteName?.also {
+			stream.writeUnsignedVarInt(wietbotWebsiteNameIndex)
+			schema.serialize(serializationContext, stream, it)
+		}
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
@@ -110,13 +116,12 @@ object UserSerializer : ModelSerializer<User, User>
 		var localName: String? = null
 		var platform: Platform? = null
 		var internalId: Long? = null
-		var stackExchangeId: String? = null
-		var stackExchangeName: String? = null
+		var stackOverflowId: String? = null
+		var stackOverflowName: String? = null
 		var discordId: String? = null
 		var discordName: String? = null
 		var wietbotWebsiteId: String? = null
 		var wietbotWebsiteName: String? = null
-		var role: Int? = null
 		
 		while (true)
 		{
@@ -127,25 +132,23 @@ object UserSerializer : ModelSerializer<User, User>
 					localName!!,
 					platform!!,
 					internalId!!,
-					stackExchangeId!!,
-					stackExchangeName!!,
-					discordId!!,
-					discordName!!,
-					wietbotWebsiteId!!,
-					wietbotWebsiteName!!,
-					role!!,
+					stackOverflowId,
+					stackOverflowName,
+					discordId,
+					discordName,
+					wietbotWebsiteId,
+					wietbotWebsiteName,
 				)
 				localIdIndex -> localId = schema.deserialize(deserializationContext, stream)
 				localNameIndex -> localName = schema.deserialize(deserializationContext, stream)
 				platformIndex -> platform = schema.deserialize(deserializationContext, stream)
 				internalIdIndex -> internalId = schema.deserialize(deserializationContext, stream)
-				stackExchangeIdIndex -> stackExchangeId = schema.deserialize(deserializationContext, stream)
-				stackExchangeNameIndex -> stackExchangeName = schema.deserialize(deserializationContext, stream)
+				stackOverflowIdIndex -> stackOverflowId = schema.deserialize(deserializationContext, stream)
+				stackOverflowNameIndex -> stackOverflowName = schema.deserialize(deserializationContext, stream)
 				discordIdIndex -> discordId = schema.deserialize(deserializationContext, stream)
 				discordNameIndex -> discordName = schema.deserialize(deserializationContext, stream)
 				wietbotWebsiteIdIndex -> wietbotWebsiteId = schema.deserialize(deserializationContext, stream)
 				wietbotWebsiteNameIndex -> wietbotWebsiteName = schema.deserialize(deserializationContext, stream)
-				roleIndex -> role = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}

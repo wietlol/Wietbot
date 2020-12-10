@@ -17,6 +17,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 class ExposedAuthRepository(
 	@Suppress("unused") val database: Database // make sure a database connection is set up
@@ -31,10 +32,13 @@ class ExposedAuthRepository(
 	
 	override fun getOrCreateUser(id: String, platform: String, name: String): User =
 		transaction {
-			User.find { getPrimaryKey(platform) eq id }
+			User.find { getPlatformId(platform) eq id }
 				.firstOrNull()
 				?.also {
-					it.setLocalName(platform, name) // todo, not sure if this is enough or if we have to save it somehow
+					Users.update({ Users.id eq it.id }) {
+						it[getPlatformName(platform)] = name
+					}
+					it.setLocalName(platform, name)
 				}
 				?: createUser(id, platform, name)
 		}
@@ -42,7 +46,7 @@ class ExposedAuthRepository(
 	private fun createUser(id: String, platform: String, name: String): User =
 		transaction {
 			User.new {
-				setPrimaryKey(platform, id)
+				setPlatformId(platform, id)
 				setLocalName(platform, name)
 				role = Role.find { Roles.name eq "pleb" }.single()
 			}
@@ -50,7 +54,7 @@ class ExposedAuthRepository(
 	
 	override fun isUserAuthorized(userId: String, platform: String, permission: String, resource: String): Boolean =
 		transaction {
-			User.find { getPrimaryKey(platform) eq userId }
+			User.find { getPlatformId(platform) eq userId }
 				.singleOrNull()
 				?.let { user ->
 					val policies = user.role.policies
@@ -120,14 +124,14 @@ class ExposedAuthRepository(
 	
 	override fun getUserRole(userId: String, platform: String): Role =
 		transaction {
-			User.find { getPrimaryKey(platform) eq userId }
+			User.find { getPlatformId(platform) eq userId }
 				.single()
 				.role
 		}
 	
 	override fun setUserRole(userId: String, platform: String, roleName: String) =
 		transaction {
-			User.find { getPrimaryKey(platform) eq userId }
+			User.find { getPlatformId(platform) eq userId }
 				.single()
 				.role = Role.find { Roles.name eq roleName }.single()
 		}
@@ -137,21 +141,30 @@ class ExposedAuthRepository(
 			Role.all().toList()
 		}
 	
-	private fun User.setPrimaryKey(platform: String, id: String): Unit =
+	private fun User.setPlatformId(platform: String, id: String): Unit =
 		when (platform)
 		{
-			DefaultPlatform.stackOverflow.name -> stackOverflowName = id
+			DefaultPlatform.stackOverflow.name -> stackOverflowId = id
 			DefaultPlatform.discord.name -> discordId = id
 			DefaultPlatform.wietbotWebsite.name -> wietbotWebsiteId = id
 			else -> TODO("Not yet implemented.")
 		}
 	
-	private fun getPrimaryKey(platform: String): Column<String> =
+	private fun getPlatformId(platform: String): Column<String?> =
+		when (platform)
+		{
+			DefaultPlatform.stackOverflow.name -> Users.stackOverflowId
+			DefaultPlatform.discord.name -> Users.discordId
+			DefaultPlatform.wietbotWebsite.name -> Users.wietbotWebsiteId
+			else -> TODO("Not yet implemented.")
+		}
+	
+	private fun getPlatformName(platform: String): Column<String?> =
 		when (platform)
 		{
 			DefaultPlatform.stackOverflow.name -> Users.stackOverflowName
-			DefaultPlatform.discord.name -> Users.discordId
-			DefaultPlatform.wietbotWebsite.name -> Users.wietbotWebsiteId
+			DefaultPlatform.discord.name -> Users.discordName
+			DefaultPlatform.wietbotWebsite.name -> Users.wietbotWebsiteName
 			else -> TODO("Not yet implemented.")
 		}
 	

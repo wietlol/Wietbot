@@ -9,7 +9,7 @@ provider:
 
     environment:
         service__name: '${self:service}'
-        heater_warmupAware: 'true'
+        heater_warmupAware: 'false'
         database_host: '${ssm:/me/wietlol/wietbot/common/database/host}'
         database_name: '${ssm:/me/wietlol/wietbot/common/database/name}'
         database_driver: '${ssm:/me/wietlol/wietbot/common/database/driver}'
@@ -36,7 +36,7 @@ plugins:
     - 'serverless-log-forwarding'
 
 custom:
-    version: '1.0.0'
+    version: '1.1.0'
     logRetentionInDays: '3'
     logForwarding:
         destinationARN: 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-data-log-dev-saveLogsCloudwatch'

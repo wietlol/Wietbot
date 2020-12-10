@@ -1,4 +1,4 @@
-// hash: #350896c6
+// hash: #e8e62a3b
 // data: serializationKey:4e83066f-87e4-442a-853c-dea9b60d7eb8
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
@@ -35,19 +35,17 @@ interface User : BitSerializable, Jsonable
 	
 	val internalId: Long
 	
-	val stackExchangeId: String
+	val stackOverflowId: String?
 	
-	val stackExchangeName: String
+	val stackOverflowName: String?
 	
-	val discordId: String
+	val discordId: String?
 	
-	val discordName: String
+	val discordName: String?
 	
-	val wietbotWebsiteId: String
+	val wietbotWebsiteId: String?
 	
-	val wietbotWebsiteName: String
-	
-	val role: Int
+	val wietbotWebsiteName: String?
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -59,13 +57,12 @@ interface User : BitSerializable, Jsonable
 		if (localName != other.localName) return false
 		if (platform != other.platform) return false
 		if (internalId != other.internalId) return false
-		if (stackExchangeId != other.stackExchangeId) return false
-		if (stackExchangeName != other.stackExchangeName) return false
+		if (stackOverflowId != other.stackOverflowId) return false
+		if (stackOverflowName != other.stackOverflowName) return false
 		if (discordId != other.discordId) return false
 		if (discordName != other.discordName) return false
 		if (wietbotWebsiteId != other.wietbotWebsiteId) return false
 		if (wietbotWebsiteName != other.wietbotWebsiteName) return false
-		if (role != other.role) return false
 		
 		return true
 	}
@@ -76,16 +73,15 @@ interface User : BitSerializable, Jsonable
 			.with(localName)
 			.with(platform)
 			.with(internalId)
-			.with(stackExchangeId)
-			.with(stackExchangeName)
+			.with(stackOverflowId)
+			.with(stackOverflowName)
 			.with(discordId)
 			.with(discordName)
 			.with(wietbotWebsiteId)
 			.with(wietbotWebsiteName)
-			.with(role)
 	
 	override fun toJson(): String =
-		"""{"localId":${localId.toJsonString()},"localName":${localName.toJsonString()},"platform":${platform.toJsonString()},"internalId":${internalId.toJsonString()},"stackExchangeId":${stackExchangeId.toJsonString()},"stackExchangeName":${stackExchangeName.toJsonString()},"discordId":${discordId.toJsonString()},"discordName":${discordName.toJsonString()},"wietbotWebsiteId":${wietbotWebsiteId.toJsonString()},"wietbotWebsiteName":${wietbotWebsiteName.toJsonString()},"role":${role.toJsonString()}}"""
+		"""{"localId":${localId.toJsonString()},"localName":${localName.toJsonString()},"platform":${platform.toJsonString()},"internalId":${internalId.toJsonString()},"stackOverflowId":${stackOverflowId.toJsonString()},"stackOverflowName":${stackOverflowName.toJsonString()},"discordId":${discordId.toJsonString()},"discordName":${discordName.toJsonString()},"wietbotWebsiteId":${wietbotWebsiteId.toJsonString()},"wietbotWebsiteName":${wietbotWebsiteName.toJsonString()}}"""
 	
 	fun duplicate(): User
 	

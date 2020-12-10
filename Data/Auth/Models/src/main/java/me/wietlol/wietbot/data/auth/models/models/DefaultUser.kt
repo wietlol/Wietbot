@@ -1,4 +1,4 @@
-// hash: #bd684073
+// hash: #da4d1878
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -15,13 +15,12 @@ data class DefaultUser(
 	override val localName: String,
 	override val platform: Platform,
 	override val internalId: Long,
-	override val stackExchangeId: String,
-	override val stackExchangeName: String,
-	override val discordId: String,
-	override val discordName: String,
-	override val wietbotWebsiteId: String,
-	override val wietbotWebsiteName: String,
-	override val role: Int,
+	override val stackOverflowId: String?,
+	override val stackOverflowName: String?,
+	override val discordId: String?,
+	override val discordName: String?,
+	override val wietbotWebsiteId: String?,
+	override val wietbotWebsiteName: String?,
 ) : User
 {
 	override fun equals(other: Any?): Boolean =
@@ -39,13 +38,12 @@ data class DefaultUser(
 			localName = localName,
 			platform = platform.duplicate(),
 			internalId = internalId,
-			stackExchangeId = stackExchangeId,
-			stackExchangeName = stackExchangeName,
+			stackOverflowId = stackOverflowId,
+			stackOverflowName = stackOverflowName,
 			discordId = discordId,
 			discordName = discordName,
 			wietbotWebsiteId = wietbotWebsiteId,
 			wietbotWebsiteName = wietbotWebsiteName,
-			role = role,
 		)
 	
 	// @formatter:on

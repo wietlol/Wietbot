@@ -1,4 +1,4 @@
-// hash: #ccfd486b
+// hash: #0d43a210
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
@@ -25,10 +25,10 @@ class UserBuilder
 	var internalId: Long?
 		= null
 	
-	var stackExchangeId: String?
+	var stackOverflowId: String?
 		= null
 	
-	var stackExchangeName: String?
+	var stackOverflowName: String?
 		= null
 	
 	var discordId: String?
@@ -43,22 +43,18 @@ class UserBuilder
 	var wietbotWebsiteName: String?
 		= null
 	
-	var role: Int?
-		= null
-	
 	fun build(): User =
 		DefaultUser(
 			localId!!,
 			localName!!,
 			platform!!,
 			internalId!!,
-			stackExchangeId!!,
-			stackExchangeName!!,
-			discordId!!,
-			discordName!!,
-			wietbotWebsiteId!!,
-			wietbotWebsiteName!!,
-			role!!,
+			stackOverflowId,
+			stackOverflowName,
+			discordId,
+			discordName,
+			wietbotWebsiteId,
+			wietbotWebsiteName,
 		)
 	
 	// @formatter:on
