@@ -1,4 +1,4 @@
-// hash: #5a819b7b
+// hash: #7083863a
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -27,8 +27,14 @@ object GetOrCreateUserRequestSerializer : ModelSerializer<GetOrCreateUserRequest
 	private val endOfObject: Int
 		= 0
 	
-	private val userIndex: Int
+	private val localIdIndex: Int
 		= 1
+	
+	private val localNameIndex: Int
+		= 2
+	
+	private val platformIndex: Int
+		= 3
 	
 	override val modelId: UUID
 		get() = GetOrCreateUserRequest.serializationKey
@@ -38,24 +44,36 @@ object GetOrCreateUserRequestSerializer : ModelSerializer<GetOrCreateUserRequest
 	
 	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: GetOrCreateUserRequest)
 	{
-		stream.writeUnsignedVarInt(userIndex)
-		schema.serialize(serializationContext, stream, entity.user)
+		stream.writeUnsignedVarInt(localIdIndex)
+		schema.serialize(serializationContext, stream, entity.localId)
+		
+		stream.writeUnsignedVarInt(localNameIndex)
+		schema.serialize(serializationContext, stream, entity.localName)
+		
+		stream.writeUnsignedVarInt(platformIndex)
+		schema.serialize(serializationContext, stream, entity.platform)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
 	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): GetOrCreateUserRequest
 	{
-		var user: User? = null
+		var localId: String? = null
+		var localName: String? = null
+		var platform: Platform? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
 				endOfObject -> return GetOrCreateUserRequestImpl(
-					user!!,
+					localId!!,
+					localName!!,
+					platform!!,
 				)
-				userIndex -> user = schema.deserialize(deserializationContext, stream)
+				localIdIndex -> localId = schema.deserialize(deserializationContext, stream)
+				localNameIndex -> localName = schema.deserialize(deserializationContext, stream)
+				platformIndex -> platform = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}

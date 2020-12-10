@@ -1,4 +1,4 @@
-// hash: #26a1e974
+// hash: #4a6ce2a0
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
@@ -13,12 +13,20 @@ import me.wietlol.wietbot.data.auth.models.models.GetOrCreateUserRequestImpl
 
 class GetOrCreateUserRequestBuilder
 {
-	var user: User?
+	var localId: String?
+		= null
+	
+	var localName: String?
+		= null
+	
+	var platform: Platform?
 		= null
 	
 	fun build(): GetOrCreateUserRequest =
 		GetOrCreateUserRequestImpl(
-			user!!,
+			localId!!,
+			localName!!,
+			platform!!,
 		)
 	
 	// @formatter:on

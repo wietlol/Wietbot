@@ -11,12 +11,17 @@ class BitBlockManager
 	fun processBitModule()
 	{
 		// bitblock processBitModule <filepath>
-		BitModuleProcessor.processBitModule(File("src/main/resources/me/wietlol/wietbot/data/auth/models/Api.bitmodule"))
+		BitModuleProcessor.processBitModule(
+			File("src/main/resources/me/wietlol/wietbot/data/auth/models/Api.bitmodule")
+		)
 	}
 	
 	@Test
 	fun buildBitSchema()
 	{
-		BitSchemaBuilder.buildSchema(File("src/main/resources/me/wietlol/wietbot/data/auth/models/Api.bitschema"), WietbotDataAuth.modelSerializers)
+		BitSchemaBuilder.buildSchema(
+			File("src/main/resources/me/wietlol/wietbot/data/auth/models/Api.bitschema"),
+			WietbotDataAuth.modelSerializers
+		)
 	}
 }

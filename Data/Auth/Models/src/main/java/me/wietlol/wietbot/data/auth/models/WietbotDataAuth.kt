@@ -1,4 +1,4 @@
-// hash: #d8466390
+// hash: #1eed27b7
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models
 
@@ -44,6 +44,7 @@ object WietbotDataAuth : RegistrySet
 			CommonModelRegistryKey("User", "WietbotDataAuth", "Wietbot", "1.0") to UserSerializer,
 			CommonModelRegistryKey("Role", "WietbotDataAuth", "Wietbot", "1.0") to RoleSerializer,
 			CommonModelRegistryKey("Permission", "WietbotDataAuth", "Wietbot", "1.0") to PermissionSerializer,
+			CommonModelRegistryKey("Platform", "WietbotDataAuth", "Wietbot", "1.0") to PlatformSerializer,
 		)
 	
 	override fun initialize(registry: ModelRegistry?) =

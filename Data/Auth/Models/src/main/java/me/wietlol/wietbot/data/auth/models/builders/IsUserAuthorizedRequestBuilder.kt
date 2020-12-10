@@ -1,4 +1,4 @@
-// hash: #dc2e92b9
+// hash: #0a5cf6b2
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
@@ -13,7 +13,10 @@ import me.wietlol.wietbot.data.auth.models.models.IsUserAuthorizedRequestImpl
 
 class IsUserAuthorizedRequestBuilder
 {
-	var userId: Int?
+	var userId: String?
+		= null
+	
+	var platform: Platform?
 		= null
 	
 	var permission: String?
@@ -25,6 +28,7 @@ class IsUserAuthorizedRequestBuilder
 	fun build(): IsUserAuthorizedRequest =
 		IsUserAuthorizedRequestImpl(
 			userId!!,
+			platform!!,
 			permission!!,
 			resource!!,
 		)

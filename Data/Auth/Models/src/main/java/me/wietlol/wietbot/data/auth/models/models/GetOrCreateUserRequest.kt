@@ -1,4 +1,4 @@
-// hash: #ed8a7590
+// hash: #6902c4dc
 // data: serializationKey:d18267a5-4694-4c9b-9a1a-8bc69a09dd25
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
@@ -27,7 +27,11 @@ interface GetOrCreateUserRequest : BitSerializable, Jsonable
 	override val serializationKey: UUID
 		get() = Companion.serializationKey
 	
-	val user: User
+	val localId: String
+	
+	val localName: String
+	
+	val platform: Platform
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -35,17 +39,21 @@ interface GetOrCreateUserRequest : BitSerializable, Jsonable
 		if (other == null) return false
 		if (other !is GetOrCreateUserRequest) return false
 		
-		if (user != other.user) return false
+		if (localId != other.localId) return false
+		if (localName != other.localName) return false
+		if (platform != other.platform) return false
 		
 		return true
 	}
 	
 	fun computeHashCode(): Int =
 		emptyHashCode
-			.with(user)
+			.with(localId)
+			.with(localName)
+			.with(platform)
 	
 	override fun toJson(): String =
-		"""{"user":${user.toJsonString()}}"""
+		"""{"localId":${localId.toJsonString()},"localName":${localName.toJsonString()},"platform":${platform.toJsonString()}}"""
 	
 	fun duplicate(): GetOrCreateUserRequest
 	

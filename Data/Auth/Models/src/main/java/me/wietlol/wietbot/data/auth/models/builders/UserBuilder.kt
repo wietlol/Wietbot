@@ -1,4 +1,4 @@
-// hash: #320433db
+// hash: #b8ed69ad
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
@@ -13,16 +13,52 @@ import me.wietlol.wietbot.data.auth.models.models.UserImpl
 
 class UserBuilder
 {
-	var id: Int?
+	var localId: String?
 		= null
 	
-	var name: String?
+	var localName: String?
+		= null
+	
+	var platform: Platform?
+		= null
+	
+	var internalId: Long?
+		= null
+	
+	var stackExchangeId: String?
+		= null
+	
+	var stackExchangeName: String?
+		= null
+	
+	var discordId: String?
+		= null
+	
+	var discordName: String?
+		= null
+	
+	var wietbotWebsiteId: String?
+		= null
+	
+	var wietbotWebsiteName: String?
+		= null
+	
+	var role: Int?
 		= null
 	
 	fun build(): User =
 		UserImpl(
-			id!!,
-			name!!,
+			localId!!,
+			localName!!,
+			platform!!,
+			internalId!!,
+			stackExchangeId!!,
+			stackExchangeName!!,
+			discordId!!,
+			discordName!!,
+			wietbotWebsiteId!!,
+			wietbotWebsiteName!!,
+			role!!,
 		)
 	
 	// @formatter:on

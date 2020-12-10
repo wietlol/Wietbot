@@ -9,7 +9,7 @@ import me.wietlol.wietbot.data.auth.core.repository.models.User
 
 interface AuthRepository
 {
-	fun getOrCreateUser(id: Int, name: String): User
+	fun getOrCreateUser(id: String, platform: String, name: String): User
 	
 	fun createPermission(name: String): Permission
 	
@@ -25,11 +25,11 @@ interface AuthRepository
 	
 	fun detachRolePolicy(role: String, policy: String)
 	
-	fun getUserRole(userId: Int): Role
+	fun getUserRole(userId: String, platform: String): Role
 	
-	fun setUserRole(userId: Int, roleName: String)
+	fun setUserRole(userId: String, platform: String, roleName: String)
 	
 	fun listRoles(): List<Role>
 	
-	fun isUserAuthorized(userId: Int, permission: String, resource: String): Boolean
+	fun isUserAuthorized(userId: String, platform: String, permission: String, resource: String): Boolean
 }

@@ -1,4 +1,4 @@
-// hash: #bf677675
+// hash: #40a584be
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -27,8 +27,11 @@ object GetUserRoleRequestSerializer : ModelSerializer<GetUserRoleRequest, GetUse
 	private val endOfObject: Int
 		= 0
 	
-	private val userIdIndex: Int
+	private val localUserIdIndex: Int
 		= 1
+	
+	private val platformIndex: Int
+		= 2
 	
 	override val modelId: UUID
 		get() = GetUserRoleRequest.serializationKey
@@ -38,24 +41,30 @@ object GetUserRoleRequestSerializer : ModelSerializer<GetUserRoleRequest, GetUse
 	
 	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: GetUserRoleRequest)
 	{
-		stream.writeUnsignedVarInt(userIdIndex)
-		schema.serialize(serializationContext, stream, entity.userId)
+		stream.writeUnsignedVarInt(localUserIdIndex)
+		schema.serialize(serializationContext, stream, entity.localUserId)
+		
+		stream.writeUnsignedVarInt(platformIndex)
+		schema.serialize(serializationContext, stream, entity.platform)
 		
 		stream.writeUnsignedVarInt(endOfObject)
 	}
 	
 	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): GetUserRoleRequest
 	{
-		var userId: Int? = null
+		var localUserId: String? = null
+		var platform: Platform? = null
 		
 		while (true)
 		{
 			when (stream.readUnsignedVarInt())
 			{
 				endOfObject -> return GetUserRoleRequestImpl(
-					userId!!,
+					localUserId!!,
+					platform!!,
 				)
-				userIdIndex -> userId = schema.deserialize(deserializationContext, stream)
+				localUserIdIndex -> localUserId = schema.deserialize(deserializationContext, stream)
+				platformIndex -> platform = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}
 		}

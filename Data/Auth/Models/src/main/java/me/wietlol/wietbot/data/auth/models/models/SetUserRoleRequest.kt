@@ -1,4 +1,4 @@
-// hash: #36b0683f
+// hash: #fa777d24
 // data: serializationKey:972f98c6-48c7-4a87-bfdf-a0c3e22cdc01
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
@@ -12,6 +12,9 @@ import me.wietlol.utils.common.with
 
 // @formatter:on
 // @tomplot:customCode:start:gAeCSq
+
+import kotlin.DeprecationLevel.WARNING
+
 // @tomplot:customCode:end
 // @formatter:off
 
@@ -27,7 +30,9 @@ interface SetUserRoleRequest : BitSerializable, Jsonable
 	override val serializationKey: UUID
 		get() = Companion.serializationKey
 	
-	val userId: Int
+	val localUserId: String
+	
+	val platform: Platform
 	
 	val role: String
 	
@@ -37,7 +42,8 @@ interface SetUserRoleRequest : BitSerializable, Jsonable
 		if (other == null) return false
 		if (other !is SetUserRoleRequest) return false
 		
-		if (userId != other.userId) return false
+		if (localUserId != other.localUserId) return false
+		if (platform != other.platform) return false
 		if (role != other.role) return false
 		
 		return true
@@ -45,16 +51,22 @@ interface SetUserRoleRequest : BitSerializable, Jsonable
 	
 	fun computeHashCode(): Int =
 		emptyHashCode
-			.with(userId)
+			.with(localUserId)
+			.with(platform)
 			.with(role)
 	
 	override fun toJson(): String =
-		"""{"userId":${userId.toJsonString()},"role":${role.toJsonString()}}"""
+		"""{"localUserId":${localUserId.toJsonString()},"platform":${platform.toJsonString()},"role":${role.toJsonString()}}"""
 	
 	fun duplicate(): SetUserRoleRequest
 	
 	// @formatter:on
 	// @tomplot:customCode:start:32T3K8
+	
+	@Deprecated("backwards compatibility property", ReplaceWith("localUserId"), WARNING)
+	val userId: String
+		get() = localUserId
+	
 	// @tomplot:customCode:end
 	// @formatter:off
 }

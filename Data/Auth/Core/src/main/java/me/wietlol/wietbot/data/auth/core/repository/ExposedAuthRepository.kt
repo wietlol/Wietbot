@@ -12,6 +12,8 @@ import me.wietlol.wietbot.data.auth.core.repository.models.Role
 import me.wietlol.wietbot.data.auth.core.repository.models.Roles
 import me.wietlol.wietbot.data.auth.core.repository.models.User
 import me.wietlol.wietbot.data.auth.core.repository.models.Users
+import me.wietlol.wietbot.data.auth.models.models.PlatformImpl
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -27,27 +29,28 @@ class ExposedAuthRepository(
 			}
 		}
 	
-	override fun getOrCreateUser(id: Int, name: String): User =
+	override fun getOrCreateUser(id: String, platform: String, name: String): User =
 		transaction {
-			User.find { Users.stackExchangeId eq id }
+			User.find { getPrimaryKey(platform) eq id }
 				.firstOrNull()
-				?.also { it.name = name }
-				?: createUser(id, name)
+				?.also {
+					it.setLocalName(platform, name) // todo, not sure if this is enough or if we have to save it somehow
+				}
+				?: createUser(id, platform, name)
 		}
 	
-	private fun createUser(id: Int, name: String): User =
+	private fun createUser(id: String, platform: String, name: String): User =
 		transaction {
 			User.new {
-				stackExchangeId = id
-				this.name = name
+				setPrimaryKey(platform, id)
+				setLocalName(platform, name)
 				role = Role.find { Roles.name eq "pleb" }.single()
 			}
 		}
 	
-	override fun isUserAuthorized(userId: Int, permission: String, resource: String): Boolean =
+	override fun isUserAuthorized(userId: String, platform: String, permission: String, resource: String): Boolean =
 		transaction {
-			println("checking if user ($userId) is authorized to perform ($permission) on resource ($resource)")
-			User.find { Users.stackExchangeId eq userId }
+			User.find { getPrimaryKey(platform) eq userId }
 				.singleOrNull()
 				?.let { user ->
 					val policies = user.role.policies
@@ -55,13 +58,9 @@ class ExposedAuthRepository(
 					val isGranted = policies.flatMap { it.grants }.any { it.appliesOn(permission, resource) }
 					val isRevoked = policies.flatMap { it.revokes }.any { it.appliesOn(permission, resource) }
 					
-					println("permission is ${if (isGranted) "" else "not "}granted")
-					println("permission is ${if (isRevoked) "" else "not "}revoked")
-					
 					isGranted && isRevoked.not()
 				}
 				?: run {
-					println("user not found, no permission granted")
 					false
 				}
 		}
@@ -119,16 +118,16 @@ class ExposedAuthRepository(
 				}
 		}
 	
-	override fun getUserRole(userId: Int): Role =
+	override fun getUserRole(userId: String, platform: String): Role =
 		transaction {
-			User.find { Users.stackExchangeId eq userId }
+			User.find { getPrimaryKey(platform) eq userId }
 				.single()
 				.role
 		}
 	
-	override fun setUserRole(userId: Int, roleName: String) =
+	override fun setUserRole(userId: String, platform: String, roleName: String) =
 		transaction {
-			User.find { Users.stackExchangeId eq userId }
+			User.find { getPrimaryKey(platform) eq userId }
 				.single()
 				.role = Role.find { Roles.name eq roleName }.single()
 		}
@@ -137,4 +136,33 @@ class ExposedAuthRepository(
 		transaction {
 			Role.all().toList()
 		}
+	
+	private fun User.setPrimaryKey(platform: String, id: String): Unit =
+		when (platform)
+		{
+			PlatformImpl.stackOverflow.name -> stackOverflowName = id
+			PlatformImpl.discord.name -> discordId = id
+			PlatformImpl.wietbotWebsite.name -> wietbotWebsiteId = id
+			else -> TODO("Not yet implemented.")
+		}
+	
+	private fun getPrimaryKey(platform: String): Column<String> =
+		when (platform)
+		{
+			PlatformImpl.stackOverflow.name -> Users.stackOverflowName
+			PlatformImpl.discord.name -> Users.discordId
+			PlatformImpl.wietbotWebsite.name -> Users.wietbotWebsiteId
+			else -> TODO("Not yet implemented.")
+		}
+	
+	private fun User.setLocalName(platform: String, name: String)
+	{
+		when (platform)
+		{
+			PlatformImpl.stackOverflow.name -> stackOverflowName = name
+			PlatformImpl.discord.name -> discordName = name
+			PlatformImpl.wietbotWebsite.name -> wietbotWebsiteName = name
+			else -> TODO("Not yet implemented.")
+		}
+	}
 }

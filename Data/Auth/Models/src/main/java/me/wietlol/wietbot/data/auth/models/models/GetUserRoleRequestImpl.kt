@@ -1,4 +1,4 @@
-// hash: #d83e0184
+// hash: #d68ff9e9
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -11,7 +11,8 @@ import me.wietlol.wietbot.data.auth.models.models.*
 
 
 data class GetUserRoleRequestImpl(
-	override val userId: Int,
+	override val localUserId: String,
+	override val platform: Platform,
 ) : GetUserRoleRequest
 {
 	override fun equals(other: Any?): Boolean =
@@ -25,7 +26,8 @@ data class GetUserRoleRequestImpl(
 	
 	override fun duplicate(): GetUserRoleRequestImpl =
 		copy(
-			userId = userId,
+			localUserId = localUserId,
+			platform = platform.duplicate(),
 		)
 	
 	// @formatter:on

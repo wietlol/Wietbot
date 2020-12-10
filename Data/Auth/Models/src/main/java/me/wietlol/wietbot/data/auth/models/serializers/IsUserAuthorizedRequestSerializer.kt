@@ -1,4 +1,4 @@
-// hash: #03d083d5
+// hash: #98c2cfed
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -30,11 +30,14 @@ object IsUserAuthorizedRequestSerializer : ModelSerializer<IsUserAuthorizedReque
 	private val userIdIndex: Int
 		= 1
 	
-	private val permissionIndex: Int
+	private val platformIndex: Int
 		= 2
 	
-	private val resourceIndex: Int
+	private val permissionIndex: Int
 		= 3
+	
+	private val resourceIndex: Int
+		= 4
 	
 	override val modelId: UUID
 		get() = IsUserAuthorizedRequest.serializationKey
@@ -47,6 +50,9 @@ object IsUserAuthorizedRequestSerializer : ModelSerializer<IsUserAuthorizedReque
 		stream.writeUnsignedVarInt(userIdIndex)
 		schema.serialize(serializationContext, stream, entity.userId)
 		
+		stream.writeUnsignedVarInt(platformIndex)
+		schema.serialize(serializationContext, stream, entity.platform)
+		
 		stream.writeUnsignedVarInt(permissionIndex)
 		schema.serialize(serializationContext, stream, entity.permission)
 		
@@ -58,7 +64,8 @@ object IsUserAuthorizedRequestSerializer : ModelSerializer<IsUserAuthorizedReque
 	
 	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): IsUserAuthorizedRequest
 	{
-		var userId: Int? = null
+		var userId: String? = null
+		var platform: Platform? = null
 		var permission: String? = null
 		var resource: String? = "*"
 		
@@ -68,10 +75,12 @@ object IsUserAuthorizedRequestSerializer : ModelSerializer<IsUserAuthorizedReque
 			{
 				endOfObject -> return IsUserAuthorizedRequestImpl(
 					userId!!,
+					platform!!,
 					permission!!,
 					resource!!,
 				)
 				userIdIndex -> userId = schema.deserialize(deserializationContext, stream)
+				platformIndex -> platform = schema.deserialize(deserializationContext, stream)
 				permissionIndex -> permission = schema.deserialize(deserializationContext, stream)
 				resourceIndex -> resource = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)

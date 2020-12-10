@@ -41,6 +41,7 @@ import me.wietlol.wietbot.data.auth.models.models.IsUserAuthorizedResponseImpl
 import me.wietlol.wietbot.data.auth.models.models.ListRolesRequest
 import me.wietlol.wietbot.data.auth.models.models.ListRolesResponse
 import me.wietlol.wietbot.data.auth.models.models.ListRolesResponseImpl
+import me.wietlol.wietbot.data.auth.models.models.PlatformImpl
 import me.wietlol.wietbot.data.auth.models.models.RoleImpl
 import me.wietlol.wietbot.data.auth.models.models.SetUserRoleRequest
 import me.wietlol.wietbot.data.auth.models.models.SetUserRoleResponse
@@ -132,7 +133,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	
 	override fun getUserRole(request: GetUserRoleRequest): GetUserRoleResponse
 	{
-		val role = authRepository.getUserRole(request.userId)
+		val role = authRepository.getUserRole(request.localUserId, request.platform.name)
 		
 		return GetUserRoleResponseImpl(
 			RoleImpl(
@@ -147,7 +148,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	
 	override fun setUserRole(request: SetUserRoleRequest): SetUserRoleResponse
 	{
-		authRepository.setUserRole(request.userId, request.role)
+		authRepository.setUserRole(request.localUserId, request.platform.name, request.role)
 		
 		return SetUserRoleResponseImpl()
 	}
@@ -157,12 +158,33 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	
 	override fun getOrCreateUser(request: GetOrCreateUserRequest): GetOrCreateUserResponse
 	{
-		val user = authRepository.getOrCreateUser(request.user.id, request.user.name)
+		val user = authRepository.getOrCreateUser(request.localId, request.platform.name, request.localName)
 		
 		return GetOrCreateUserResponseImpl(
 			UserImpl(
-				user.stackExchangeId,
-				user.name
+				when (request.platform.name)
+				{
+					PlatformImpl.stackOverflow.name -> user.stackOverflowId
+					PlatformImpl.discord.name -> user.discordId
+					PlatformImpl.wietbotWebsite.name -> user.wietbotWebsiteId
+					else -> "-"
+				},
+				when (request.platform.name)
+				{
+					PlatformImpl.stackOverflow.name -> user.stackOverflowName
+					PlatformImpl.discord.name -> user.discordName
+					PlatformImpl.wietbotWebsite.name -> user.wietbotWebsiteName
+					else -> "-"
+				},
+				request.platform,
+				user.id.value,
+				user.stackOverflowId,
+				user.stackOverflowName,
+				user.discordId,
+				user.discordName,
+				user.wietbotWebsiteId,
+				user.wietbotWebsiteName,
+				user.role.id.value,
 			)
 		)
 	}
@@ -182,7 +204,7 @@ class AuthHandler : KoinComponent, AuthService, BaseHandler
 	
 	override fun isUserAuthorized(request: IsUserAuthorizedRequest): IsUserAuthorizedResponse
 	{
-		val isAuthorized = authRepository.isUserAuthorized(request.userId, request.permission, request.resource)
+		val isAuthorized = authRepository.isUserAuthorized(request.userId, request.platform.name, request.permission, request.resource)
 		
 		return IsUserAuthorizedResponseImpl(
 			isAuthorized

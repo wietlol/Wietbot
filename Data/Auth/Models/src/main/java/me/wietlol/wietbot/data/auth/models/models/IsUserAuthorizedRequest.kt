@@ -1,4 +1,4 @@
-// hash: #9b3f81c6
+// hash: #93954509
 // data: serializationKey:9f4ae267-f5a4-416f-9033-7b4df27c4524
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
@@ -27,7 +27,9 @@ interface IsUserAuthorizedRequest : BitSerializable, Jsonable
 	override val serializationKey: UUID
 		get() = Companion.serializationKey
 	
-	val userId: Int
+	val userId: String
+	
+	val platform: Platform
 	
 	val permission: String
 	
@@ -40,6 +42,7 @@ interface IsUserAuthorizedRequest : BitSerializable, Jsonable
 		if (other !is IsUserAuthorizedRequest) return false
 		
 		if (userId != other.userId) return false
+		if (platform != other.platform) return false
 		if (permission != other.permission) return false
 		if (resource != other.resource) return false
 		
@@ -49,11 +52,12 @@ interface IsUserAuthorizedRequest : BitSerializable, Jsonable
 	fun computeHashCode(): Int =
 		emptyHashCode
 			.with(userId)
+			.with(platform)
 			.with(permission)
 			.with(resource)
 	
 	override fun toJson(): String =
-		"""{"userId":${userId.toJsonString()},"permission":${permission.toJsonString()},"resource":${resource.toJsonString()}}"""
+		"""{"userId":${userId.toJsonString()},"platform":${platform.toJsonString()},"permission":${permission.toJsonString()},"resource":${resource.toJsonString()}}"""
 	
 	fun duplicate(): IsUserAuthorizedRequest
 	

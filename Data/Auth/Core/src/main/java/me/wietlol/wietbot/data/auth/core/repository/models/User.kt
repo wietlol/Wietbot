@@ -1,22 +1,30 @@
 package me.wietlol.wietbot.data.auth.core.repository.models
 
 import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.IntIdTable
+import org.jetbrains.exposed.dao.LongEntity
+import org.jetbrains.exposed.dao.LongEntityClass
+import org.jetbrains.exposed.dao.LongIdTable
 
-object Users : IntIdTable("auth_user")
+object Users : LongIdTable("auth_user")
 {
-	val stackExchangeId = integer("stackExchangeId").uniqueIndex()
-	val name = varchar("name", 512).index()
+	val stackOverflowId = varchar("stackOverflowId", 256).index()
+	val stackOverflowName = varchar("stackOverflowName", 512).index()
+	val discordId = varchar("discordId", 256).index()
+	val discordName = varchar("discordName", 512).index()
+	val wietbotWebsiteId = varchar("wietbotWebsiteId", 256).index()
+	val wietbotWebsiteName = varchar("wietbotWebsiteName", 512).index()
 	val role = reference("role", Roles)
 }
 
-class User(id: EntityID<Int>) : IntEntity(id)
+class User(id: EntityID<Long>) : LongEntity(id)
 {
-	companion object : IntEntityClass<User>(Users)
+	companion object : LongEntityClass<User>(Users)
 	
-	var stackExchangeId by Users.stackExchangeId
-	var name by Users.name
+	var stackOverflowId by Users.stackOverflowId
+	var stackOverflowName by Users.stackOverflowName
+	var discordId by Users.discordId
+	var discordName by Users.discordName
+	var wietbotWebsiteId by Users.wietbotWebsiteId
+	var wietbotWebsiteName by Users.wietbotWebsiteName
 	var role by Role referencedOn Users.role
 }

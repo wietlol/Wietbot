@@ -1,4 +1,4 @@
-// hash: #616cbe70
+// hash: #84c787df
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
@@ -13,12 +13,16 @@ import me.wietlol.wietbot.data.auth.models.models.GetUserRoleRequestImpl
 
 class GetUserRoleRequestBuilder
 {
-	var userId: Int?
+	var localUserId: String?
+		= null
+	
+	var platform: Platform?
 		= null
 	
 	fun build(): GetUserRoleRequest =
 		GetUserRoleRequestImpl(
-			userId!!,
+			localUserId!!,
+			platform!!,
 		)
 	
 	// @formatter:on

@@ -1,4 +1,4 @@
-// hash: #e3733428
+// hash: #350896c6
 // data: serializationKey:4e83066f-87e4-442a-853c-dea9b60d7eb8
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
@@ -27,9 +27,27 @@ interface User : BitSerializable, Jsonable
 	override val serializationKey: UUID
 		get() = Companion.serializationKey
 	
-	val id: Int
+	val localId: String
 	
-	val name: String
+	val localName: String
+	
+	val platform: Platform
+	
+	val internalId: Long
+	
+	val stackExchangeId: String
+	
+	val stackExchangeName: String
+	
+	val discordId: String
+	
+	val discordName: String
+	
+	val wietbotWebsiteId: String
+	
+	val wietbotWebsiteName: String
+	
+	val role: Int
 	
 	fun isEqualTo(other: Any?): Boolean
 	{
@@ -37,19 +55,37 @@ interface User : BitSerializable, Jsonable
 		if (other == null) return false
 		if (other !is User) return false
 		
-		if (id != other.id) return false
-		if (name != other.name) return false
+		if (localId != other.localId) return false
+		if (localName != other.localName) return false
+		if (platform != other.platform) return false
+		if (internalId != other.internalId) return false
+		if (stackExchangeId != other.stackExchangeId) return false
+		if (stackExchangeName != other.stackExchangeName) return false
+		if (discordId != other.discordId) return false
+		if (discordName != other.discordName) return false
+		if (wietbotWebsiteId != other.wietbotWebsiteId) return false
+		if (wietbotWebsiteName != other.wietbotWebsiteName) return false
+		if (role != other.role) return false
 		
 		return true
 	}
 	
 	fun computeHashCode(): Int =
 		emptyHashCode
-			.with(id)
-			.with(name)
+			.with(localId)
+			.with(localName)
+			.with(platform)
+			.with(internalId)
+			.with(stackExchangeId)
+			.with(stackExchangeName)
+			.with(discordId)
+			.with(discordName)
+			.with(wietbotWebsiteId)
+			.with(wietbotWebsiteName)
+			.with(role)
 	
 	override fun toJson(): String =
-		"""{"id":${id.toJsonString()},"name":${name.toJsonString()}}"""
+		"""{"localId":${localId.toJsonString()},"localName":${localName.toJsonString()},"platform":${platform.toJsonString()},"internalId":${internalId.toJsonString()},"stackExchangeId":${stackExchangeId.toJsonString()},"stackExchangeName":${stackExchangeName.toJsonString()},"discordId":${discordId.toJsonString()},"discordName":${discordName.toJsonString()},"wietbotWebsiteId":${wietbotWebsiteId.toJsonString()},"wietbotWebsiteName":${wietbotWebsiteName.toJsonString()},"role":${role.toJsonString()}}"""
 	
 	fun duplicate(): User
 	

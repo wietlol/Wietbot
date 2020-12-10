@@ -1,4 +1,4 @@
-// hash: #d77b4f31
+// hash: #394d14d1
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -11,7 +11,8 @@ import me.wietlol.wietbot.data.auth.models.models.*
 
 
 data class IsUserAuthorizedRequestImpl(
-	override val userId: Int,
+	override val userId: String,
+	override val platform: Platform,
 	override val permission: String,
 	override val resource: String = "*",
 ) : IsUserAuthorizedRequest
@@ -28,6 +29,7 @@ data class IsUserAuthorizedRequestImpl(
 	override fun duplicate(): IsUserAuthorizedRequestImpl =
 		copy(
 			userId = userId,
+			platform = platform.duplicate(),
 			permission = permission,
 			resource = resource,
 		)

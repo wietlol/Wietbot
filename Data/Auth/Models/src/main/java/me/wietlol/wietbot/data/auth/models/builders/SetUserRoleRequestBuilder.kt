@@ -1,4 +1,4 @@
-// hash: #8c96cd5b
+// hash: #2f45508c
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.builders
 
@@ -13,7 +13,10 @@ import me.wietlol.wietbot.data.auth.models.models.SetUserRoleRequestImpl
 
 class SetUserRoleRequestBuilder
 {
-	var userId: Int?
+	var localUserId: String?
+		= null
+	
+	var platform: Platform?
 		= null
 	
 	var role: String?
@@ -21,7 +24,8 @@ class SetUserRoleRequestBuilder
 	
 	fun build(): SetUserRoleRequest =
 		SetUserRoleRequestImpl(
-			userId!!,
+			localUserId!!,
+			platform!!,
 			role!!,
 		)
 	

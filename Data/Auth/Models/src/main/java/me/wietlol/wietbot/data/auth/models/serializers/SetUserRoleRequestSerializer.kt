@@ -1,4 +1,4 @@
-// hash: #4e04b9f8
+// hash: #c3cffa4a
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.serializers
 
@@ -27,11 +27,14 @@ object SetUserRoleRequestSerializer : ModelSerializer<SetUserRoleRequest, SetUse
 	private val endOfObject: Int
 		= 0
 	
-	private val userIdIndex: Int
+	private val localUserIdIndex: Int
 		= 1
 	
-	private val roleIndex: Int
+	private val platformIndex: Int
 		= 2
+	
+	private val roleIndex: Int
+		= 3
 	
 	override val modelId: UUID
 		get() = SetUserRoleRequest.serializationKey
@@ -41,8 +44,11 @@ object SetUserRoleRequestSerializer : ModelSerializer<SetUserRoleRequest, SetUse
 	
 	override fun serialize(serializationContext: SerializationContext, stream: OutputStream, schema: Schema, entity: SetUserRoleRequest)
 	{
-		stream.writeUnsignedVarInt(userIdIndex)
-		schema.serialize(serializationContext, stream, entity.userId)
+		stream.writeUnsignedVarInt(localUserIdIndex)
+		schema.serialize(serializationContext, stream, entity.localUserId)
+		
+		stream.writeUnsignedVarInt(platformIndex)
+		schema.serialize(serializationContext, stream, entity.platform)
 		
 		stream.writeUnsignedVarInt(roleIndex)
 		schema.serialize(serializationContext, stream, entity.role)
@@ -52,7 +58,8 @@ object SetUserRoleRequestSerializer : ModelSerializer<SetUserRoleRequest, SetUse
 	
 	override fun deserialize(deserializationContext: DeserializationContext, stream: InputStream, schema: Schema): SetUserRoleRequest
 	{
-		var userId: Int? = null
+		var localUserId: String? = null
+		var platform: Platform? = null
 		var role: String? = null
 		
 		while (true)
@@ -60,10 +67,12 @@ object SetUserRoleRequestSerializer : ModelSerializer<SetUserRoleRequest, SetUse
 			when (stream.readUnsignedVarInt())
 			{
 				endOfObject -> return SetUserRoleRequestImpl(
-					userId!!,
+					localUserId!!,
+					platform!!,
 					role!!,
 				)
-				userIdIndex -> userId = schema.deserialize(deserializationContext, stream)
+				localUserIdIndex -> localUserId = schema.deserialize(deserializationContext, stream)
+				platformIndex -> platform = schema.deserialize(deserializationContext, stream)
 				roleIndex -> role = schema.deserialize(deserializationContext, stream)
 				else -> schema.deserialize<Any>(deserializationContext, stream)
 			}

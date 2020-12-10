@@ -1,4 +1,4 @@
-// hash: #e28f8f44
+// hash: #c00d44ca
 // @formatter:off
 package me.wietlol.wietbot.data.auth.models.models
 
@@ -11,7 +11,9 @@ import me.wietlol.wietbot.data.auth.models.models.*
 
 
 data class GetOrCreateUserRequestImpl(
-	override val user: User,
+	override val localId: String,
+	override val localName: String,
+	override val platform: Platform,
 ) : GetOrCreateUserRequest
 {
 	override fun equals(other: Any?): Boolean =
@@ -25,7 +27,9 @@ data class GetOrCreateUserRequestImpl(
 	
 	override fun duplicate(): GetOrCreateUserRequestImpl =
 		copy(
-			user = user.duplicate(),
+			localId = localId,
+			localName = localName,
+			platform = platform.duplicate(),
 		)
 	
 	// @formatter:on
