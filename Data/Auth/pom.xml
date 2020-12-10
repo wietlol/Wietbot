@@ -6,7 +6,7 @@
 	
 	<groupId>me.wietlol.wietbot</groupId>
 	<artifactId>data-auth</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<packaging>pom</packaging>
 	
 	<modules>
@@ -38,10 +38,10 @@
 		<jackson.version>2.10.1</jackson.version>
 
 		<bitblock.version>1.1.0</bitblock.version>
-		<utils.version>1.0.0</utils.version>
+		<utils.version>1.1.0</utils.version>
 		<konfig.version>1.0.0</konfig.version>
 		<loggo.version>1.0.0</loggo.version>
-		<wietbot-libraries-lambda-base.version>1.0.0</wietbot-libraries-lambda-base.version>
+		<wietbot-libraries-lambda-base.version>1.1.0</wietbot-libraries-lambda-base.version>
 	</properties>
 	
 	<dependencies>
