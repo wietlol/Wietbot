@@ -1,0 +1,48 @@
+service: 'wietbot-features-command-handler'
+
+provider:
+    name: 'aws'
+    runtime: 'java11'
+    region: 'eu-west-1'
+    memorySize: '512'
+    timeout: '60'
+
+    environment:
+        service_name: '${self:service}'
+        commandExecute_prefix: '@Wietbot '
+        commandExecute_fuzzySearch_matchDistance: '1'
+        commandExecute_fuzzySearch_suggestDistanceLimit: '4'
+        wietbot_id: '11345663'
+
+    iamRoleStatements:
+        -   Effect: 'Allow'
+            Action:
+                - 'sns:Publish'
+            Resource:
+                - 'arn:aws:sns:eu-west-1:059598504952:*'
+        -   Effect: 'Allow'
+            Action:
+                - 'lambda:InvokeFunction'
+            Resource:
+                - 'arn:aws:lambda:eu-west-1:059598504952:function:*'
+
+plugins:
+    - 'serverless-plugin-log-retention'
+    - 'serverless-log-forwarding'
+
+custom:
+    version: '1.0.0'
+    logRetentionInDays: '3'
+    logForwarding:
+        destinationARN: 'arn:aws:lambda:eu-west-1:059598504952:function:wietbot-data-log-dev-saveLogsCloudwatch'
+        filterPattern: '{ $.severity.value >= 0 }'
+
+package:
+    artifact: 'target/features-command-handler-core-${self:custom.version}.jar'
+
+functions:
+    handleCommandSns:
+        handler: 'me.wietlol.wietbot.features.commandhandler.core.api.CommandHandlerHandler::handleCommandSns'
+        events:
+            -   sns:
+                    arn: 'arn:aws:sns:eu-west-1:059598504952:wietbot-events-stackoverflow-message'

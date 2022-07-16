@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>me.wietlol.wietbot</groupId>
+		<artifactId>features-command-handler</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	
+	<artifactId>features-command-handler-models</artifactId>
+	<packaging>jar</packaging>
+	
+	<dependencies>
+		<!-- serialization -->
+		<dependency>
+			<groupId>me.wietlol.bitblock</groupId>
+			<artifactId>bitblock-core</artifactId>
+			<version>${bitblock.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>me.wietlol.bitblock</groupId>
+			<artifactId>bitblock-code-generator</artifactId>
+			<version>${bitblock.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
